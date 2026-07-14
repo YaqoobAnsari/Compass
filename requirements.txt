@@ -1,0 +1,53 @@
+# COMPASS — Crowd-guided Online radio Mapping with Propagation-Aware Sequential Sensing
+# Python 3.12 (conda env: compass).  Install:  pip install -r requirements.txt
+# GPU (cluster H200, CUDA 12.x): default PyPI torch wheels are CUDA-enabled on Linux.
+
+# --- Core deep learning ---
+torch>=2.2
+torchvision>=0.17
+lightning>=2.2
+torchmetrics>=1.2
+
+# --- Diffusion / model utilities ---
+diffusers>=0.27
+einops>=0.7
+
+# --- Sequence / continuous-time models (Pillar 1: trajectory sequence encoder; Neural-CDE option) ---
+torchdiffeq>=0.2.4
+
+# --- Config & experiment tracking ---
+hydra-core>=1.3
+omegaconf>=2.3
+wandb>=0.16
+
+# --- Data processing ---
+numpy>=1.26
+scipy>=1.11
+pandas>=2.1
+h5py>=3.10
+pillow>=10.0
+
+# --- Image processing ---
+scikit-image>=0.22
+scikit-learn>=1.4
+
+# --- Graphs / path planning (Pillar 3: street-graph active crowdsensing) ---
+networkx>=3.2
+
+# --- Visualization ---
+matplotlib>=3.8
+seaborn>=0.13
+
+# --- CLI / progress ---
+tqdm>=4.66
+rich>=13.7
+
+# --- Notebooks (prototyping) ---
+jupyter>=1.0
+ipykernel>=6.29
+ipywidgets>=8.1
+
+# --- Dev ---
+pytest>=8.0
+ruff>=0.3
+black>=24.0

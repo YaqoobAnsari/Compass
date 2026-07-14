@@ -1,0 +1,614 @@
+{
+  "sites": {
+    "cmuq": {
+      "stationary_floors": [
+        1,
+        2,
+        3
+      ],
+      "mobile_floors": [
+        1,
+        2,
+        3
+      ],
+      "floors": {
+        "1": {
+          "stationary_rows": 734511,
+          "valid_rows": 383806,
+          "n_real_tx": 25,
+          "device_spread_db": 7.8,
+          "n_phones_shared": 4
+        },
+        "2": {
+          "stationary_rows": 833809,
+          "valid_rows": 449199,
+          "n_real_tx": 35,
+          "device_spread_db": 13.5,
+          "n_phones_shared": 6
+        },
+        "3": {
+          "stationary_rows": 606101,
+          "valid_rows": 310488,
+          "n_real_tx": 41,
+          "device_spread_db": 1.4,
+          "n_phones_shared": 3
+        }
+      },
+      "mobile_lag1_autocorr": 0.77,
+      "total_stationary_rows": 2174421,
+      "total_mobile_rows": 729207,
+      "n_phones": 7,
+      "n_real_transmitters": 57
+    },
+    "ec_parking": {
+      "stationary_floors": [
+        0,
+        1,
+        2
+      ],
+      "mobile_floors": [
+        0,
+        1,
+        2
+      ],
+      "floors": {
+        "0": {
+          "stationary_rows": 144115,
+          "valid_rows": 142584,
+          "n_real_tx": 18,
+          "device_spread_db": 2.3,
+          "n_phones_shared": 2
+        },
+        "1": {
+          "stationary_rows": 355116,
+          "valid_rows": 354904,
+          "n_real_tx": 27,
+          "device_spread_db": 10.8,
+          "n_phones_shared": 2
+        },
+        "2": {
+          "stationary_rows": 129501,
+          "valid_rows": 129309,
+          "n_real_tx": 22,
+          "device_spread_db": 11.6,
+          "n_phones_shared": 4
+        }
+      },
+      "mobile_lag1_autocorr": 0.968,
+      "total_stationary_rows": 628732,
+      "total_mobile_rows": 328787,
+      "n_phones": 6,
+      "n_real_transmitters": 41
+    },
+    "ezdan_tower1": {
+      "stationary_floors": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "mobile_floors": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35
+      ],
+      "floors": {
+        "5": {
+          "stationary_rows": 25662,
+          "valid_rows": 11339,
+          "n_real_tx": 23,
+          "device_spread_db": 6.5,
+          "n_phones_shared": 2
+        },
+        "6": {
+          "stationary_rows": 27683,
+          "valid_rows": 11399,
+          "n_real_tx": 21,
+          "device_spread_db": 12.7,
+          "n_phones_shared": 2
+        },
+        "7": {
+          "stationary_rows": 19611,
+          "valid_rows": 10707,
+          "n_real_tx": 24,
+          "device_spread_db": 0.9,
+          "n_phones_shared": 2
+        },
+        "8": {
+          "stationary_rows": 22806,
+          "valid_rows": 11171,
+          "n_real_tx": 19,
+          "device_spread_db": 5.3,
+          "n_phones_shared": 2
+        },
+        "9": {
+          "stationary_rows": 18619,
+          "valid_rows": 10173,
+          "n_real_tx": 19,
+          "device_spread_db": 1.0,
+          "n_phones_shared": 2
+        },
+        "10": {
+          "stationary_rows": 21537,
+          "valid_rows": 11308,
+          "n_real_tx": 23,
+          "device_spread_db": 9.4,
+          "n_phones_shared": 2
+        },
+        "11": {
+          "stationary_rows": 23669,
+          "valid_rows": 10924,
+          "n_real_tx": 18,
+          "device_spread_db": 6.7,
+          "n_phones_shared": 2
+        },
+        "12": {
+          "stationary_rows": 27726,
+          "valid_rows": 10009,
+          "n_real_tx": 20,
+          "device_spread_db": 4.9,
+          "n_phones_shared": 2
+        },
+        "13": {
+          "stationary_rows": 30336,
+          "valid_rows": 9705,
+          "n_real_tx": 21,
+          "device_spread_db": 1.9,
+          "n_phones_shared": 2
+        },
+        "14": {
+          "stationary_rows": 28484,
+          "valid_rows": 9728,
+          "n_real_tx": 20,
+          "device_spread_db": 1.2,
+          "n_phones_shared": 2
+        },
+        "15": {
+          "stationary_rows": 24847,
+          "valid_rows": 10240,
+          "n_real_tx": 23,
+          "device_spread_db": 1.4,
+          "n_phones_shared": 2
+        },
+        "16": {
+          "stationary_rows": 21684,
+          "valid_rows": 9913,
+          "n_real_tx": 19,
+          "device_spread_db": 9.5,
+          "n_phones_shared": 3
+        },
+        "17": {
+          "stationary_rows": 4114,
+          "valid_rows": 3327,
+          "n_real_tx": 10,
+          "device_spread_db": 7.2,
+          "n_phones_shared": 3
+        },
+        "18": {
+          "stationary_rows": 7935,
+          "valid_rows": 3679,
+          "n_real_tx": 14,
+          "device_spread_db": 5.0,
+          "n_phones_shared": 3
+        },
+        "20": {
+          "stationary_rows": 5632,
+          "valid_rows": 3522,
+          "n_real_tx": 11,
+          "device_spread_db": 7.7,
+          "n_phones_shared": 3
+        },
+        "21": {
+          "stationary_rows": 7714,
+          "valid_rows": 4024,
+          "n_real_tx": 12,
+          "device_spread_db": 9.0,
+          "n_phones_shared": 3
+        },
+        "22": {
+          "stationary_rows": 7428,
+          "valid_rows": 4215,
+          "n_real_tx": 11,
+          "device_spread_db": 11.6,
+          "n_phones_shared": 3
+        },
+        "23": {
+          "stationary_rows": 5109,
+          "valid_rows": 3275,
+          "n_real_tx": 9,
+          "device_spread_db": 8.7,
+          "n_phones_shared": 3
+        },
+        "24": {
+          "stationary_rows": 7878,
+          "valid_rows": 3700,
+          "n_real_tx": 10,
+          "device_spread_db": 9.5,
+          "n_phones_shared": 3
+        },
+        "25": {
+          "stationary_rows": 7265,
+          "valid_rows": 3677,
+          "n_real_tx": 10,
+          "device_spread_db": 7.3,
+          "n_phones_shared": 3
+        },
+        "26": {
+          "stationary_rows": 6590,
+          "valid_rows": 2690,
+          "n_real_tx": 7,
+          "device_spread_db": 7.0,
+          "n_phones_shared": 3
+        },
+        "27": {
+          "stationary_rows": 15691,
+          "valid_rows": 6152,
+          "n_real_tx": 10,
+          "device_spread_db": 5.3,
+          "n_phones_shared": 3
+        },
+        "28": {
+          "stationary_rows": 18010,
+          "valid_rows": 6951,
+          "n_real_tx": 11,
+          "device_spread_db": 7.7,
+          "n_phones_shared": 3
+        },
+        "29": {
+          "stationary_rows": 22319,
+          "valid_rows": 8518,
+          "n_real_tx": 14,
+          "device_spread_db": 3.6,
+          "n_phones_shared": 2
+        },
+        "30": {
+          "stationary_rows": 23042,
+          "valid_rows": 9780,
+          "n_real_tx": 15,
+          "device_spread_db": 1.6,
+          "n_phones_shared": 2
+        },
+        "31": {
+          "stationary_rows": 20711,
+          "valid_rows": 7704,
+          "n_real_tx": 12,
+          "device_spread_db": 0.8,
+          "n_phones_shared": 2
+        },
+        "32": {
+          "stationary_rows": 21649,
+          "valid_rows": 8358,
+          "n_real_tx": 18,
+          "device_spread_db": 3.5,
+          "n_phones_shared": 2
+        },
+        "33": {
+          "stationary_rows": 20221,
+          "valid_rows": 6808,
+          "n_real_tx": 14,
+          "device_spread_db": 4.7,
+          "n_phones_shared": 2
+        },
+        "34": {
+          "stationary_rows": 18720,
+          "valid_rows": 7753,
+          "n_real_tx": 12,
+          "device_spread_db": 2.6,
+          "n_phones_shared": 2
+        },
+        "35": {
+          "stationary_rows": 19171,
+          "valid_rows": 7803,
+          "n_real_tx": 9,
+          "device_spread_db": 2.9,
+          "n_phones_shared": 2
+        }
+      },
+      "mobile_lag1_autocorr": 0.955,
+      "total_stationary_rows": 531863,
+      "total_mobile_rows": 210248,
+      "n_phones": 6,
+      "n_real_transmitters": 64
+    },
+    "ezdan_tower4": {
+      "stationary_floors": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "mobile_floors": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "floors": {
+        "5": {
+          "stationary_rows": 16819,
+          "valid_rows": 8843,
+          "n_real_tx": 14,
+          "device_spread_db": 2.9,
+          "n_phones_shared": 3
+        },
+        "6": {
+          "stationary_rows": 19662,
+          "valid_rows": 9927,
+          "n_real_tx": 15,
+          "device_spread_db": 0.4,
+          "n_phones_shared": 2
+        },
+        "7": {
+          "stationary_rows": 22397,
+          "valid_rows": 9862,
+          "n_real_tx": 17,
+          "device_spread_db": 4.9,
+          "n_phones_shared": 2
+        },
+        "8": {
+          "stationary_rows": 19630,
+          "valid_rows": 10206,
+          "n_real_tx": 14,
+          "device_spread_db": 2.2,
+          "n_phones_shared": 2
+        },
+        "9": {
+          "stationary_rows": 15375,
+          "valid_rows": 8492,
+          "n_real_tx": 12,
+          "device_spread_db": 11.3,
+          "n_phones_shared": 4
+        },
+        "10": {
+          "stationary_rows": 17078,
+          "valid_rows": 8774,
+          "n_real_tx": 12,
+          "device_spread_db": 9.6,
+          "n_phones_shared": 4
+        },
+        "11": {
+          "stationary_rows": 17254,
+          "valid_rows": 8856,
+          "n_real_tx": 12,
+          "device_spread_db": 7.5,
+          "n_phones_shared": 4
+        },
+        "12": {
+          "stationary_rows": 18139,
+          "valid_rows": 9630,
+          "n_real_tx": 14,
+          "device_spread_db": 3.7,
+          "n_phones_shared": 3
+        },
+        "13": {
+          "stationary_rows": 19378,
+          "valid_rows": 8238,
+          "n_real_tx": 16,
+          "device_spread_db": 3.4,
+          "n_phones_shared": 2
+        },
+        "14": {
+          "stationary_rows": 18865,
+          "valid_rows": 8484,
+          "n_real_tx": 14,
+          "device_spread_db": 2.7,
+          "n_phones_shared": 2
+        },
+        "15": {
+          "stationary_rows": 18447,
+          "valid_rows": 8070,
+          "n_real_tx": 11,
+          "device_spread_db": 1.1,
+          "n_phones_shared": 2
+        },
+        "16": {
+          "stationary_rows": 18877,
+          "valid_rows": 7998,
+          "n_real_tx": 11,
+          "device_spread_db": 6.4,
+          "n_phones_shared": 2
+        },
+        "17": {
+          "stationary_rows": 15681,
+          "valid_rows": 7134,
+          "n_real_tx": 11,
+          "device_spread_db": 0.8,
+          "n_phones_shared": 2
+        },
+        "18": {
+          "stationary_rows": 15875,
+          "valid_rows": 7526,
+          "n_real_tx": 9,
+          "device_spread_db": 7.3,
+          "n_phones_shared": 2
+        },
+        "19": {
+          "stationary_rows": 14947,
+          "valid_rows": 6974,
+          "n_real_tx": 10,
+          "device_spread_db": 10.9,
+          "n_phones_shared": 2
+        },
+        "20": {
+          "stationary_rows": 13377,
+          "valid_rows": 6152,
+          "n_real_tx": 10,
+          "device_spread_db": 0.1,
+          "n_phones_shared": 2
+        },
+        "21": {
+          "stationary_rows": 14642,
+          "valid_rows": 5777,
+          "n_real_tx": 10,
+          "device_spread_db": 2.1,
+          "n_phones_shared": 2
+        },
+        "23": {
+          "stationary_rows": 13838,
+          "valid_rows": 5826,
+          "n_real_tx": 11,
+          "device_spread_db": 6.3,
+          "n_phones_shared": 2
+        },
+        "24": {
+          "stationary_rows": 12785,
+          "valid_rows": 4767,
+          "n_real_tx": 8,
+          "device_spread_db": 4.4,
+          "n_phones_shared": 2
+        },
+        "25": {
+          "stationary_rows": 11988,
+          "valid_rows": 4324,
+          "n_real_tx": 6,
+          "device_spread_db": 5.0,
+          "n_phones_shared": 2
+        },
+        "26": {
+          "stationary_rows": 11450,
+          "valid_rows": 4650,
+          "n_real_tx": 4,
+          "device_spread_db": 0.4,
+          "n_phones_shared": 2
+        },
+        "27": {
+          "stationary_rows": 12394,
+          "valid_rows": 4439,
+          "n_real_tx": 4,
+          "device_spread_db": 1.6,
+          "n_phones_shared": 2
+        },
+        "28": {
+          "stationary_rows": 12282,
+          "valid_rows": 4288,
+          "n_real_tx": 5,
+          "device_spread_db": 1.5,
+          "n_phones_shared": 2
+        },
+        "29": {
+          "stationary_rows": 11693,
+          "valid_rows": 3893,
+          "n_real_tx": 5,
+          "device_spread_db": 0.9,
+          "n_phones_shared": 2
+        },
+        "30": {
+          "stationary_rows": 12230,
+          "valid_rows": 3688,
+          "n_real_tx": 4,
+          "device_spread_db": 8.1,
+          "n_phones_shared": 2
+        }
+      },
+      "mobile_lag1_autocorr": 0.91,
+      "total_stationary_rows": 395103,
+      "total_mobile_rows": 66369,
+      "n_phones": 6,
+      "n_real_transmitters": 42
+    }
+  },
+  "aggregate": {
+    "median_device_spread_db": 4.93,
+    "device_spread_range_db": [
+      0.1,
+      13.5
+    ],
+    "median_mobile_lag1_autocorr": 0.932,
+    "n_floors_measured": 61
+  }
+}

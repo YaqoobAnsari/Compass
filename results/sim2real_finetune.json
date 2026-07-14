@@ -1,0 +1,12 @@
+{
+  "n_synth_cells": 160,
+  "n_real_cells": 54,
+  "folds": 3,
+  "rmse": {
+    "scratch": 6.47,
+    "zeroshot": 7.883,
+    "finetuned": 6.302,
+    "classical_RBF": 5.505
+  },
+  "finetuned_beats_classical": false
+}

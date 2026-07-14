@@ -1,0 +1,9 @@
+{
+  "n_walks": 130,
+  "n_test": 39,
+  "gru_order_aware_rmse": 1.788,
+  "set_order_blind_rmse": 9.788,
+  "mean_baseline_rmse": 9.758,
+  "gru_params": 100737,
+  "set_params": 12673
+}

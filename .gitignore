@@ -1,0 +1,30 @@
+# Data & experiment outputs — NEVER commit
+/data/
+/experiments/
+*.ckpt
+*.pth
+*.pt
+wandb/
+outputs/
+multirun/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+build/
+dist/
+
+# Env / tooling
+.venv/
+.env
+
+# OS
+.DS_Store
+
+# Cloned external datasets (Git-LFS, large)
+/external/

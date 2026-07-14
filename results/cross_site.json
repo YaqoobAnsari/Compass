@@ -1,0 +1,22 @@
+{
+  "n_cmuq_cells": 40,
+  "n_ec_cells": 14,
+  "interpolator": {
+    "train_cmuq_test_ec": 5.624,
+    "train_ec_test_cmuq": 7.905,
+    "within_cmuq": 5.307,
+    "within_ec": 4.578
+  },
+  "order_gru": {
+    "train_cmuq_test_ec": 1.011,
+    "train_ec_test_cmuq": 2.63,
+    "within_cmuq": 1.497,
+    "within_ec": 1.015
+  },
+  "classical": {
+    "rbf_cmuq": 5.614,
+    "rbf_ec": 4.959
+  },
+  "n_cmuq_walks": 79,
+  "n_ec_walks": 51
+}

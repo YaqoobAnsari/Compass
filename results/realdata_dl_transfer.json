@@ -1,0 +1,38 @@
+{
+  "n_cells": 54,
+  "test_frac": 0.5,
+  "min_rp": 10,
+  "note": "RadioUNet & PMNet require a TX-location input, which real crowdsensing lacks (boosters; A5 18% locatable) -> INAPPLICABLE to the TX-agnostic real task. Only TX-agnostic methods evaluated.",
+  "rmse": {
+    "COMPASS-no_tx (zero-shot)": 10.001,
+    "RBF(mq) native": 6.475,
+    "IDW(p=2) native": 6.499,
+    "GP native": 6.825
+  },
+  "rmse_ci": {
+    "COMPASS-no_tx (zero-shot)": {
+      "mean": 7.2328093114323355,
+      "lo": 6.981730782095406,
+      "hi": 7.476770215251041,
+      "n": 2883
+    },
+    "RBF(mq) native": {
+      "mean": 4.694375998612311,
+      "lo": 4.52621927152849,
+      "hi": 4.8608181131826615,
+      "n": 2883
+    },
+    "IDW(p=2) native": {
+      "mean": 4.811939530850227,
+      "lo": 4.652501295705075,
+      "hi": 4.982397012430818,
+      "n": 2883
+    },
+    "GP native": {
+      "mean": 4.941891850750005,
+      "lo": 4.767275840736789,
+      "hi": 5.10975958796235,
+      "n": 2883
+    }
+  }
+}

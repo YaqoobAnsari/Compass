@@ -1,0 +1,65 @@
+{
+  "device": "cuda",
+  "methods": {
+    "COMPASS-full": {
+      "params_M": 7.16,
+      "ms_per_forward": 6.83,
+      "mc_passes_for_uq": 8,
+      "ms_with_uq": 54.65
+    },
+    "COMPASS-wnet": {
+      "params_M": 6.4,
+      "ms_per_forward": 6.67,
+      "mc_passes_for_uq": 8,
+      "ms_with_uq": 53.34
+    },
+    "pmnet": {
+      "params_M": 6.58,
+      "ms_per_forward": 3.68,
+      "mc_passes_for_uq": 1,
+      "ms_with_uq": 3.68
+    },
+    "radiogan": {
+      "params_M": 7.8,
+      "ms_per_forward": 2.99,
+      "mc_passes_for_uq": 1,
+      "ms_with_uq": 2.99
+    },
+    "radiotransformer": {
+      "params_M": 6.35,
+      "ms_per_forward": 3.01,
+      "mc_passes_for_uq": 8,
+      "ms_with_uq": 24.08
+    },
+    "radiounet": {
+      "params_M": 8.74,
+      "ms_per_forward": 5.04,
+      "mc_passes_for_uq": 1,
+      "ms_with_uq": 5.04
+    },
+    "rmdm": {
+      "params_M": 8.24,
+      "ms_per_forward": 42.6,
+      "mc_passes_for_uq": 8,
+      "ms_with_uq": 340.77
+    },
+    "sparse_unet": {
+      "params_M": 7.77,
+      "ms_per_forward": 2.22,
+      "mc_passes_for_uq": 8,
+      "ms_with_uq": 17.78
+    },
+    "IDW": {
+      "params_M": 0.0,
+      "ms_per_forward": 45.23,
+      "mc_passes_for_uq": 1,
+      "ms_with_uq": 45.23
+    },
+    "RBF(mq)": {
+      "params_M": 0.0,
+      "ms_per_forward": 62.91,
+      "mc_passes_for_uq": 1,
+      "ms_with_uq": 62.91
+    }
+  }
+}

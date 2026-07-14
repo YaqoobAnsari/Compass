@@ -1,0 +1,44 @@
+{
+  "n_samples": 72,
+  "tx_estimation_error_px": {
+    "argmax_rss": 35.7,
+    "weighted_centroid": 38.5,
+    "log_distance_fit": 58.0
+  },
+  "rmse": {
+    "full + true TX": {
+      "mean": 12.328829831547207,
+      "lo": 11.906520242823495,
+      "hi": 12.721173518233828,
+      "n": 72
+    },
+    "full + estimated TX": {
+      "mean": 21.035363263554043,
+      "lo": 19.303194119864038,
+      "hi": 22.681753114859262,
+      "n": 72
+    },
+    "no-TX model": {
+      "mean": 18.52011748154958,
+      "lo": 17.835404428508546,
+      "hi": 19.27339073916276,
+      "n": 72
+    },
+    "jitter-trained + estimated TX": {
+      "mean": 18.444098326894974,
+      "lo": 17.382070702976648,
+      "hi": 19.556216773721907,
+      "n": 72
+    },
+    "jitter-trained + true TX": {
+      "mean": 16.338092154926724,
+      "lo": 15.78419355849425,
+      "hi": 16.915632100568878,
+      "n": 72
+    }
+  },
+  "tx_value_db": 6.19,
+  "recovery_full_plus_estimated": -0.406,
+  "recovery_jitter_plus_estimated": 0.012,
+  "verdict": "estimated TX insufficient even with jitter training -> use no-TX model"
+}

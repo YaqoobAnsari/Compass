@@ -1,0 +1,34 @@
+{
+  "site": "ezdan_tower4",
+  "floor": 5,
+  "stationary_rows": 16819,
+  "mobile_rows": 4095,
+  "phones": [
+    "25028RN03A",
+    "CPH2743",
+    "HED-LX9",
+    "RMX3938",
+    "SM-A176B",
+    "itel A675L"
+  ],
+  "n_transmitters_stationary": 16,
+  "device_heterogeneity": {
+    "transmitter_id": 53530411,
+    "reference_point": 1,
+    "per_phone_mean_rss_dbm": {
+      "itel A675L": -87.8,
+      "CPH2743": -86.8,
+      "HED-LX9": -85.0
+    },
+    "spread_db": 2.9,
+    "std_db": 1.5
+  },
+  "trajectory_correlation": {
+    "transmitter_id": 53530401,
+    "phone": "CPH2743",
+    "n_scans": 108,
+    "lag1_autocorr": 0.91,
+    "lag1_autocorr_shuffled": 0.006,
+    "correlated_not_iid": true
+  }
+}

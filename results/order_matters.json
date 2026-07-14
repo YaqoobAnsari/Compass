@@ -1,0 +1,48 @@
+{
+  "config": {
+    "root": "/data1/yansari/Compass/data/raw",
+    "variant": "IRT2",
+    "train_maps": 50,
+    "val_maps": 12,
+    "tx_per_map": 3,
+    "k": 3,
+    "n_points": 80,
+    "epochs": 60,
+    "sigma_shadow": 6.0,
+    "decorr_m": 30.0,
+    "device_offset_std": 4.0,
+    "device_gain_std": 0.05,
+    "fast_db": 1.0,
+    "seed": 0,
+    "cache": "/data1/yansari/Compass/results/order_matters_data.npz",
+    "regen": false,
+    "results": "/data1/yansari/Compass/results/order_matters.json",
+    "fig": "/data1/yansari/Compass/figures/experiments/order_matters.png"
+  },
+  "device": "cuda",
+  "rmse_db": {
+    "correlated": {
+      "gru_true": 8.044,
+      "gru_shuffled": 8.393,
+      "gru_reversed": 9.955,
+      "set": 8.102
+    },
+    "iid": {
+      "gru_true": 5.497,
+      "gru_shuffled": 6.736,
+      "gru_reversed": 5.295,
+      "set": 6.821
+    }
+  },
+  "gaps_db": {
+    "correlated": {
+      "gru_true_beats_set": 0.058,
+      "gru_true_beats_shuffled": 0.349
+    },
+    "iid": {
+      "gru_true_beats_set": 1.324,
+      "gru_true_beats_shuffled": 1.239
+    }
+  },
+  "order_helps_under_correlated_noise": false
+}

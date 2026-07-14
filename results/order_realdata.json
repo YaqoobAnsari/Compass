@@ -1,0 +1,69 @@
+{
+  "n_sequences": 130,
+  "min_len": 30,
+  "sites_floors": {
+    "cmuq": [
+      1,
+      2,
+      3
+    ],
+    "ec_parking": [
+      0,
+      1,
+      2
+    ]
+  },
+  "autocorr_true_median": 0.9839,
+  "autocorr_true_mean": 0.8851,
+  "autocorr_shuffled_median": -0.0002,
+  "gap_fill_rmse": {
+    "true": 6.986,
+    "shuffled": 12.351,
+    "mean": 9.921
+  },
+  "gap_fill_rmse_ci": {
+    "true": {
+      "mean": 6.986,
+      "lo": 6.954,
+      "hi": 7.019,
+      "n": 893900
+    },
+    "shuffled": {
+      "mean": 12.351,
+      "lo": 12.329,
+      "hi": 12.374,
+      "n": 893900
+    },
+    "mean": {
+      "mean": 9.921,
+      "lo": 9.905,
+      "hi": 9.938,
+      "n": 893900
+    }
+  },
+  "wilcoxon_true_vs_shuffled": {
+    "p_value": 4.6716125678141626e-23,
+    "median_diff": -7.114266094852468,
+    "n": 130
+  },
+  "per_site": {
+    "cmuq": {
+      "n_seq": 79,
+      "autocorr_true_median": 0.9819,
+      "gap_fill_rmse": {
+        "true": 8.07,
+        "shuffled": 13.371,
+        "mean": 10.741
+      }
+    },
+    "ec_parking": {
+      "n_seq": 51,
+      "autocorr_true_median": 0.9886,
+      "gap_fill_rmse": {
+        "true": 1.49,
+        "shuffled": 8.815,
+        "mean": 7.078
+      }
+    }
+  }
+}

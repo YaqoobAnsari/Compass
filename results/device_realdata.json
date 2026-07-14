@@ -1,0 +1,147 @@
+{
+  "n_shared_cells_total": 1700,
+  "offset_spread_median_dB": 4.12,
+  "offset_spread_p90_dB": 11.6,
+  "offset_spread_max_dB": 27.77,
+  "recon_method": "RBF(multiquadric)",
+  "dense_multiphone": {
+    "recon_raw_rmse": 5.477,
+    "recon_cal_rmse": 5.467,
+    "improvement_pct": 0.18
+  },
+  "single_device_per_rp": {
+    "recon_raw_rmse": 6.397,
+    "recon_cal_rmse": 6.267,
+    "improvement_pct": 2.04
+  },
+  "contiguous_device_zones": {
+    "recon_raw_rmse": 6.285,
+    "recon_cal_rmse": 6.234,
+    "improvement_pct": 0.82
+  },
+  "per_floor": {
+    "cmuq/floor1": {
+      "n_shared_cells": 474,
+      "n_phones": 7,
+      "offset_spread_median_dB": 4.78,
+      "offset_spread_p90_dB": 12.06,
+      "device_offsets_dB": {
+        "25028RN03A": -0.28,
+        "25028RN03A-2": 0.0,
+        "CPH2743": 2.33,
+        "HED-LX9": -0.46,
+        "RMX3938": 0.35,
+        "SM-A176B": -1.73,
+        "itel A675L": -0.2
+      },
+      "reliability": {
+        "offset_corr_mean": 0.86,
+        "offset_corr_std": 0.11,
+        "var_reduction_mean": 0.029,
+        "n_splits": 10
+      },
+      "recon_raw_rmse": 5.796,
+      "recon_cal_rmse": 5.796,
+      "recon_sd_raw_rmse": 6.687,
+      "recon_sd_cal_rmse": 6.672
+    },
+    "cmuq/floor2": {
+      "n_shared_cells": 473,
+      "n_phones": 7,
+      "offset_spread_median_dB": 4.23,
+      "offset_spread_p90_dB": 11.11,
+      "device_offsets_dB": {
+        "25028RN03A": -0.21,
+        "25028RN03A-2": -0.06,
+        "CPH2743": 2.22,
+        "HED-LX9": 0.48,
+        "RMX3938": -0.05,
+        "SM-A176B": -0.95,
+        "itel A675L": -1.43
+      },
+      "reliability": {
+        "offset_corr_mean": 0.884,
+        "offset_corr_std": 0.067,
+        "var_reduction_mean": 0.046,
+        "n_splits": 10
+      },
+      "recon_raw_rmse": 5.154,
+      "recon_cal_rmse": 5.146,
+      "recon_sd_raw_rmse": 5.995,
+      "recon_sd_cal_rmse": 5.94
+    },
+    "cmuq/floor3": {
+      "n_shared_cells": 432,
+      "n_phones": 7,
+      "offset_spread_median_dB": 3.14,
+      "offset_spread_p90_dB": 10.11,
+      "device_offsets_dB": {
+        "25028RN03A": -0.11,
+        "25028RN03A-2": 0.12,
+        "CPH2743": 2.21,
+        "HED-LX9": -1.41,
+        "RMX3938": -0.01,
+        "SM-A176B": -0.87,
+        "itel A675L": 0.07
+      },
+      "reliability": {
+        "offset_corr_mean": 0.89,
+        "offset_corr_std": 0.059,
+        "var_reduction_mean": 0.03,
+        "n_splits": 10
+      },
+      "recon_raw_rmse": 5.82,
+      "recon_cal_rmse": 5.822,
+      "recon_sd_raw_rmse": 6.54,
+      "recon_sd_cal_rmse": 6.485
+    },
+    "ec_parking/floor1": {
+      "n_shared_cells": 236,
+      "n_phones": 6,
+      "offset_spread_median_dB": 3.45,
+      "offset_spread_p90_dB": 9.75,
+      "device_offsets_dB": {
+        "25028RN03A": -0.11,
+        "CPH2743": 1.67,
+        "HED-LX9": -1.65,
+        "RMX3938": 0.33,
+        "SM-A176B": -1.15,
+        "itel A675L": 0.91
+      },
+      "reliability": {
+        "offset_corr_mean": 0.778,
+        "offset_corr_std": 0.1,
+        "var_reduction_mean": 0.016,
+        "n_splits": 10
+      },
+      "recon_raw_rmse": 5.064,
+      "recon_cal_rmse": 5.051,
+      "recon_sd_raw_rmse": 5.732,
+      "recon_sd_cal_rmse": 5.691
+    },
+    "ec_parking/floor2": {
+      "n_shared_cells": 85,
+      "n_phones": 6,
+      "offset_spread_median_dB": 9.77,
+      "offset_spread_p90_dB": 20.76,
+      "device_offsets_dB": {
+        "25028RN03A": 5.3,
+        "CPH2743": 1.42,
+        "HED-LX9": 1.63,
+        "RMX3938": -5.91,
+        "SM-A176B": -3.94,
+        "itel A675L": 1.5
+      },
+      "reliability": {
+        "offset_corr_mean": 0.878,
+        "offset_corr_std": 0.067,
+        "var_reduction_mean": 0.512,
+        "n_splits": 10
+      },
+      "recon_raw_rmse": 5.008,
+      "recon_cal_rmse": 4.863,
+      "recon_sd_raw_rmse": 8.06,
+      "recon_sd_cal_rmse": 6.443
+    }
+  }
+}

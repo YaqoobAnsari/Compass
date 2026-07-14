@@ -1,0 +1,339 @@
+{
+  "variant": "IRT2",
+  "n_samples": 12,
+  "n_passed": 12,
+  "all_passed": true,
+  "split_sizes": {
+    "train": 490,
+    "val": 105,
+    "test": 106
+  },
+  "mean_dbm_margin": 23.629501342773438,
+  "max_tx_pixel_error_px": 3,
+  "samples": [
+    {
+      "map_id": 1,
+      "tx_id": 0,
+      "street_fraction": 0.6678619384765625,
+      "mean_dbm_street": -155.96328735351562,
+      "mean_dbm_building": -185.06578063964844,
+      "dbm_margin": 29.102493286132812,
+      "tx_pixel": [
+        108,
+        124
+      ],
+      "gain_argmax_pixel": [
+        107,
+        124
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 1,
+      "tx_id": 1,
+      "street_fraction": 0.6678619384765625,
+      "mean_dbm_street": -166.94003295898438,
+      "mean_dbm_building": -185.29061889648438,
+      "dbm_margin": 18.3505859375,
+      "tx_pixel": [
+        181,
+        93
+      ],
+      "gain_argmax_pixel": [
+        180,
+        93
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 1,
+      "tx_id": 2,
+      "street_fraction": 0.6678619384765625,
+      "mean_dbm_street": -170.65054321289062,
+      "mean_dbm_building": -185.4844512939453,
+      "dbm_margin": 14.833908081054688,
+      "tx_pixel": [
+        74,
+        176
+      ],
+      "gain_argmax_pixel": [
+        73,
+        176
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 5,
+      "tx_id": 0,
+      "street_fraction": 0.6474151611328125,
+      "mean_dbm_street": -154.5275115966797,
+      "mean_dbm_building": -185.03121948242188,
+      "dbm_margin": 30.503707885742188,
+      "tx_pixel": [
+        71,
+        145
+      ],
+      "gain_argmax_pixel": [
+        70,
+        145
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 5,
+      "tx_id": 1,
+      "street_fraction": 0.6474151611328125,
+      "mean_dbm_street": -150.31044006347656,
+      "mean_dbm_building": -184.59730529785156,
+      "dbm_margin": 34.286865234375,
+      "tx_pixel": [
+        160,
+        135
+      ],
+      "gain_argmax_pixel": [
+        159,
+        135
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 5,
+      "tx_id": 2,
+      "street_fraction": 0.6474151611328125,
+      "mean_dbm_street": -162.79481506347656,
+      "mean_dbm_building": -184.99551391601562,
+      "dbm_margin": 22.200698852539062,
+      "tx_pixel": [
+        193,
+        138
+      ],
+      "gain_argmax_pixel": [
+        192,
+        135
+      ],
+      "tx_pixel_error_px": 3,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 10,
+      "tx_id": 0,
+      "street_fraction": 0.6014862060546875,
+      "mean_dbm_street": -159.88742065429688,
+      "mean_dbm_building": -185.2506866455078,
+      "dbm_margin": 25.363265991210938,
+      "tx_pixel": [
+        190,
+        191
+      ],
+      "gain_argmax_pixel": [
+        189,
+        191
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 10,
+      "tx_id": 1,
+      "street_fraction": 0.6014862060546875,
+      "mean_dbm_street": -158.27658081054688,
+      "mean_dbm_building": -184.99896240234375,
+      "dbm_margin": 26.722381591796875,
+      "tx_pixel": [
+        193,
+        82
+      ],
+      "gain_argmax_pixel": [
+        191,
+        81
+      ],
+      "tx_pixel_error_px": 2,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 10,
+      "tx_id": 2,
+      "street_fraction": 0.6014862060546875,
+      "mean_dbm_street": -162.44216918945312,
+      "mean_dbm_building": -185.49835205078125,
+      "dbm_margin": 23.056182861328125,
+      "tx_pixel": [
+        107,
+        108
+      ],
+      "gain_argmax_pixel": [
+        107,
+        106
+      ],
+      "tx_pixel_error_px": 2,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 15,
+      "tx_id": 0,
+      "street_fraction": 0.647674560546875,
+      "mean_dbm_street": -166.52906799316406,
+      "mean_dbm_building": -185.2007293701172,
+      "dbm_margin": 18.671661376953125,
+      "tx_pixel": [
+        102,
+        97
+      ],
+      "gain_argmax_pixel": [
+        101,
+        97
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 15,
+      "tx_id": 1,
+      "street_fraction": 0.647674560546875,
+      "mean_dbm_street": -167.03018188476562,
+      "mean_dbm_building": -185.2313995361328,
+      "dbm_margin": 18.201217651367188,
+      "tx_pixel": [
+        172,
+        116
+      ],
+      "gain_argmax_pixel": [
+        171,
+        116
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 15,
+      "tx_id": 2,
+      "street_fraction": 0.647674560546875,
+      "mean_dbm_street": -162.98204040527344,
+      "mean_dbm_building": -185.2430877685547,
+      "dbm_margin": 22.26104736328125,
+      "tx_pixel": [
+        63,
+        173
+      ],
+      "gain_argmax_pixel": [
+        62,
+        173
+      ],
+      "tx_pixel_error_px": 1,
+      "checks": {
+        "shape_ok": true,
+        "building_binary": true,
+        "radio_in_unit": true,
+        "dbm_in_range": true,
+        "street_fraction_ok": true,
+        "polarity_street_stronger": true,
+        "tx_at_gain_peak": true
+      },
+      "passed": true
+    }
+  ]
+}

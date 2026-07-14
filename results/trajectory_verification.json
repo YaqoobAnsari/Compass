@@ -1,0 +1,146 @@
+{
+  "variant": "IRT2",
+  "n_samples": 6,
+  "n_passed": 6,
+  "all_passed": true,
+  "mean_signal_above_floor_db": 24.41147189670139,
+  "mean_on_street_frac": 1.0,
+  "noise_model": {
+    "decorr_m=5.0": {
+      "field_std_db": 6.0,
+      "measured_decorr_px": 12.0
+    },
+    "decorr_m=20.0": {
+      "field_std_db": 6.0,
+      "measured_decorr_px": 47.0
+    },
+    "decorr_m=40.0": {
+      "field_std_db": 6.0,
+      "measured_decorr_px": 54.0
+    }
+  },
+  "noise_std_ok": true,
+  "decorr_monotonic": true,
+  "samples": [
+    {
+      "map_id": 1,
+      "tx_id": 0,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -171.02798461914062,
+      "building_floor_dbm": -185.06578063964844,
+      "signal_above_floor_db": 14.037796020507812,
+      "coverage_fraction": 0.0039520263671875,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 1,
+      "tx_id": 1,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -168.66587829589844,
+      "building_floor_dbm": -185.06578063964844,
+      "signal_above_floor_db": 16.39990234375,
+      "coverage_fraction": 0.00457763671875,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 5,
+      "tx_id": 0,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -162.1374308268229,
+      "building_floor_dbm": -185.03121948242188,
+      "signal_above_floor_db": 22.893788655598968,
+      "coverage_fraction": 0.0041656494140625,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 5,
+      "tx_id": 1,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -162.42633056640625,
+      "building_floor_dbm": -185.03121948242188,
+      "signal_above_floor_db": 22.604888916015625,
+      "coverage_fraction": 0.0045013427734375,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 10,
+      "tx_id": 0,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -146.75838724772134,
+      "building_floor_dbm": -185.2506866455078,
+      "signal_above_floor_db": 38.49229939778647,
+      "coverage_fraction": 0.00457763671875,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    },
+    {
+      "map_id": 10,
+      "tx_id": 1,
+      "on_street_frac": 1.0,
+      "clean_mean_dbm": -153.21053059895834,
+      "building_floor_dbm": -185.2506866455078,
+      "signal_above_floor_db": 32.04015604654947,
+      "coverage_fraction": 0.004547119140625,
+      "seq_shape": [
+        100,
+        11
+      ],
+      "checks": {
+        "on_street": true,
+        "real_signal": true,
+        "coverage_plausible": true,
+        "sequence_ok": true
+      },
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "n_samples": 120,
+  "methods": {
+    "COMPASS-full": {
+      "has_uncertainty": true,
+      "err_unc_corr": {
+        "mean": 0.5483146473742672,
+        "lo": 0.5324658770885676,
+        "hi": 0.5638292895700682,
+        "n": 120
+      },
+      "picp_1sigma": 0.099,
+      "picp_2sigma": 0.216,
+      "sharpness_db": 1.299
+    },
+    "GP(Kriging)": {
+      "has_uncertainty": true,
+      "err_unc_corr": {
+        "mean": 0.33065603775382496,
+        "lo": 0.30997456219163366,
+        "hi": 0.35161155742906697,
+        "n": 120
+      },
+      "picp_1sigma": 0.491,
+      "picp_2sigma": 0.786,
+      "sharpness_db": 18.877
+    },
+    "radiounet": {
+      "has_uncertainty": false,
+      "err_unc_corr": null,
+      "picp_1sigma": null,
+      "picp_2sigma": null,
+      "sharpness_db": 0.001
+    },
+    "pmnet": {
+      "has_uncertainty": false,
+      "err_unc_corr": null,
+      "picp_1sigma": null,
+      "picp_2sigma": null,
+      "sharpness_db": 0.001
+    }
+  }
+}

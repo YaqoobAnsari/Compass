@@ -1,0 +1,27 @@
+{
+  "model": "wnet",
+  "n_samples": 144,
+  "n_eval_px": 3291292,
+  "scale_factor": 10.869,
+  "raw": {
+    "picp_1sigma": 0.144,
+    "picp_2sigma": 0.297,
+    "ece": 8.33,
+    "sharpness_db": 1.253,
+    "err_unc_corr": 0.532
+  },
+  "recalibrated_moment": {
+    "picp_1sigma": 0.901,
+    "picp_2sigma": 0.968,
+    "ece": 5.948,
+    "sharpness_db": 13.623,
+    "err_unc_corr": 0.532
+  },
+  "conformal_scalars": {
+    "q68": 4.781,
+    "q95": 14.322,
+    "picp_68_target": 0.658,
+    "picp_95_target": 0.939
+  },
+  "note": "Variance-scaling (single factor from a held-out calib split) restores nominal coverage; it multiplies all stds equally so err-unc CORRELATION (ranking) is unchanged. Split-conformal q-scalars give distribution-free target coverage."
+}

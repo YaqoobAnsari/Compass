@@ -1,0 +1,51 @@
+{
+  "config": {
+    "root": "/data1/yansari/Compass/data/raw",
+    "variant": "IRT2",
+    "n_maps": 4,
+    "k": 4,
+    "n_points": 120,
+    "length_scale": 25.0,
+    "noise_std": 2.0,
+    "seed": 0,
+    "fig_dir": "/data1/yansari/Compass/figures/reconstruct",
+    "results": "/data1/yansari/Compass/results/reconstruct_demo.json"
+  },
+  "mean_gp_rmse_free_unobs": 34.58,
+  "mean_idw_rmse_free_unobs": 27.07,
+  "mean_uncertainty_error_corr": 0.362,
+  "samples": [
+    {
+      "map_id": 1,
+      "n_obs": 480,
+      "coverage_free_pct": 1.06,
+      "gp_rmse_free_unobs": 46.53,
+      "idw_rmse_free_unobs": 25.32,
+      "gp_uncertainty_error_corr": 0.14
+    },
+    {
+      "map_id": 5,
+      "n_obs": 480,
+      "coverage_free_pct": 0.95,
+      "gp_rmse_free_unobs": 34.42,
+      "idw_rmse_free_unobs": 24.57,
+      "gp_uncertainty_error_corr": 0.28
+    },
+    {
+      "map_id": 10,
+      "n_obs": 480,
+      "coverage_free_pct": 0.97,
+      "gp_rmse_free_unobs": 25.82,
+      "idw_rmse_free_unobs": 29.42,
+      "gp_uncertainty_error_corr": 0.584
+    },
+    {
+      "map_id": 15,
+      "n_obs": 480,
+      "coverage_free_pct": 1.01,
+      "gp_rmse_free_unobs": 31.55,
+      "idw_rmse_free_unobs": 28.98,
+      "gp_uncertainty_error_corr": 0.446
+    }
+  ]
+}
