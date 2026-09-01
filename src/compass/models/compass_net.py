@@ -18,6 +18,7 @@ from dataclasses import dataclass
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 
 from .sequence import GRUDenoiser  # reuse the validated GRU as a sequence encoder
 from .unet import ConditioningUNet
@@ -29,12 +30,34 @@ class CompassConfig:
     use_tx: bool = True
     use_order: bool = True       # sequence-aware (FiLM); False -> order-blind
     use_device: bool = True      # per-trajectory offset head
+    use_occlusion: bool = False  # explicit ray-occlusion / diffraction geometry channel
     tx_scales: int = 4
     base: int = 48
     depth: int = 4
     seq_in_dim: int = 11         # SEQ_FEATURES length
     seq_hidden: int = 64
     p_drop: float = 0.15
+
+
+def occlusion_field(building: torch.Tensor, tx_rowcol: torch.Tensor, n_steps: int = 32) -> torch.Tensor:
+    """Explicit propagation-geometry channel: for each pixel, the fraction of the
+    TX->pixel ray that lies inside buildings (a differentiable knife-edge shadow-depth
+    proxy). Deterministic from building + TX, but CNNs fail to infer it from the raw
+    rasters -> supplying it closes the NLoS/LoS reconstruction wall. (B,1,H,W)."""
+    B, _, H, W = building.shape
+    dev = building.device
+    ys = torch.arange(H, device=dev).view(1, H, 1).expand(B, H, W).float()
+    xs = torch.arange(W, device=dev).view(1, 1, W).expand(B, H, W).float()
+    tr = tx_rowcol[:, 0].view(B, 1, 1).float()
+    tc = tx_rowcol[:, 1].view(B, 1, 1).float()
+    acc = torch.zeros(B, H, W, device=dev)
+    for i in range(1, n_steps):
+        t = i / n_steps
+        gy = (tr + t * (ys - tr)) / max(H - 1, 1) * 2 - 1
+        gx = (tc + t * (xs - tc)) / max(W - 1, 1) * 2 - 1
+        acc += F.grid_sample(building, torch.stack([gx, gy], dim=-1),
+                             mode="nearest", align_corners=True)[:, 0]
+    return (acc / n_steps).unsqueeze(1)
 
 
 def tx_heatmap(tx_rowcol: torch.Tensor, H: int, W: int, scales: int) -> torch.Tensor:
@@ -96,6 +119,8 @@ class CompassNet(nn.Module):
             cin += 1
         if cfg.use_tx:
             cin += cfg.tx_scales
+        if cfg.use_occlusion:
+            cin += 1
         film_dim = cfg.seq_hidden if cfg.use_order else 0
         self.unet = ConditioningUNet(cin, base=cfg.base, depth=cfg.depth,
                                      film_dim=film_dim, p_drop=cfg.p_drop)
@@ -111,6 +136,8 @@ class CompassNet(nn.Module):
         if self.cfg.use_tx:
             H, W = batch["sparse_rss"].shape[-2:]
             x.append(tx_heatmap(batch["tx_rowcol"], H, W, self.cfg.tx_scales))
+        if self.cfg.use_occlusion:
+            x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
         x = torch.cat(x, dim=1)
 
         film_vec = None

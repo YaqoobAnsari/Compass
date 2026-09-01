@@ -28,3 +28,18 @@ dist/
 
 # Cloned external datasets (Git-LFS, large)
 /external/
+
+# ---- Internal working documents (not part of the published artefact) ----
+# These stay on disk for the authors but are deliberately not published.
+/RESULTS.md
+/PAPER_NARRATIVE.md
+/PUBLICATION_AUDIT.md
+/ROADMAP.md
+/docs/
+/spikes/
+/results/STAGE*.md
+/_qa/
+
+# Generated presentation decks (rebuild with scripts/update_decks.sh)
+/COMPASS_results.pdf
+/COMPASS_results.pptx

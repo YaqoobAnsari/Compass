@@ -118,7 +118,12 @@ src/compass/
 scripts/         all experiments (exp_*.py) + training + deck generators
 results/ figures/  per-experiment JSON + plots
 tests/           ~70 unit tests
+METHODS.md       full architecture + training specification, read from the source
 ```
+
+> **[`METHODS.md`](METHODS.md)** documents every shape, constant and layer exactly as
+> implemented, together with a section reconciling the code against earlier descriptions
+> of the system. Start there if you want the method in detail rather than the summary.
 
 ## 📜 Citation
 

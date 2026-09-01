@@ -1,0 +1,372 @@
+{
+  "n_samples": 636,
+  "density_terciles": [
+    0.1974,
+    0.2815
+  ],
+  "per_method": {
+    "RBF(mq)": {
+      "overall_rmse": 25.903,
+      "strata": {
+        "easy": {
+          "rmse": 23.18,
+          "rmse_nlos": 27.785,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 25.917,
+          "rmse_nlos": 26.636,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 28.42,
+          "rmse_nlos": 28.94,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 5.24
+    },
+    "IDW": {
+      "overall_rmse": 28.249,
+      "strata": {
+        "easy": {
+          "rmse": 25.142,
+          "rmse_nlos": 30.015,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 28.5,
+          "rmse_nlos": 29.586,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 30.892,
+          "rmse_nlos": 31.741,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 5.75
+    },
+    "GP": {
+      "overall_rmse": 28.006,
+      "strata": {
+        "easy": {
+          "rmse": 25.165,
+          "rmse_nlos": 29.503,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 28.052,
+          "rmse_nlos": 27.828,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 30.613,
+          "rmse_nlos": 30.37,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 5.448
+    },
+    "COMPASS-full": {
+      "overall_rmse": 11.606,
+      "strata": {
+        "easy": {
+          "rmse": 10.982,
+          "rmse_nlos": 14.007,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 12.235,
+          "rmse_nlos": 13.287,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.583,
+          "rmse_nlos": 12.24,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 0.601
+    },
+    "COMPASS-wnet": {
+      "overall_rmse": 10.22,
+      "strata": {
+        "easy": {
+          "rmse": 9.867,
+          "rmse_nlos": 12.769,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 10.697,
+          "rmse_nlos": 11.713,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 10.09,
+          "rmse_nlos": 10.763,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 0.223
+    },
+    "COMPASS-wnet_occ": {
+      "overall_rmse": 8.616,
+      "strata": {
+        "easy": {
+          "rmse": 7.98,
+          "rmse_nlos": 10.603,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 9.075,
+          "rmse_nlos": 10.1,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 8.773,
+          "rmse_nlos": 9.44,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 0.793
+    },
+    "COMPASS-no_tx": {
+      "overall_rmse": 16.055,
+      "strata": {
+        "easy": {
+          "rmse": 14.623,
+          "rmse_nlos": 16.912,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 16.54,
+          "rmse_nlos": 16.415,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 16.944,
+          "rmse_nlos": 16.208,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 2.321
+    },
+    "pmnet": {
+      "overall_rmse": 14.191,
+      "strata": {
+        "easy": {
+          "rmse": 13.035,
+          "rmse_nlos": 16.316,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 14.777,
+          "rmse_nlos": 15.878,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 14.723,
+          "rmse_nlos": 15.38,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.688
+    },
+    "radiodiff": {
+      "overall_rmse": 11.458,
+      "strata": {
+        "easy": {
+          "rmse": 10.677,
+          "rmse_nlos": 13.77,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 11.899,
+          "rmse_nlos": 12.975,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.779,
+          "rmse_nlos": 12.53,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.102
+    },
+    "radiogan": {
+      "overall_rmse": 11.431,
+      "strata": {
+        "easy": {
+          "rmse": 10.579,
+          "rmse_nlos": 13.489,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 11.914,
+          "rmse_nlos": 12.894,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.776,
+          "rmse_nlos": 12.425,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.197
+    },
+    "radiomamba": {
+      "overall_rmse": 10.875,
+      "strata": {
+        "easy": {
+          "rmse": 10.07,
+          "rmse_nlos": 12.788,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 11.391,
+          "rmse_nlos": 12.3,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.142,
+          "rmse_nlos": 11.713,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.072
+    },
+    "radiotransformer": {
+      "overall_rmse": 10.937,
+      "strata": {
+        "easy": {
+          "rmse": 10.031,
+          "rmse_nlos": 12.633,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 11.577,
+          "rmse_nlos": 12.535,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.169,
+          "rmse_nlos": 11.807,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.138
+    },
+    "radiounet": {
+      "overall_rmse": 9.789,
+      "strata": {
+        "easy": {
+          "rmse": 8.882,
+          "rmse_nlos": 11.413,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 10.275,
+          "rmse_nlos": 11.198,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 10.174,
+          "rmse_nlos": 10.849,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.292
+    },
+    "rmdm": {
+      "overall_rmse": 35.217,
+      "strata": {
+        "easy": {
+          "rmse": 22.787,
+          "rmse_nlos": 27.25,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 35.04,
+          "rmse_nlos": 38.018,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 44.658,
+          "rmse_nlos": 48.051,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 21.871
+    },
+    "sparse_unet": {
+      "overall_rmse": 20.861,
+      "strata": {
+        "easy": {
+          "rmse": 19.783,
+          "rmse_nlos": 19.478,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 20.966,
+          "rmse_nlos": 19.767,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 21.814,
+          "rmse_nlos": 20.859,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 2.031
+    },
+    "uram": {
+      "overall_rmse": 11.392,
+      "strata": {
+        "easy": {
+          "rmse": 10.487,
+          "rmse_nlos": 13.196,
+          "n": 216
+        },
+        "medium": {
+          "rmse": 11.88,
+          "rmse_nlos": 12.781,
+          "n": 210
+        },
+        "hard": {
+          "rmse": 11.781,
+          "rmse_nlos": 12.363,
+          "n": 210
+        }
+      },
+      "degradation_easy_to_hard": 1.294
+    }
+  },
+  "wnet_vs_radiounet": {
+    "easy": {
+      "wnet_rmse": 9.867,
+      "radiounet_rmse": 8.882,
+      "median_diff": 0.3251781463623047,
+      "p_value": 8.21175047041259e-06
+    },
+    "medium": {
+      "wnet_rmse": 10.697,
+      "radiounet_rmse": 10.275,
+      "median_diff": 0.3002047538757324,
+      "p_value": 0.0017616208624685447
+    },
+    "hard": {
+      "wnet_rmse": 10.09,
+      "radiounet_rmse": 10.174,
+      "median_diff": -0.16861772537231445,
+      "p_value": 0.16798836081769053
+    },
+    "hardest_quartile": {
+      "wnet_rmse": 10.126,
+      "radiounet_rmse": 10.183,
+      "median_diff": -0.05377531051635742,
+      "p_value": 0.609105250075116,
+      "n": 156
+    }
+  }
+}

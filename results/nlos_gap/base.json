@@ -1,0 +1,15 @@
+{
+  "occlusion": false,
+  "n_params": 6993601,
+  "epochs": 40,
+  "best": {
+    "unobs": 11.699,
+    "los": 7.113,
+    "nlos": 12.61
+  },
+  "final": {
+    "unobs": 11.712,
+    "los": 7.179,
+    "nlos": 12.617
+  }
+}

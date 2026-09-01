@@ -24,17 +24,21 @@ def main() -> int:
     ap.add_argument("--tx-per-map", type=int, default=20)
     ap.add_argument("--epochs", type=int, default=40)
     ap.add_argument("--batch-size", type=int, default=16)
-    ap.add_argument("--out", default=str(REPO / "experiments" / "dl_baselines" / "rmdm"))
+    ap.add_argument("--arch", default="rmdm", choices=["rmdm", "radiodiff"])
+    ap.add_argument("--val-sample-every", type=int, default=8)
+    ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     splits = split_map_ids(list_map_ids(args.root))
+    out = args.out or str(REPO / "experiments" / "dl_baselines" / args.arch)
     cfg = RMDMTrainConfig(
-        root=args.root, out_dir=args.out,
+        root=args.root, out_dir=out, arch=args.arch,
+        val_sample_every=args.val_sample_every,
         train_maps=splits["train"][: args.train_maps],
         val_maps=splits["val"][: args.val_maps],
         tx_per_map=args.tx_per_map, epochs=args.epochs, batch_size=args.batch_size,
     )
-    print(f"[train-rmdm] -> {args.out}  (train={len(cfg.train_maps)} maps x {cfg.tx_per_map} tx)")
+    print(f"[train-{args.arch}] -> {out}  (train={len(cfg.train_maps)} maps x {cfg.tx_per_map} tx)")
     train_rmdm(cfg)
     return 0
 

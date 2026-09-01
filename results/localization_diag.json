@@ -1,0 +1,10 @@
+{
+  "naive": 9.28,
+  "common": 10.13,
+  "binary": 8.43,
+  "percell5": 9.27,
+  "percell10": 9.29,
+  "common_pc10": 10.31,
+  "heardset_jaccard_crossdevice": 0.299,
+  "percell_offset_std_db": 3.88
+}

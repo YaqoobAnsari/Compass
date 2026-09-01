@@ -1,0 +1,433 @@
+{
+  "per_floor": {
+    "cmuq_f1": {
+      "n_phones": 7,
+      "n_rp": 84,
+      "same_device_m": {
+        "mean": 4.31,
+        "std": 2.38,
+        "median": 4.85,
+        "n": 7
+      },
+      "naive_m": {
+        "mean": 8.19,
+        "std": 2.41,
+        "median": 9.74,
+        "n": 7
+      },
+      "meannorm_m": {
+        "mean": 9.3,
+        "std": 3.31,
+        "median": 11.97,
+        "n": 7
+      },
+      "random_m": {
+        "mean": 16.47,
+        "std": 0.27,
+        "median": 16.52,
+        "n": 7
+      },
+      "anchor_m": {
+        "1": {
+          "naive": {
+            "mean": 8.19,
+            "std": 2.42,
+            "median": 9.93,
+            "n": 7
+          },
+          "cal": {
+            "mean": 8.09,
+            "std": 2.34,
+            "median": 9.79,
+            "n": 7
+          }
+        },
+        "3": {
+          "naive": {
+            "mean": 8.22,
+            "std": 2.43,
+            "median": 9.81,
+            "n": 7
+          },
+          "cal": {
+            "mean": 8.31,
+            "std": 2.25,
+            "median": 9.78,
+            "n": 7
+          }
+        },
+        "5": {
+          "naive": {
+            "mean": 8.24,
+            "std": 2.46,
+            "median": 9.81,
+            "n": 7
+          },
+          "cal": {
+            "mean": 8.22,
+            "std": 2.21,
+            "median": 9.78,
+            "n": 7
+          }
+        },
+        "10": {
+          "naive": {
+            "mean": 8.32,
+            "std": 2.26,
+            "median": 9.56,
+            "n": 7
+          },
+          "cal": {
+            "mean": 8.39,
+            "std": 2.18,
+            "median": 9.76,
+            "n": 7
+          }
+        }
+      }
+    },
+    "cmuq_f2": {
+      "n_phones": 7,
+      "n_rp": 84,
+      "same_device_m": {
+        "mean": 3.35,
+        "std": 1.49,
+        "median": 3.38,
+        "n": 7
+      },
+      "naive_m": {
+        "mean": 11.62,
+        "std": 4.76,
+        "median": 15.42,
+        "n": 7
+      },
+      "meannorm_m": {
+        "mean": 9.14,
+        "std": 3.14,
+        "median": 9.43,
+        "n": 7
+      },
+      "random_m": {
+        "mean": 17.07,
+        "std": 0.31,
+        "median": 17.1,
+        "n": 7
+      },
+      "anchor_m": {
+        "1": {
+          "naive": {
+            "mean": 11.63,
+            "std": 4.75,
+            "median": 15.41,
+            "n": 7
+          },
+          "cal": {
+            "mean": 11.52,
+            "std": 4.8,
+            "median": 15.6,
+            "n": 7
+          }
+        },
+        "3": {
+          "naive": {
+            "mean": 11.6,
+            "std": 4.73,
+            "median": 15.4,
+            "n": 7
+          },
+          "cal": {
+            "mean": 11.5,
+            "std": 4.79,
+            "median": 15.49,
+            "n": 7
+          }
+        },
+        "5": {
+          "naive": {
+            "mean": 11.65,
+            "std": 4.77,
+            "median": 15.39,
+            "n": 7
+          },
+          "cal": {
+            "mean": 11.54,
+            "std": 4.76,
+            "median": 15.53,
+            "n": 7
+          }
+        },
+        "10": {
+          "naive": {
+            "mean": 11.54,
+            "std": 4.76,
+            "median": 15.34,
+            "n": 7
+          },
+          "cal": {
+            "mean": 11.54,
+            "std": 4.83,
+            "median": 15.44,
+            "n": 7
+          }
+        }
+      }
+    },
+    "cmuq_f3": {
+      "n_phones": 7,
+      "n_rp": 70,
+      "same_device_m": {
+        "mean": 3.44,
+        "std": 1.25,
+        "median": 3.71,
+        "n": 7
+      },
+      "naive_m": {
+        "mean": 7.57,
+        "std": 2.43,
+        "median": 9.35,
+        "n": 7
+      },
+      "meannorm_m": {
+        "mean": 10.75,
+        "std": 5.13,
+        "median": 15.09,
+        "n": 7
+      },
+      "random_m": {
+        "mean": 15.35,
+        "std": 0.13,
+        "median": 15.34,
+        "n": 7
+      },
+      "anchor_m": {
+        "1": {
+          "naive": {
+            "mean": 7.58,
+            "std": 2.41,
+            "median": 9.28,
+            "n": 7
+          },
+          "cal": {
+            "mean": 7.59,
+            "std": 2.48,
+            "median": 9.69,
+            "n": 7
+          }
+        },
+        "3": {
+          "naive": {
+            "mean": 7.6,
+            "std": 2.43,
+            "median": 9.43,
+            "n": 7
+          },
+          "cal": {
+            "mean": 7.62,
+            "std": 2.51,
+            "median": 9.71,
+            "n": 7
+          }
+        },
+        "5": {
+          "naive": {
+            "mean": 7.54,
+            "std": 2.38,
+            "median": 9.44,
+            "n": 7
+          },
+          "cal": {
+            "mean": 7.54,
+            "std": 2.41,
+            "median": 9.28,
+            "n": 7
+          }
+        },
+        "10": {
+          "naive": {
+            "mean": 7.65,
+            "std": 2.43,
+            "median": 9.44,
+            "n": 7
+          },
+          "cal": {
+            "mean": 7.66,
+            "std": 2.52,
+            "median": 9.68,
+            "n": 7
+          }
+        }
+      }
+    },
+    "ec_parking_f1": {
+      "n_phones": 6,
+      "n_rp": 34,
+      "same_device_m": {
+        "mean": 4.52,
+        "std": 1.06,
+        "median": 4.65,
+        "n": 6
+      },
+      "naive_m": {
+        "mean": 9.79,
+        "std": 0.8,
+        "median": 9.73,
+        "n": 6
+      },
+      "meannorm_m": {
+        "mean": 12.69,
+        "std": 1.35,
+        "median": 12.9,
+        "n": 6
+      },
+      "random_m": {
+        "mean": 15.17,
+        "std": 0.05,
+        "median": 15.2,
+        "n": 6
+      },
+      "anchor_m": {
+        "1": {
+          "naive": {
+            "mean": 9.54,
+            "std": 0.7,
+            "median": 9.73,
+            "n": 6
+          },
+          "cal": {
+            "mean": 9.69,
+            "std": 0.8,
+            "median": 9.74,
+            "n": 6
+          }
+        },
+        "3": {
+          "naive": {
+            "mean": 9.64,
+            "std": 0.87,
+            "median": 9.73,
+            "n": 6
+          },
+          "cal": {
+            "mean": 9.73,
+            "std": 0.99,
+            "median": 9.79,
+            "n": 6
+          }
+        },
+        "5": {
+          "naive": {
+            "mean": 9.78,
+            "std": 0.88,
+            "median": 9.73,
+            "n": 6
+          },
+          "cal": {
+            "mean": 9.8,
+            "std": 0.86,
+            "median": 9.75,
+            "n": 6
+          }
+        },
+        "10": {
+          "naive": {
+            "mean": 9.6,
+            "std": 0.54,
+            "median": 9.75,
+            "n": 6
+          },
+          "cal": {
+            "mean": 9.49,
+            "std": 0.52,
+            "median": 9.75,
+            "n": 6
+          }
+        }
+      }
+    }
+  },
+  "pooled": {
+    "same_device_m": {
+      "mean": 3.88,
+      "std": 1.72,
+      "median": 4.27,
+      "n": 27
+    },
+    "naive_m": {
+      "mean": 9.27,
+      "std": 3.4,
+      "median": 9.72,
+      "n": 27
+    },
+    "meannorm_m": {
+      "mean": 10.39,
+      "std": 3.81,
+      "median": 12.05,
+      "n": 27
+    },
+    "random_m": {
+      "mean": 16.05,
+      "std": 0.81,
+      "median": 16.03,
+      "n": 27
+    },
+    "anchor_m": {
+      "1": {
+        "naive": {
+          "mean": 9.22,
+          "std": 3.39,
+          "median": 9.75,
+          "n": 27
+        },
+        "cal": {
+          "mean": 9.2,
+          "std": 3.4,
+          "median": 9.71,
+          "n": 27
+        }
+      },
+      "3": {
+        "naive": {
+          "mean": 9.25,
+          "std": 3.39,
+          "median": 9.76,
+          "n": 27
+        },
+        "cal": {
+          "mean": 9.28,
+          "std": 3.38,
+          "median": 9.78,
+          "n": 27
+        }
+      },
+      "5": {
+        "naive": {
+          "mean": 9.29,
+          "std": 3.42,
+          "median": 9.62,
+          "n": 27
+        },
+        "cal": {
+          "mean": 9.25,
+          "std": 3.36,
+          "median": 9.7,
+          "n": 27
+        }
+      },
+      "10": {
+        "naive": {
+          "mean": 9.27,
+          "std": 3.33,
+          "median": 9.69,
+          "n": 27
+        },
+        "cal": {
+          "mean": 9.26,
+          "std": 3.35,
+          "median": 9.76,
+          "n": 27
+        }
+      }
+    }
+  },
+  "device_penalty_m": 5.39
+}

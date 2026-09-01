@@ -1,0 +1,70 @@
+{
+  "n_cells": 67,
+  "buffer_m": 1.0,
+  "epochs": 0,
+  "overall": {
+    "RBF (base)": {
+      "mean": 5.494,
+      "lo": 5.247,
+      "hi": 5.744,
+      "n": 2061
+    },
+    "CNP-deep (geometry)": {
+      "mean": 9.056,
+      "lo": 8.69,
+      "hi": 9.421,
+      "n": 2061
+    },
+    "CNP-deep (no geometry)": {
+      "mean": 9.055,
+      "lo": 8.69,
+      "hi": 9.421,
+      "n": 2061
+    },
+    "residual-GBT": {
+      "mean": 5.139,
+      "lo": 4.925,
+      "hi": 5.366,
+      "n": 2061
+    },
+    "residual-GBT-nogeom": {
+      "mean": 5.214,
+      "lo": 5.008,
+      "hi": 5.432,
+      "n": 2061
+    }
+  },
+  "wilcoxon_vs_rbf": {
+    "CNP-deep (geometry)": {
+      "p_value": 2.1734026790298428e-09,
+      "median_diff": 1.6444141094740474,
+      "n": 67
+    },
+    "CNP-deep (no geometry)": {
+      "p_value": 2.2583828812060023e-09,
+      "median_diff": 1.6446172491175726,
+      "n": 67
+    },
+    "residual-GBT": {
+      "p_value": 0.00020684409745933856,
+      "median_diff": -0.23593605137489382,
+      "n": 67
+    },
+    "residual-GBT-nogeom": {
+      "p_value": 0.014842809950464473,
+      "median_diff": -0.10354334962897749,
+      "n": 67
+    }
+  },
+  "delta_pct_vs_rbf": {
+    "RBF (base)": 0.0,
+    "CNP-deep (geometry)": 64.83,
+    "CNP-deep (no geometry)": 64.82,
+    "residual-GBT": -6.46,
+    "residual-GBT-nogeom": -5.1
+  },
+  "mean_uncertainty_db": {
+    "CNP-deep (geometry)": 0.786,
+    "CNP-deep (no geometry)": 0.786
+  }
+}

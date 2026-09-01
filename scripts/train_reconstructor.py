@@ -41,6 +41,8 @@ def main() -> int:
     ap.add_argument("--tx-per-map", type=int, default=20)
     ap.add_argument("--epochs", type=int, default=40)
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--use-occlusion", action="store_true",
+                    help="add the explicit ray-occlusion / diffraction geometry channel")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -55,6 +57,7 @@ def main() -> int:
         epochs=args.epochs,
         batch_size=args.batch_size,
         arch=args.arch,
+        use_occlusion=args.use_occlusion,
         **ABLATIONS[args.name],
     )
     print(f"[train] variant={args.name} -> {out}  (train={len(cfg.train_maps)} maps x {cfg.tx_per_map} tx)")

@@ -38,6 +38,7 @@ class TrainConfig:
     use_tx: bool = True
     use_order: bool = True
     use_device: bool = True
+    use_occlusion: bool = False
     use_rcl: bool = True
     order_shuffle: bool = False
     correlated_noise: bool = True
@@ -93,7 +94,7 @@ def train(cfg: TrainConfig) -> dict:
 
     mcfg = CompassConfig(use_building=cfg.use_building, use_tx=cfg.use_tx,
                          use_order=cfg.use_order, use_device=cfg.use_device,
-                         base=cfg.base, depth=cfg.depth)
+                         use_occlusion=cfg.use_occlusion, base=cfg.base, depth=cfg.depth)
     model = (CompassWNet(mcfg) if cfg.arch == "compass_wnet" else CompassNet(mcfg)).to(device)
     n_params = sum(p.numel() for p in model.parameters())
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=1e-2)

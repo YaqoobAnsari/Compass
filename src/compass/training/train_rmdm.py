@@ -18,7 +18,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from ..models.baselines.rmdm import RMDM
+from ..models.baselines import BASELINES
 from .data import CompassTrainDataset
 
 
@@ -37,6 +37,7 @@ class RMDMTrainConfig:
     num_workers: int = 8
     seed: int = 0
     val_sample_every: int = 8
+    arch: str = "rmdm"          # key in BASELINES (rmdm | radiodiff)
     kwargs: Dict = field(default_factory=dict)
 
 
@@ -74,12 +75,12 @@ def train_rmdm(cfg: RMDMTrainConfig) -> dict:
     va = DataLoader(va_ds, batch_size=cfg.batch_size, shuffle=False, num_workers=cfg.num_workers,
                     persistent_workers=cfg.num_workers > 0)
 
-    model = RMDM(**cfg.kwargs).to(device)
+    model = BASELINES[cfg.arch](**cfg.kwargs).to(device)
     n_params = sum(p.numel() for p in model.parameters())
     opt = torch.optim.AdamW(model.parameters(), lr=cfg.lr, weight_decay=1e-2)
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=cfg.epochs)
 
-    history = {"config": asdict(cfg), "arch": "rmdm", "n_params": n_params, "epochs": []}
+    history = {"config": asdict(cfg), "arch": cfg.arch, "n_params": n_params, "epochs": []}
     best = float("inf")
     t0 = time.time()
     for ep in range(cfg.epochs):
@@ -103,14 +104,14 @@ def train_rmdm(cfg: RMDMTrainConfig) -> dict:
         history["epochs"].append(rec)
         vstr = f"{val_rmse:.2f}" if val_rmse is not None else "  -- "
         print(f"  ep {ep:3d} train {rec['train_loss']:.4f} val_rmse {vstr} dB ({rec['elapsed_s']:.0f}s)")
-        torch.save({"model": model.state_dict(), "arch": "rmdm", "kwargs": cfg.kwargs, "epoch": ep},
+        torch.save({"model": model.state_dict(), "arch": cfg.arch, "kwargs": cfg.kwargs, "epoch": ep},
                    out / "last.ckpt")
         if val_rmse is not None and val_rmse < best:
             best = val_rmse
-            torch.save({"model": model.state_dict(), "arch": "rmdm", "kwargs": cfg.kwargs,
+            torch.save({"model": model.state_dict(), "arch": cfg.arch, "kwargs": cfg.kwargs,
                         "epoch": ep, "val_rmse": val_rmse}, out / "best.ckpt")
         (out / "history.json").write_text(json.dumps(history, indent=2))
     history["best_val_rmse_free_unobs_db"] = best
     (out / "history.json").write_text(json.dumps(history, indent=2))
-    print(f"[train-rmdm] done. best val free-unobs RMSE = {best:.2f} dB | {n_params/1e6:.2f}M params")
+    print(f"[train-{cfg.arch}] done. best val free-unobs RMSE = {best:.2f} dB | {n_params/1e6:.2f}M params")
     return history

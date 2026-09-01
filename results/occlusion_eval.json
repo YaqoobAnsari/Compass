@@ -1,0 +1,16 @@
+{
+  "occlusion": {
+    "rmse_free_unobs": 8.684,
+    "ssim_free": 0.84,
+    "rmse_free": 8.677,
+    "rmse_nlos": 9.785,
+    "rmse_los": 3.975
+  },
+  "baseline": {
+    "rmse_free_unobs": 9.973,
+    "ssim_free": 0.826,
+    "rmse_free": 9.96,
+    "rmse_nlos": 11.181,
+    "rmse_los": 5.162
+  }
+}

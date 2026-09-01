@@ -1,0 +1,83 @@
+{
+  "n_cells": 67,
+  "sites_floors": {
+    "cmuq": [
+      1,
+      2,
+      3
+    ],
+    "ec_parking": [
+      1,
+      2
+    ]
+  },
+  "min_rp": 8,
+  "buffer_m": 1.0,
+  "overall": {
+    "RBF (base)": {
+      "mean": 5.494,
+      "lo": 5.247,
+      "hi": 5.744,
+      "n": 2061
+    },
+    "residual-GBT": {
+      "mean": 5.139,
+      "lo": 4.925,
+      "hi": 5.366,
+      "n": 2061
+    },
+    "residual-GBT-nogeom": {
+      "mean": 5.214,
+      "lo": 5.008,
+      "hi": 5.432,
+      "n": 2061
+    },
+    "residual-Ridge": {
+      "mean": 5.405,
+      "lo": 5.16,
+      "hi": 5.659,
+      "n": 2061
+    }
+  },
+  "by_site": {
+    "RBF (base)": {
+      "cmuq": 5.611,
+      "ec_parking": 5.048
+    },
+    "residual-GBT": {
+      "cmuq": 5.213,
+      "ec_parking": 4.864
+    },
+    "residual-GBT-nogeom": {
+      "cmuq": 5.273,
+      "ec_parking": 4.997
+    },
+    "residual-Ridge": {
+      "cmuq": 5.488,
+      "ec_parking": 5.092
+    }
+  },
+  "wilcoxon_vs_rbf": {
+    "residual-GBT": {
+      "p_value": 0.00020684409745933856,
+      "median_diff": -0.23593631840464635,
+      "n": 67
+    },
+    "residual-GBT-nogeom": {
+      "p_value": 0.014842809950464473,
+      "median_diff": -0.10354394206522333,
+      "n": 67
+    },
+    "residual-Ridge": {
+      "p_value": 0.1438192949207848,
+      "median_diff": -0.05945719489870527,
+      "n": 67
+    }
+  },
+  "delta_pct_vs_rbf": {
+    "RBF (base)": 0.0,
+    "residual-GBT": -6.46,
+    "residual-GBT-nogeom": -5.1,
+    "residual-Ridge": -1.62
+  }
+}

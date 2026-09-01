@@ -16,7 +16,7 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from .compass_net import CompassConfig, DeviceHead, SequenceEncoder, tx_heatmap
+from .compass_net import CompassConfig, DeviceHead, SequenceEncoder, occlusion_field, tx_heatmap
 from .unet import ConditioningUNet
 
 
@@ -29,6 +29,8 @@ class CompassWNet(nn.Module):
             cin += 1
         if cfg.use_tx:
             cin += cfg.tx_scales
+        if cfg.use_occlusion:
+            cin += 1
         film_dim = cfg.seq_hidden if cfg.use_order else 0
         # base scaled down so two UNets ~ match the single-UNet capacity budget
         # (multiple of 8 for the UNet's GroupNorm)
@@ -48,6 +50,8 @@ class CompassWNet(nn.Module):
         if self.cfg.use_tx:
             H, W = batch["sparse_rss"].shape[-2:]
             x.append(tx_heatmap(batch["tx_rowcol"], H, W, self.cfg.tx_scales))
+        if self.cfg.use_occlusion:
+            x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
         return torch.cat(x, dim=1)
 
     def forward(self, batch: dict) -> torch.Tensor:

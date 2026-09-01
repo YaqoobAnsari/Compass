@@ -1,0 +1,7 @@
+{
+  "aug_mean_m": 6.99,
+  "noaug_mean_m": 7.54,
+  "delta_m": 0.55,
+  "wilcoxon_p": 0.0012526363134384155,
+  "n_phones": 27
+}

@@ -1,0 +1,143 @@
+{
+  "per_floor": {
+    "cmuq_f1": {
+      "naive": 8.18,
+      "meannorm": 9.32,
+      "binary": 9.23,
+      "rank": 8.89,
+      "wjaccard": 9.21,
+      "hybrid": 8.96,
+      "sensmatch": 15.61,
+      "ceiling": 3.14,
+      "learned": 7.0
+    },
+    "cmuq_f2": {
+      "naive": 11.63,
+      "meannorm": 9.15,
+      "binary": 7.11,
+      "rank": 7.18,
+      "wjaccard": 7.47,
+      "hybrid": 7.12,
+      "sensmatch": 16.69,
+      "ceiling": 2.55,
+      "learned": 6.41
+    },
+    "cmuq_f3": {
+      "naive": 7.6,
+      "meannorm": 10.76,
+      "binary": 6.66,
+      "rank": 7.97,
+      "wjaccard": 6.65,
+      "hybrid": 6.57,
+      "sensmatch": 8.89,
+      "ceiling": 2.78,
+      "learned": 6.71
+    },
+    "ec_parking_f1": {
+      "naive": 9.65,
+      "meannorm": 12.69,
+      "binary": 11.02,
+      "rank": 10.46,
+      "wjaccard": 11.33,
+      "hybrid": 10.43,
+      "sensmatch": 13.82,
+      "ceiling": 3.09,
+      "learned": 7.44
+    }
+  },
+  "pooled": {
+    "naive": {
+      "mean": 9.25,
+      "median": 9.71,
+      "lo": 7.98,
+      "hi": 10.58,
+      "n_phones": 27
+    },
+    "meannorm": {
+      "mean": 10.4,
+      "median": 12.05,
+      "lo": 8.88,
+      "hi": 11.81,
+      "n_phones": 27
+    },
+    "binary": {
+      "mean": 8.41,
+      "median": 8.74,
+      "lo": 7.28,
+      "hi": 9.52,
+      "n_phones": 27
+    },
+    "rank": {
+      "mean": 8.56,
+      "median": 8.71,
+      "lo": 7.28,
+      "hi": 9.78,
+      "n_phones": 27
+    },
+    "wjaccard": {
+      "mean": 8.56,
+      "median": 8.74,
+      "lo": 7.39,
+      "hi": 9.71,
+      "n_phones": 27
+    },
+    "hybrid": {
+      "mean": 8.19,
+      "median": 8.74,
+      "lo": 6.96,
+      "hi": 9.4,
+      "n_phones": 27
+    },
+    "sensmatch": {
+      "mean": 13.75,
+      "median": 12.89,
+      "lo": 11.38,
+      "hi": 16.33,
+      "n_phones": 27
+    },
+    "ceiling": {
+      "mean": 2.88,
+      "median": 3.06,
+      "lo": 2.46,
+      "hi": 3.32,
+      "n_phones": 27
+    },
+    "learned": {
+      "mean": 6.87,
+      "median": 7.69,
+      "lo": 6.24,
+      "hi": 7.48,
+      "n_phones": 27
+    }
+  },
+  "wilcoxon": {
+    "learned_vs_naive": {
+      "p_value": 6.407499313354492e-07,
+      "median_diff": -1.7395854822780485,
+      "n": 27
+    },
+    "learned_vs_binary": {
+      "p_value": 0.00042723119258880615,
+      "median_diff": -1.0210802738990203,
+      "n": 27
+    },
+    "learned_vs_rank": {
+      "p_value": 0.00020888447761535645,
+      "median_diff": -1.391852269728414,
+      "n": 27
+    },
+    "learned_vs_meannorm": {
+      "p_value": 1.3113021850585938e-06,
+      "median_diff": -3.7929457844839956,
+      "n": 27
+    },
+    "learned_vs_hybrid": {
+      "p_value": 0.0029667913913726807,
+      "median_diff": -1.2198584737996292,
+      "n": 27
+    }
+  },
+  "n_phones_total": 27,
+  "best_method": "learned",
+  "gap_closed_pct": 37.4
+}
