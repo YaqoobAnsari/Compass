@@ -1,0 +1,405 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage{booktabs,array,longtable}
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[colorlinks,allcolors=blue!60!black]{hyperref}
+\usepackage{parskip}
+\usepackage{amssymb}
+\definecolor{hd}{RGB}{20,50,90}
+\titleformat{\section}{\Large\bfseries\color{hd}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\large\bfseries\color{hd}}{\thesubsection}{0.6em}{}
+\newcommand{\yes}{\textcolor{green!50!black}{\textbf{have}}}
+\newcommand{\no}{\textcolor{red!70!black}{\textbf{missing}}}
+\newcommand{\parti}{\textcolor{orange!80!black}{\textbf{partial}}}
+\setlist{itemsep=2pt,topsep=3pt,parsep=0pt}
+
+\title{\vspace{-1.5cm}\textbf{COMPASS at CVPR}\\[2mm]
+\large What the results actually say, what the dataset must become,\\and what to collect between now and 16 November 2026}
+\author{Planning document}
+\date{8 September 2026}
+
+\begin{document}
+\maketitle
+\vspace{-6mm}
+\hrule
+\vspace{4mm}
+
+\section{Correction: we are stronger than the README says}
+
+The repository README reports COMPASS-WNet at $9.97$~dB against RadioUNet at $10.00$~dB
+over 120 samples and calls it a tie. That table is stale. The current
+\texttt{results/dl\_baselines.json}, over 320 samples with bootstrap intervals, says
+something materially different.
+
+\begin{center}
+\small
+\begin{tabular}{lrrl}
+\toprule
+Method & Free-unobs RMSE (dB) & SSIM & Uncertainty corr. \\
+\midrule
+\rowcolor{green!8}\textbf{COMPASS-WNet + occlusion} & \textbf{8.65} \small[8.42,\,8.86] & \textbf{0.841} & 0.553 \\
+RadioUNet & 9.93 \small[9.68,\,10.18] & 0.816 & none \\
+COMPASS-WNet (no occlusion) & 10.11 \small[9.82,\,10.42] & 0.823 & 0.530 \\
+RadioMamba & 10.92 & 0.795 & 0.486 \\
+RadioTransformer & 10.97 & 0.791 & 0.454 \\
+URAM & 11.34 & 0.800 & 0.436 \\
+RadioDiff & 11.40 & 0.802 & none \\
+RadioGAN & 11.42 & 0.788 & none \\
+PMNet & 14.12 & 0.714 & none \\
+SparseUNet (no geometry) & 21.05 & 0.656 & $-0.022$ \\
+RBF / Ordinary Kriging / IDW / GP & 25.6 to 28.1 & 0.67 to 0.72 & 0.34 to 0.38 \\
+RMDM & 35.98 & 0.715 & none \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Three things follow, and they change my earlier advice.
+
+\textbf{You beat the field outright.} $8.65$ against RadioUNet's $9.93$ is a $12.9\%$
+reduction, and the $95\%$ intervals $[8.42, 8.86]$ and $[9.68, 10.18]$ do not overlap.
+This is not a tie. Against the best classical method it is a factor of three. My earlier
+concern that CVPR rewards clear wins and you only had a tie is void.
+
+\textbf{The win is attributable to one idea.} COMPASS-WNet scores $10.11$ without the
+occlusion field and $8.65$ with it. The single geometric channel is worth $1.46$~dB,
+which is larger than the entire gap to the next best method. That is the cleanest
+possible ablation story: one physically motivated input, one interpretable mechanism,
+one decisive number.
+
+\textbf{You own uncertainty.} Every competitive baseline reports none. Among those that
+do, yours correlates best with actual error at $0.553$.
+
+\section{What is still missing for CVPR}
+
+The synthetic story is now strong enough. Two gaps remain, and only one of them is
+serious.
+
+\textbf{Architectural novelty is modest, and that is survivable.} A reviewer will see a
+cascaded U-Net with extra input channels. The defence is that the contribution is not
+the backbone but the diagnostic and the channel: unrelated architectures plateau at the
+\emph{same} non-line-of-sight error, which identifies a missing input rather than
+insufficient capacity, and the occlusion field supplies exactly the line integral a
+convolution cannot form. Framed that way it reads as insight rather than engineering.
+Many accepted CVPR papers are one good idea attached to a standard backbone.
+
+\textbf{The real-data result is the actual problem.} On UniCellular the learned
+reconstructor reaches $6.30$~dB after fine-tuning while classical RBF reaches
+$5.51$~dB, and \texttt{sim2real\_finetune.json} records
+\texttt{finetuned\_beats\_classical: false}. A residual model on top of classical does
+edge ahead at $5.14$ against $5.49$, but the intervals overlap. As it stands, the paper
+must either omit real data, which wastes its best differentiator, or report that
+interpolation wins, which a reviewer reads as a failed method.
+
+\subsection{Why the real-data result is a data problem, not a method problem}
+
+This is the key diagnosis. Real evaluation currently uses held-out reference points from
+54 to 67 usable cells, roughly 2{,}000 evaluation points. There is no dense ground truth
+anywhere in the corpus, so you cannot measure reconstruction error over a field. You can
+only measure error at sparse survey points that were themselves collected the same way
+as the training points. Under that protocol an interpolator is close to optimal by
+construction, because the metric only ever asks it to interpolate between nearby samples
+of the same process. The learned model's advantages, which are extrapolation into
+unmeasured regions and geometry-aware behaviour behind walls, are precisely the things
+the protocol cannot see.
+
+Fixing the protocol, not the model, is what turns this section from a liability into the
+paper's headline.
+
+\section{The proposed headline and storyline}
+
+\subsection{Headline}
+
+\begin{quote}
+\textbf{Simulation says radio-map reconstruction is solved. On real measurements with
+dense ground truth, every method including ours degrades sharply, and the ranking
+changes. We provide the benchmark that shows it and the geometric prior that narrows the
+gap.}
+\end{quote}
+
+This is a shape CVPR recognises and rewards, the ``in the wild'' paper. It converts your
+current weakness into the contribution. You are no longer a method that loses to
+interpolation on real data. You are the group that built the first real benchmark on
+which the question can be asked honestly, and you happen to hold the best method on both
+halves.
+
+\subsection{Narrative arc}
+
+\begin{enumerate}
+\item Radio-map reconstruction is a sparse-to-dense inverse problem whose field is
+governed by geometry that is directly observable. Vision should care.
+\item On the standard synthetic benchmark the problem looks close to solved, and we push
+it further with a ray-occlusion field, reaching $8.65$~dB against $9.93$ for the best
+prior method.
+\item We then show the benchmark is measuring the wrong thing. We introduce a real
+multi-site, multi-floor indoor benchmark with dense ground truth, trajectories, inertial
+signals and surveyed transmitters.
+\item On it, learned methods that dominate simulation fall behind classical
+interpolation, and the ordering of published methods does not survive transfer. We
+characterise the gap along geometry, device heterogeneity and acquisition order.
+\item The geometric prior transfers where the rest does not, and calibrated uncertainty
+turns into a usable acquisition rule.
+\end{enumerate}
+
+\subsection{Candidate titles}
+
+\begin{itemize}
+\item \textbf{Walls Cast Soft Shadows: Geometry-Conditioned Radio Field Reconstruction
+in Simulation and Reality}
+\item \textbf{The Sim-to-Real Gap in Radio Map Reconstruction}
+\item \textbf{Penumbra: Occlusion-Aware Radio Field Reconstruction with a Real-World
+Benchmark}
+\end{itemize}
+
+On naming, \textsc{compass} is heavily overloaded in machine learning.
+\textbf{Penumbra} encodes the finding that walls attenuate rather than block, it is
+native vision and graphics vocabulary, and it is distinctive. The draft defines
+\texttt{\textbackslash methodname} once so the change costs one line.
+
+\section{The dataset contribution}
+
+\subsection{Hard constraint}
+
+CVPR reviewer guidelines are explicit. A dataset may be \emph{used} while private, but it
+may only be \emph{claimed as a contribution} if there is a reasonable expectation of
+public release on publication. If the data cannot be released, drop the dataset claim and
+keep the method claim. This decision gates everything below and should be settled first,
+because it involves the building owners at Ezdan and the CMUQ estates office, not us.
+
+\subsection{What already exists}
+
+\begin{center}
+\small
+\begin{tabular}{lrrrrr}
+\toprule
+Site & Floors & Phones & Transmitters & Stationary rows & Mobile rows \\
+\midrule
+CMUQ & 3 & 7 & 57 & 2{,}174{,}421 & 729{,}207 \\
+EC Parking & 3 & 6 & 41 & 628{,}732 & 328{,}787 \\
+Ezdan Tower 1 & 30 & 6 & 64 & 531{,}863 & 210{,}248 \\
+Ezdan Tower 4 & 25 & 6 & 42 & 395{,}103 & 66{,}369 \\
+\midrule
+\textbf{Total} & \textbf{61} & 6 to 7 & \textbf{204} & \textbf{3{,}730{,}119} & \textbf{1{,}334{,}611} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+This is already a serious corpus: four buildings, sixty-one floors including two
+high-rises, two hundred transmitters, five million rows, seven devices. Scale is not the
+problem. Per-sample schema is
+\texttt{phoneName}, \texttt{rpNumber}, \texttt{scanNumber}, \texttt{timeStamp},
+\texttt{transmitter\_id}, \texttt{transmitter\_rss}, \texttt{coordinates},
+\texttt{floor}, plus floor plans.
+
+\subsection{What is missing, in priority order}
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{>{\raggedright}p{4.3cm}cp{8.6cm}}
+\toprule
+Quantity & Status & Why it matters and what it unlocks \\
+\midrule
+Dense ground-truth field & \no &
+\textbf{The single blocking gap.} Without a densely sampled reference on at least one
+floor you cannot measure reconstruction error, only interpolation error at survey
+points. This is why classical wins today. Fixing it is what makes the real benchmark
+real. \\
+Surveyed transmitter positions & \parti &
+Only $18\%$ of cells currently yield a reliable point source. Ground-truth antenna and
+booster locations for a subset let you separate ``the model cannot localise'' from ``the
+model cannot propagate'', and make the occlusion field computable on real data. \\
+Continuous trajectory ground truth & \parti &
+\texttt{rpNumber} implies discrete survey points. Mobile rows exist with lag-1
+autocorrelation $0.77$ to $0.97$, but without accurate continuous position the order and
+active-sensing claims rest on weak positioning. \\
+Inertial signals (IMU) & \no &
+Accelerometer, gyroscope, magnetometer and barometer. Turns this into a multimodal
+sensing dataset, supports dead reckoning between fixes, makes the order argument
+mechanistic rather than statistical, and is what a vision audience recognises as a
+modern dataset. \\
+Device calibration references & \parti &
+Offsets are estimable at $0.78$ to $0.89$ correlation, but a controlled
+same-place-same-time capture across all seven phones gives a ground-truth offset per
+device rather than an inferred one. \\
+Radio metadata & \parti &
+Band, frequency, PCI, cell type, indoor or outdoor. Needed to explain why boosters share
+identifiers and to justify the transmitter-agnostic design. \\
+Temporal repeats & \no &
+The same route walked on different days, times and crowd levels. Quantifies drift, and
+gives a generalisation axis reviewers will ask about. \\
+Orientation and body effects & \no &
+Phone held, pocketed, bag. Body attenuation is several dB and is an obvious confound. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Collection plan}
+
+Resources assumed: six to seven phones, a team of people, access to CMUQ and the existing
+sites, roughly ten weeks to 16 November 2026.
+
+\subsection{Priority 1: the dense ground-truth floor (non-negotiable)}
+
+Pick \textbf{one} floor. CMUQ floor 2 is the natural choice because it already has the
+most transmitters, the widest device spread at $13.5$~dB and six shared phones.
+
+\begin{itemize}
+\item Survey on a regular grid, target $1$ to $2$~m spacing across all accessible free
+space. For a floor of roughly $80\times60$~m at $2$~m spacing this is on the order of
+1{,}200 points.
+\item At each point, dwell for a fixed window, for example 30 seconds, and record every
+visible cell on every phone simultaneously.
+\item Mark the point physically or use a total station, laser rangefinder or a
+tape-and-chalk grid. Positional error should be well under the grid pitch.
+\item This yields, for the first time, a field you can hold out in blocks rather than at
+scattered points. \textbf{Evaluate by masking contiguous regions}, which is what
+finally lets extrapolation and geometry show their value.
+\end{itemize}
+
+Estimated effort: two people, three to four days per floor at 2~m spacing, plus a day of
+setup. This is the highest-value use of the available time by a wide margin.
+
+\subsection{Priority 2: trajectories with usable position}
+
+\begin{itemize}
+\item Walk repeatable routes with start, end and periodic waypoints marked on the floor
+plan, and press a hardware or on-screen marker at each waypoint so position can be
+interpolated between known fixes rather than guessed.
+\item Log continuously at the highest scan rate the handset allows, and record the
+scan-to-timestamp mapping.
+\item Cover at least: a corridor loop, a route crossing several walls, a route into a
+deep non-line-of-sight region, and an open-space route as a control.
+\item Repeat each route with at least three phones carried together, and at three
+distinct times of day.
+\end{itemize}
+
+\subsection{Priority 3: inertial and context streams}
+
+Record alongside every mobile session, at the stated minimum rates:
+
+\begin{itemize}
+\item Accelerometer, gyroscope, magnetometer at $\ge 50$~Hz.
+\item Barometer at $\ge 1$~Hz for floor transitions.
+\item Step counter and device orientation quaternion if exposed.
+\item Screen state, and whether the phone was in hand, pocket or bag, logged per session.
+\item A monotonic clock alongside wall-clock time, so drift between devices is
+recoverable.
+\end{itemize}
+
+\subsection{Priority 4: transmitter survey}
+
+\begin{itemize}
+\item Physically locate and record the position of every accessible antenna, femtocell
+and booster on the dense floor, with floor and mounting height.
+\item Record the mapping from physical unit to the cell identifiers it broadcasts, which
+is what resolves the shared-identifier problem.
+\item Even twenty surveyed units on one floor changes the transmitter-agnostic claim from
+an assumption into a measured statement.
+\end{itemize}
+
+\subsection{Priority 5: device calibration capture}
+
+\begin{itemize}
+\item All seven phones, same location, same orientation, same two-minute window,
+repeated at five positions spanning strong to weak signal.
+\item Repeat at the start and end of the campaign to capture drift.
+\item Gives a ground-truth per-device offset curve as a function of signal level, rather
+than a single scalar.
+\end{itemize}
+
+\subsection{Clock synchronisation}
+
+Cross-device order and device comparison both depend on it. Synchronise all phones to a
+single NTP source at the start of each session, log both wall-clock and monotonic time,
+and begin every session with a shared physical event, for example all phones held
+together for ten seconds, so residual offset is recoverable in post-processing.
+
+\subsection{Privacy and release}
+
+Because release gates the dataset claim, handle it at collection time rather than after.
+\begin{itemize}
+\item Collect with team members as the only participants, so there are no third-party
+subjects and no consent chain to reconstruct later.
+\item Record no personally identifying information. Replace \texttt{phoneName} with a
+stable pseudonym at capture.
+\item Obtain written permission from CMUQ and Ezdan for floor plans and cell identifiers
+to be published. Floor plans are the item most likely to be refused, so ask early and be
+ready to release a simplified occupancy raster instead of an architectural drawing.
+\item Decide whether transmitter positions can be published. If not, release the derived
+occlusion field rather than the coordinates.
+\end{itemize}
+
+\section{What the real-data headline becomes}
+
+With the dense floor in hand, the section rewrites itself along these lines.
+
+\begin{itemize}
+\item \textbf{The ranking does not transfer.} Methods are re-evaluated on a real dense
+field with block-held-out regions. Report the reordering explicitly. This is the
+scientific payload and is publishable regardless of who wins.
+\item \textbf{The gap is quantified.} Same architectures, same protocol, simulation
+against reality, with the degradation attributed across geometry, device heterogeneity
+and sampling structure.
+\item \textbf{Geometry transfers.} The occlusion field is computed from a floor plan and
+a surveyed transmitter, so it is available on real data. If the $1.46$~dB it is worth in
+simulation survives even partially, that is the paper's strongest single sentence.
+\item \textbf{Uncertainty becomes actionable.} With a dense field you can finally show
+that guided acquisition reaches a target error with fewer measurements than
+space-filling, on real data, which is the practical claim that makes the work matter.
+\end{itemize}
+
+\section{Ten weeks to the deadline}
+
+\begin{center}
+\small
+\begin{tabular}{llp{9.2cm}}
+\toprule
+Weeks & Focus & Detail \\
+\midrule
+1 & Decide and unblock & Settle the release question with CMUQ and Ezdan. Choose the
+dense floor. Build and test the logging app with IMU and marker support. Pilot on one
+corridor and verify every stream lands. \\
+2 to 4 & Collect & Dense grid survey. Trajectory routes with repeats. Transmitter survey.
+Device calibration captures. \\
+4 to 6 & Process and release-prep & Position interpolation, clock alignment, occupancy
+rasters, per-device offsets, anonymisation, dataset card and licence. \\
+5 to 8 & Experiments & Re-run every baseline under the block-held-out protocol. Sim-to-real
+transfer matrix. Occlusion ablation on real data. Guided acquisition on the dense field. \\
+8 to 10 & Write and buffer & Full draft by week 9. Keep a week of slack, since collection
+always overruns. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Risks, and the honest fallback}
+
+\begin{itemize}
+\item \textbf{Release refused.} Most likely failure. Fallback is to drop the dataset
+claim, keep the real-data evaluation as supporting analysis, and submit on the method
+plus the sim-to-real characterisation. Still a viable paper.
+\item \textbf{Dense survey does not finish.} Reduce scope to a partial floor rather than
+coarsening the grid. A small dense region is scientifically useful, a large sparse one is
+not, because sparse is exactly the regime that already fails to discriminate.
+\item \textbf{Geometry does not transfer.} Genuinely possible, and it must be reported if
+so. It remains publishable as a negative transfer result on a new benchmark, which is
+why the benchmark should be the primary claim and the method the secondary one.
+\item \textbf{Ten weeks is tight.} If the collection slips past week 6, target a
+sensing venue where the contribution is legible without the vision framing, and use the
+CVPR draft as the base.
+\end{itemize}
+
+\section{Decisions needed from you}
+
+\begin{enumerate}
+\item Can the data be released publicly? Everything else follows from this.
+\item Which floor becomes the dense reference, and who can commit the days to survey it?
+\item Do we rename to Penumbra, or keep COMPASS for continuity with the repository and
+prior decks?
+\item Is the dataset the primary contribution with the method second, or the reverse? I
+recommend the former, because it is the more defensible claim and it makes the real-data
+result an asset rather than a liability.
+\end{enumerate}
+
+\end{document}
