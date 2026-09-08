@@ -1,0 +1,84 @@
+%% 1_intro
+\section{Introduction}
+\label{sec:intro}
+
+Recovering a dense physical field from sparse, irregularly placed samples is a
+recurring inverse problem in vision. Radio maps are an instance of it that is
+unusually well posed for visual reasoning, because the field is shaped by geometry
+that is directly observable. A transmitter illuminates a scene, walls absorb and
+diffract the wavefront, and the received signal strength at a pixel is largely
+determined by what lies along the straight path back to the source. The structure is
+the same one that governs shading and shadowing, and it is visible in a floor plan.
+
+Yet the methods that dominate this problem are evaluated in a regime that does not
+occur. Learned reconstructors such as RadioUNet~\cite{levie2021radiounet} and
+PMNet~\cite{lee2024pmnet} are trained and benchmarked on ray-traced simulations in
+which samples are drawn uniformly at random and the transmitter location is supplied
+as an input. Real measurements violate both assumptions. They are crowdsensed, which
+means they arrive along the paths people actually walk and leave whole regions with no
+observation at all, and the transmitter is frequently unlocatable because indoor
+boosters share cell identifiers. Reported accuracy under the benchmark regime therefore
+overstates what these models deliver once deployed.
+
+We study the deployed regime directly, on real indoor cellular measurements alongside
+the standard synthetic benchmark, and we find that the gap is not a matter of degree.
+Three properties of real crowdsensed data are absent from the simulation setting and
+each one changes what a model should condition on.
+
+\noindent\textbf{Walls attenuate rather than block.} On real data, pairs of
+measurements separated by a wall differ by an additional $2$ to $3$~dB at matched
+distance. The wall does not terminate the signal, it casts a soft shadow whose depth
+grows with the amount of material traversed. Convolutional backbones cannot construct
+this quantity: it is a long, thin integral along a line joining two points, whereas a
+receptive field aggregates over a neighbourhood. We show that unrelated architectures
+plateau at the \emph{same} non-line-of-sight error, which is the signature of a missing
+input rather than of insufficient capacity, and we supply the missing input as a
+differentiable ray-occlusion field.
+
+\noindent\textbf{Measurement order carries signal.} Crowdsensed samples are not a set.
+They are a walk, and consecutive readings are correlated at $0.984$. A model that
+consumes the same measurements as an ordered sequence reaches $1.79$~dB against
+$9.79$~dB for an order-blind model on the same data ($p = 4.7\!\times\!10^{-23}$), and
+the effect transfers across sites.
+
+\noindent\textbf{The sensor is not calibrated.} Handsets disagree by a median of
+$4.1$~dB and by as much as $27.8$~dB on the same signal. Treating measurements as
+absolute, as every simulation-trained model does, injects an error larger than the
+quantity being predicted.
+
+These three observations motivate \methodname, a geometry-conditioned reconstructor
+that takes the acquisition process as part of its input rather than as a nuisance. The
+model conditions on a ray-occlusion field that integrates building occupancy along the
+transmitter-to-pixel segment, on the order in which measurements were collected, and on
+a per-device offset estimated jointly with the field. It predicts a dense map together
+with a calibrated per-pixel uncertainty, which we then use to decide where to measure
+next.
+
+On the synthetic benchmark, \methodname matches the strongest learned reconstructor on
+accuracy at $9.97$~dB free-unobserved RMSE against $10.00$~dB, attains the best
+structural fidelity at $0.814$ SSIM, and is the only method in the comparison that also
+supplies uncertainty which survives calibration. Nine deep and classical baselines are
+evaluated under an identical protocol with bootstrap confidence intervals and paired
+tests. We report an outcome that the benchmark framing would have concealed: on sparse
+real measurements, classical interpolation remains the stronger reconstructor at
+$5.51$~dB against $6.30$~dB. We therefore do not claim learned reconstruction as the
+contribution. The contribution is the geometry, order and calibration structure that
+learning does supply, each validated independently on real data, and the demonstration
+that uncertainty derived from it guides acquisition better than space-filling
+alternatives.
+
+\noindent\textbf{Contributions.}
+\begin{enumerate}[itemsep=1pt,topsep=2pt,parsep=0pt]
+    \item A ray-occlusion field that gives a convolutional reconstructor the
+    line-integral geometry it cannot otherwise form, motivated by a diagnostic showing
+    that unrelated backbones share one non-line-of-sight plateau.
+    \item Order-aware and device-aware conditioning, each isolated on real indoor
+    cellular data with negative controls, and a transmitter-agnostic design justified
+    by the finding that only $18\%$ of cells yield a reliable point source.
+    \item Calibrated per-pixel uncertainty, recalibrated to near-nominal coverage, and
+    an acquisition rule built on it that outperforms space-filling collection on walled
+    sites ($p = 0.039$).
+    \item An evaluation on real crowdsensed measurements alongside the standard
+    synthetic benchmark, which quantifies how far the two regimes diverge and states
+    explicitly where learning does and does not help.
+\end{enumerate}
