@@ -1,0 +1,257 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs,array,longtable}
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[colorlinks,allcolors=blue!55!black]{hyperref}
+\usepackage{parskip}
+\definecolor{hd}{RGB}{18,48,88}
+\definecolor{bad}{RGB}{150,20,20}
+\definecolor{good}{RGB}{20,110,45}
+\titleformat{\section}{\large\bfseries\color{hd}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{hd}}{\thesubsection}{0.6em}{}
+\newcommand{\B}[1]{\textcolor{bad}{\textbf{#1}}}
+\newcommand{\G}[1]{\textcolor{good}{\textbf{#1}}}
+\setlist{itemsep=1.5pt,topsep=2pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.18}
+\title{\vspace{-1.4cm}\textbf{COMPASS Real-Data Specification}\\[1.5mm]
+\large What the current corpus can and cannot support, and exactly what to collect}
+\date{8 September 2026}\author{}
+\begin{document}\maketitle\vspace{-9mm}\hrule\vspace{3mm}
+
+\section{The one defect that matters}
+
+The corpus is large. It is not the size that limits us.
+
+Every real reconstruction number is produced by holding out one reference point and
+predicting it from the others. Under that protocol the model is only ever asked to
+interpolate between nearby samples of the same process, which is the regime where a
+tuned interpolator is close to optimal by construction. The two things our method is
+actually for, extrapolating into unmeasured regions and reasoning about geometry behind
+walls, are invisible to it.
+
+That is why classical wins on real data and learned methods lose. It is a property of
+the measurement geometry, not of the models. \textbf{The fix is a densely sampled
+reference floor that permits contiguous block hold-out.} Everything else in this document
+is secondary to that.
+
+Concrete evidence that the protocol is degenerate: in
+\texttt{results/realdata\_recon.json} the \texttt{buffer\_0m} and \texttt{buffer\_1m}
+results are \B{byte-identical}. The 1\,m exclusion buffer removed no test points at all,
+because reference points are never within 1\,m of each other. At 2\,m the buffer finally
+bites and every method degrades by about 27\%.
+
+\section{What exists, precisely}
+
+\subsection{Coverage is far thinner than the row count suggests}
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Site / floor & RPs & Cells & Cells $\ge$8 RP & Extent (m) & Area (m$^2$) & RP spacing \\ \midrule
+CMU-Q f1 & 84 & 25 & 13 & $41.1\times29.2$ & 1200 & 3.8\,m \\
+\rowcolor{green!8}CMU-Q f2 & 84 & 35 & 15 & $39.7\times30.2$ & 1199 & 3.8\,m \\
+CMU-Q f3 & 70 & 41 & 15 & $31.3\times30.1$ & 942 & 3.7\,m \\
+EC Parking f0 & 20 & 18 & 9 & \B{$0.0\times0.0$} & \B{---} & \B{no coords} \\
+EC Parking f1 & 34 & 27 & 15 & $48.6\times11.8$ & 573 & 4.1\,m \\
+EC Parking f2 & 34 & 22 & 9 & $48.6\times11.8$ & 573 & 4.1\,m \\
+\midrule
+Ezdan Tower 1 & 2--5 per floor & 9--24 & \B{0 on every floor} & degenerate & --- & --- \\
+Ezdan Tower 4 & 4 per floor & 4--17 & \B{0 on every floor} & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{The two high-rises contribute nothing.} Ezdan Towers 1 and 4 hold 927{,}000
+stationary rows across 55 floors and yield \B{zero} usable cells, because each floor has
+only 2 to 5 reference points and a cell needs at least 8 to be reconstructable. All 76
+viable cells come from CMU-Q (43) and EC Parking (33). Any statement about ``four sites,
+61 floors'' is true of the raw capture and false of the evaluable data.
+
+\subsection{What is present and what is absent}
+
+Present per sample: \texttt{phoneName}, \texttt{rpNumber}, \texttt{scanNumber},
+\texttt{timeStamp}, \texttt{transmitter\_id}, \texttt{transmitter\_rss},
+\texttt{coordinates}, \texttt{floor}, plus floor plans at 0.032\,m per pixel.
+
+Absent, in the order that hurts:
+
+\begin{center}\small
+\begin{tabular}{@{}p{4.2cm}p{12.6cm}@{}}
+\toprule
+Missing & Consequence today \\ \midrule
+\B{Dense ground-truth field} & Cannot measure extrapolation. Forces leave-one-point-out,
+which structurally favours interpolation. This single gap is why the real-data section
+currently reads as a negative result. \\
+\B{Ground-truth transmitter positions} & Only 17.9\% of cells pass the source-reliability
+gate, and even those localise only to 0.26--9.19\,m by self-consistency. There is no
+external reference, so no localisation error can be reported, and the occlusion field
+cannot be computed on real data because it needs a transmitter to cast a ray from. \\
+\B{Inertial signals} & No accelerometer, gyroscope, magnetometer or barometer anywhere.
+The order argument therefore rests on a statistical control (shuffling) rather than on a
+physical one (motion). \\
+\B{Continuous trajectory position} & Mobile walks exist (1.33M rows) but carry
+\texttt{rpNumber} $=-1$, so they have no position labels. The order and active-sensing
+work uses them as sequences without knowing where they are. \\
+Device calibration reference & Offsets are inferred, not measured against a controlled
+capture. \\
+Radio metadata & No band, PCI, or indoor-versus-macro flag, which is what would explain
+the shared-identifier problem rather than merely asserting it. \\
+Temporal repeats & No route walked on separate days, so drift is unquantified. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Target: one dense reference floor}
+
+\subsection{Choose CMU-Q floor 2}
+
+It has the most transmitters (35), the widest device spread in the corpus (13.5\,dB),
+six phones sharing cells, a valid floor plan and coordinate file, and 600 scans per
+reference point. It is also already the best-sampled floor, so the dense survey extends
+rather than replaces existing work.
+
+\subsection{Grid density and effort}
+
+The floor is $39.7\times30.2$\,m, about 1199\,m$^2$ gross. Assuming 55--65\% is
+accessible free space, roughly 700\,m$^2$ is walkable.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Grid pitch & Points ($\approx$) & vs current 84 RPs & Assessment \\ \midrule
+3.8\,m (current) & 84 & $1\times$ & Cannot support block hold-out. \\
+2.0\,m & 175 & $2.1\times$ & Minimum viable. Blocks of 3--4\,m become possible. \\
+\rowcolor{green!8}1.5\,m & 310 & $3.7\times$ & \G{Recommended.} Good block resolution, one to two days. \\
+1.0\,m & 700 & $8.3\times$ & Ideal, but three to four days. Diminishing returns. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+At 1.5\,m, with a 45\,s dwell and 30\,s to move and mark, 310 points is about 6.5 hours
+of collection. Two people with all seven phones on a shared rig finish in \G{two days}
+including setup. That is the entire cost of turning the weakest section of the paper into
+its strongest.
+
+\subsection{Why this changes the result and not just the protocol}
+
+With a dense field you can hold out \emph{contiguous regions} rather than scattered
+points. Mask a 6\,m block, or a whole room, or everything beyond a given wall, and ask
+each method to predict it. Interpolators have nothing to interpolate from inside the
+mask, so they fall back to distance-weighted smoothing, while a geometry-conditioned
+model can reason about what the wall does. That is the comparison our method was built
+for and the one the current protocol cannot express.
+
+It also, for the first time, makes the occlusion channel computable on real data, provided
+the transmitter survey below happens.
+
+\section{Collection specification}
+
+\subsection{A. Dense grid survey (blocking)}
+
+\begin{itemize}
+\item CMU-Q floor 2, 1.5\,m grid across all accessible free space, roughly 310 points.
+\item Mark the grid physically. Chalk plus a laser rangefinder from two known walls is
+sufficient. Target positional error under 0.3\,m, which is a fifth of the pitch.
+\item Dwell 45\,s per point. Log \emph{every} visible cell, not only strong ones, and
+record non-detections explicitly. A cell that is not heard is information.
+\item Carry all seven phones simultaneously on a rigid rig with fixed relative geometry,
+so device comparisons at each point are controlled.
+\item Record rig orientation (one of four cardinal headings) and repeat one in ten points
+at a second heading to quantify body and orientation effects.
+\end{itemize}
+
+\subsection{B. Transmitter survey (unlocks the geometry claim)}
+
+\begin{itemize}
+\item Physically locate every accessible antenna, femtocell, booster and repeater on the
+floor. Record position in the same coordinate frame as the grid, plus mounting height.
+\item Record which cell identifiers each physical unit broadcasts. This is the
+measurement that turns ``boosters share identifiers'' from an inference into a fact.
+\item Twenty surveyed units is enough. This is the item that makes the ray-occlusion
+field computable on real data, so it is second only to the grid itself.
+\end{itemize}
+
+\subsection{C. Trajectories with recoverable position}
+
+\begin{itemize}
+\item Walk routes that start, end and pass through marked grid points, pressing a marker
+button at each, so position between fixes is interpolable rather than guessed.
+\item Four route types: a corridor loop, a route crossing at least four walls, a route
+into a deep non-line-of-sight pocket, and an open-space control.
+\item Three phones carried together per walk, three times of day, three separate days.
+\item Vary speed deliberately: slow, normal, brisk. Speed aliasing is a real confound in
+the order argument and nobody has measured it.
+\end{itemize}
+
+\subsection{D. Inertial and context streams}
+
+Logged continuously alongside every mobile session:
+
+\begin{center}\small
+\begin{tabular}{@{}llp{8.4cm}@{}}
+\toprule
+Stream & Minimum rate & Purpose \\ \midrule
+Accelerometer & 50\,Hz & Step detection, dead reckoning between fixes \\
+Gyroscope & 50\,Hz & Heading change, turn detection \\
+Magnetometer & 25\,Hz & Absolute heading, indoor anomaly features \\
+Barometer & 1\,Hz & Floor transitions \\
+Orientation quaternion & 25\,Hz & Body and hand pose \\
+Step counter & per event & Cheap odometry cross-check \\
+Carry mode & per session & hand, pocket, bag \\
+Monotonic + wall clock & per sample & Cross-device drift recovery \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{E. Device calibration capture}
+
+All seven phones, same rig, same orientation, 2\,min dwell, at five points spanning
+strong to weak signal. Repeat at the start and end of the campaign. This yields a
+ground-truth offset \emph{as a function of signal level}, which matters because the
+current model assumes a single additive scalar per device and the audit already flags
+that real handsets may compress at strong signal.
+
+\section{What each item buys}
+
+\begin{center}\small
+\begin{tabular}{@{}p{3.4cm}p{5.0cm}p{8.0cm}@{}}
+\toprule
+Collect & Unlocks & Claim it makes possible \\ \midrule
+Dense grid & Block hold-out evaluation & ``The simulation ranking does not survive
+transfer'' becomes measurable rather than asserted. Extrapolation becomes visible. \\
+TX survey & Occlusion field on real data & ``Our geometric prior transfers'' becomes
+testable. Currently untestable at any price. \\
+Trajectory position & Order and active sensing on located walks & Turns the order result
+from a sequence-imputation proxy into a spatial claim. \\
+IMU & Motion-grounded order & Replaces the shuffle control with a physical one, and makes
+the dataset multimodal, which is what a vision audience recognises. \\
+Calibration capture & Level-dependent device model & Fixes the additive-scalar assumption
+the audit flags as unrealistic. \\
+Repeats & Temporal drift & Answers the generalisation question reviewers always ask. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Minimum viable versus ideal}
+
+If time collapses, collect in this order and stop wherever you must. Each prefix is
+independently publishable.
+
+\begin{enumerate}
+\item \textbf{Dense grid on one floor, plus transmitter survey.} This alone rescues the
+real-data section and makes the geometry claim testable. Two to three days.
+\item \textbf{Add located trajectories with IMU.} Makes the order and acquisition claims
+spatial. Two more days.
+\item \textbf{Add device calibration and temporal repeats.} Closes the two remaining
+reviewer questions. One more day.
+\item \textbf{Second dense floor} (CMU-Q f1 or f3) for a within-site generalisation axis.
+\end{enumerate}
+
+\textbf{A note on scope.} Do not spread thin across the two Ezdan towers. Fifty-five
+floors there currently yield zero evaluable cells, and bringing even one of them to
+viability needs the same dense survey as CMU-Q f2. One dense floor beats sixty sparse
+ones for every claim in this paper.
+
+\end{document}

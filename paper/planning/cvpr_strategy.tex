@@ -1,0 +1,231 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs,array,longtable}
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[colorlinks,allcolors=blue!55!black]{hyperref}
+\usepackage{parskip}
+\definecolor{hd}{RGB}{18,48,88}
+\definecolor{bad}{RGB}{150,20,20}
+\definecolor{good}{RGB}{20,110,45}
+\titleformat{\section}{\large\bfseries\color{hd}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{hd}}{\thesubsection}{0.6em}{}
+\newcommand{\B}[1]{\textcolor{bad}{\textbf{#1}}}
+\newcommand{\G}[1]{\textcolor{good}{\textbf{#1}}}
+\setlist{itemsep=1.5pt,topsep=2pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.15}
+\title{\vspace{-1.4cm}\textbf{Can COMPASS be a CVPR methods paper?}\\[1.5mm]
+\large The novelty verdict, the real risk, and the framing that survives it}
+\date{8 September 2026}\author{}
+\begin{document}\maketitle\vspace{-9mm}\hrule\vspace{3mm}
+
+\section{Verdict}
+
+\textbf{Yes, on one condition.} CVPR's own governing documents support a
+combine-known-parts paper more explicitly than most people assume, and the scope
+objection I worried about earlier is dead. But the threat is not rejection. It is the
+Findings Track, which is defined almost word for word as a description of this paper.
+Escaping it is the whole framing problem.
+
+\section{What CVPR actually says}
+
+The AC Guides give the acceptance criteria ACs are instructed to apply, verbatim:
+
+\begin{quote}
+\textbf{Poster:} incremental steps that expand the sum of the community's knowledge or
+add bricks to the cathedral of knowledge; papers introducing useful tools; papers of
+interest to a subcommunity.\\
+\textbf{Reject:} unlikely to be significant or already known. Provide clear evidence.
+\end{quote}
+
+Read that carefully. \textbf{Novelty does not appear in the poster criterion at all.} The
+reject criterion has two prongs. Our 13\% with non-overlapping intervals kills
+``unlikely to be significant'' outright. \textbf{The entire framing job is to kill
+``already known''} — and the question is not whether our components are known, which they
+are, but whether the \emph{result} was known. It was not, or someone would have reported it.
+
+The Reviewer Training Material goes further and names \textbf{``Novelty Fallacy''} as one
+of six reviewing errors reviewers are trained to avoid:
+
+\begin{quote}
+Bad: ``It's just a small tweak, so it shouldn't be accepted.''\\
+Better: ``While the modification to [existing method] is incremental, the paper provides
+valuable insights into [specific aspect] and achieves strong results with lower
+computational cost.''
+\end{quote}
+
+Konrad Schindler's official CVPR tutorial lists a ladder of novelty types and includes,
+as a named legitimate tier, \textbf{``New, clever engineering with known ingredients''}
+with SIFT and VGG as the exemplars. That is our tier, and it is sanctioned.
+
+\subsection{Scope is not a problem}
+
+I was wrong to worry about this. CVPR 2026 accepted \emph{X-band Radar Non-Line-of-Sight
+Imaging}, \emph{Wave-Former: Through-Occlusion 3D Reconstruction via Wireless Shape
+Completion}, \emph{Seeing through boxes: Non-Line-of-Sight 3D Reconstruction from Radar
+Signals}, and CVPR 2025 accepted \emph{Radio Frequency Ray Tracing with Neural Object
+Representation}. Radio propagation and occlusion reasoning are live CVPR topics.
+
+Most usefully, CVPR 2026 accepted \emph{Proxy-GS: Unified Occlusion Priors}, framed as
+``our analysis reveals that significant redundancy still remains due to the \emph{lack of
+occlusion awareness}.'' That is structurally our move, accepted this year.
+
+\section{The real risk: the Findings Track}
+
+CVPR 2026 introduced it. From the Author Guidelines, verbatim:
+
+\begin{quote}
+The goal is to reduce resubmissions by offering a venue for \textbf{technically sound
+papers with solid experimental validation, even if their novelty is more incremental.}
+\end{quote}
+
+And the instruction ACs receive, verbatim:
+
+\begin{quote}
+We suggest ACs recommend technically sound papers with solid experimental validation and
+contributing valuable insights, even if their technical novelty is more incremental
+\ldots\ and \textbf{papers that reviewers viewed as having incremental novelty but solid
+experimentation.}
+\end{quote}
+
+\B{That last clause is a verbatim description of this paper.} In 2026, 1{,}717 papers,
+about 10.7\% of all submissions, were routed there. Findings papers do not appear in the
+main proceedings.
+
+So the bar has moved. ``Sound plus SOTA plus incremental'' is no longer a coin flip
+between accept and reject. It now has a designated third destination, and our job is to
+land above that line rather than merely above the reject line.
+
+\section{The template: ConvNeXt}
+
+ConvNeXt is the canonical instance of our exact problem and it won. It volunteers its own
+non-novelty, twice, in plain language:
+
+\begin{quote}
+``these designs are not novel even in the ConvNet literature — they have all been
+researched separately, \textbf{but not collectively}, over the last decade''\\[1mm]
+``our ConvNeXt model itself is not completely new \ldots\ Constructed entirely from
+standard ConvNet modules''
+\end{quote}
+
+What it claims instead is an \textbf{attribution}: the field credited the gain to
+Transformers; they show it was the design decisions. The paper is the experiment that
+settles the attribution, and the SOTA number is the \emph{proof the attribution is right},
+not the contribution itself.
+
+That is the move. Our version writes itself: the field has credited progress on this
+benchmark to architectural sophistication, and we show the dominant factor is explicit
+geometric occlusion structure, which has been supplied only implicitly.
+
+\section{The decisive experiment we have not run}
+
+\textbf{Is occlusion $\times$ cascade superadditive?}
+
+This is the single most important thing to establish, and it determines whether we have a
+methods paper or a Findings paper.
+
+\begin{itemize}
+\item If the occlusion channel and the cascade contribute \emph{additively}, we have
+``two known things, added, 13\%''. That is the Findings Track description.
+\item If the combination is \emph{superadditive}, we have a genuine finding: two
+components studied separately for years interact in a way nobody measured, and here is
+why. That is a methods paper.
+\end{itemize}
+
+We can measure this today from checkpoints we already have. The 2$\times$2 is: plain UNet,
+UNet + occlusion, WNet, WNet + occlusion. We have three of the four cells. The interaction
+term is the paper.
+
+\section{The genuine novelty claim}
+
+Separately from the interaction result, the literature search found one clean piece of
+white space. \textbf{Nobody has done TX-agnostic occlusion conditioning}, and there is a
+structural reason: every occlusion feature in this field is anchored at the transmitter,
+so it is undefined without one.
+
+\textbf{Anchor the rays at the measurements instead.} For each query pixel, integrate
+building occupancy along the ray from each observed measurement, and aggregate by minimum.
+This is TX-free by construction.
+
+The motivation is ours alone and it is strong: \G{only 17.9\% of our real cells have a
+locatable transmitter}, so TX-anchored occlusion is not merely unavailable on real
+crowdsensed data, it is \emph{uncomputable} on 82\% of it. Every competing method above
+is inapplicable there. We are the only group with the data to notice this.
+
+\section{Competitive position, stated honestly}
+
+Three independent groups reached this niche in 2026, all synthetic:
+
+\begin{center}\small
+\begin{tabular}{@{}llp{8.4cm}@{}}
+\toprule
+Work & Date & Overlap with us \\ \midrule
+TGPP (arXiv 2605.05844) & May 2026 & \B{Closest.} RadioMapSeer, A$^*$ trajectories, ray
+occlusion line integral, and publishes our motivating result (9.14$\times$ degradation
+under trajectory shift). TX known. Occlusion is a supervision target, not an input. \\
+GeoUQ-GFNet (2604.05788) & Apr 2026 & Explicit LoS input channel, sparse, road-constrained
+trajectories, plus uncertainty. TX known. \\
+RadioDiff-Inv2 (2606.08439) & Jun 2026 & Crowdsourced sparse RSS with location drift,
+diffusion. Beats baselines by 4--14 dB PSNR. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Consequences. The synthetic benchmark can no longer carry the paper on its own. Occlusion
+conditioning for sparse reconstruction cannot be claimed as a primitive; four MLSP 2025
+teams used it and a March 2026 survey has a subsection named ``Geometric Occlusion
+Features''. The cascade cannot be claimed; five groups use one, and RadioUNet
+\emph{is} a WNet by its authors' own naming.
+
+What survives: TX-free occlusion, the real multi-site indoor corpus, the interaction
+finding if it holds, and detection heterogeneity, which none of them touch.
+
+\section{Paper skeleton}
+
+\textbf{Working title, in the accepted register.} \emph{What Actually Closes the
+Non-Line-of-Sight Gap in Radio Map Reconstruction?} CVPR 2026 alone had 44 ``Rethinking''
+and 21 ``Revisiting'' titles, so this register is current.
+
+\begin{enumerate}
+\item \textbf{Open with a wrong belief, not a system.} Progress has been credited to
+architecture; we show the dominant factor is geometry supplied explicitly.
+\item \textbf{Volunteer the non-novelty in the intro.} ``Neither the occlusion channel nor
+the cascade is new. Both have been studied separately. Their interaction has not been
+measured, and the transmitter-free formulation does not exist.''
+\item \textbf{Make the decomposition the headline}, not the leaderboard. The 13\% goes in
+the abstract; the attribution of the 13\% is the contribution.
+\item \textbf{Pre-empt the compute objection.} A subsection titled ``Is the gain just more
+capacity?'' with matched budget, matched data, multi-seed means and standard deviations.
+Non-overlapping intervals prove the gap is real; this proves it is the idea. Note our
+432-parameter result does most of this work already.
+\item \textbf{Deliver a mechanism with a verification experiment}, in the SimSiam pattern:
+state a hypothesis and show proof-of-concept experiments verifying it. A figure localising
+baseline error to shadowed regions and showing it removed is worth more than three
+benchmark rows.
+\item \textbf{Real-data section} as the transfer test nobody else can run.
+\item \textbf{Close as a community asset.} ``We recommend practitioners adopt this as a
+baseline,'' which matches the poster criterion verbatim.
+\end{enumerate}
+
+\section{What to do, in order}
+
+\begin{enumerate}
+\item \textbf{Run the 2$\times$2 interaction experiment.} Cheap, uses existing
+checkpoints plus one training run. Determines methods paper versus Findings paper.
+\item \textbf{Implement measurement-anchored occlusion} and test against TX-anchored on
+the same protocol. This is the novelty claim.
+\item \textbf{Fix the integrity issues} from the ledger, particularly the untrained CNP
+and the mislabelled \texttt{rmse\_ci}.
+\item \textbf{Collect the dense floor.} Two days, and it is now load-bearing rather than
+optional.
+\item \textbf{Write related work defensively.} Every neighbouring paper cited and
+distinguished, so that when the AC asks a reviewer to name an overlapping work, they find
+only papers we have already handled.
+\end{enumerate}
+
+\textbf{Realistic target: poster.} That is a good outcome and matches CVPR's own stated
+criterion for incremental-but-knowledge-expanding work. Oral would need the attribution
+finding to generalise beyond this benchmark.
+
+\end{document}
