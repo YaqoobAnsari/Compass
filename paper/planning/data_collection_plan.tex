@@ -1,0 +1,345 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{booktabs,array,longtable}
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[colorlinks,allcolors=blue!55!black]{hyperref}
+\usepackage{parskip}
+\definecolor{hd}{RGB}{18,48,88}
+\definecolor{bad}{RGB}{150,20,20}
+\definecolor{good}{RGB}{20,110,45}
+\titleformat{\section}{\large\bfseries\color{hd}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{hd}}{\thesubsection}{0.6em}{}
+\newcommand{\B}[1]{\textcolor{bad}{\textbf{#1}}}
+\newcommand{\G}[1]{\textcolor{good}{\textbf{#1}}}
+\setlist{itemsep=2pt,topsep=3pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.2}
+\title{\vspace{-1.4cm}\textbf{COMPASS Data Collection Plan}\\[1.5mm]
+\large Three dense reference floors across two buildings\\
+\normalsize Seven phones, cart-mounted survey, existing logging application}
+\date{8 September 2026}\author{}
+\begin{document}\maketitle\vspace{-8mm}\hrule\vspace{3mm}
+
+\section{Objective}
+
+Produce the first publicly released \textbf{dense ground-truth indoor radio map} with
+surveyed transmitters, multi-device measurements and inertial streams.
+
+The existing UniCellular corpus is already published, so it cannot itself be our
+contribution. What we collect now can be. The scientific target is not more data but a
+different \emph{kind} of data: a field dense enough to hold out contiguous regions
+rather than scattered points.
+
+\subsection{The defect this fixes}
+
+Reference points currently sit \textbf{3.8 to 4.1\,m apart}. At that spacing the only
+possible evaluation is to hide one point and predict it from its neighbours, which asks
+solely for interpolation between nearby samples of one smooth process. That is the exact
+regime where a tuned interpolator is near-optimal by construction, and it is why
+classical methods beat every learned method on our real data today.
+
+The protocol is provably degenerate: the 0\,m and 1\,m exclusion buffers currently
+produce \B{byte-identical} results, because no two reference points are ever within a
+metre of each other.
+
+With a dense field we can mask a contiguous block, a whole room, or everything beyond a
+given wall. An interpolator then has nothing to interpolate from; a geometry-conditioned
+model can still reason. \textbf{That is the comparison our method exists for, and the one
+the current data physically cannot express.}
+
+\section{Scope decisions}
+
+\subsection{In: three floors, two buildings}
+
+\begin{center}\small
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Floor & Building type & Extent (m) & Current RPs & Role \\ \midrule
+\rowcolor{green!8}CMU-Q f2 & Walled academic & $39.7\times30.2$ & 84 & Primary dense reference \\
+CMU-Q f1 & Walled academic & $41.1\times29.2$ & 84 & Cross-floor axis, same building \\
+EC Parking f1 & Open concrete & $48.6\times11.8$ & 34 & \textbf{Negative control} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+All three already have floor plans on disk. CMU-Q f2 is primary because it has the most
+transmitters (35), the widest device spread in the corpus (13.5\,dB) and six of seven
+phones sharing cells.
+
+\textbf{Why the control site matters more than a third building.} Wall-aware
+interpolation currently gives $+3.86\%$ at CMU-Q and \G{exactly $0.00\%$} at EC Parking,
+where cross-validation independently selects $\lambda=0$ at both folds. A geometric prior
+that helps where walls exist and does nothing where they do not is far stronger evidence
+than three sites that all agree.
+
+\subsection{Out: both Ezdan towers}
+
+Not because floor plans are missing, though they are. Every Ezdan floor reports an extent
+of roughly $25.6\times\B{0.0}$\,m. \textbf{The y-extent is zero on all 55 floors}, meaning
+every reference point on a floor shares one y coordinate and the points lie on a single
+line. That is 1-D data, and 2-D radio-map reconstruction on a line is not defined. With
+2--5 points per floor and zero evaluable cells, Ezdan is excluded on geometry.
+
+\section{Equipment}
+
+\begin{center}\small
+\begin{tabular}{@{}p{3.6cm}p{12.4cm}@{}}
+\toprule
+Item & Specification and rationale \\ \midrule
+7 phones & Mounted in \textbf{fixed relative geometry} on the cart. Fixed geometry is what
+makes per-point device comparison controlled rather than confounded by position. Record
+the physical layout once and never change it mid-campaign. \\
+Survey cart & Carries all seven phones at a \textbf{fixed height of 1.2--1.5\,m},
+approximating hand-held height. Constant height matters: antenna height changes received
+power, and a varying height would alias into the spatial signal we are trying to measure. \\
+Logging application & Existing. See the capability checklist in Section~6 for the four
+features the protocol depends on. \\
+Laser rangefinder & For grid layout and for verifying plan scale. \\
+Chalk or removable floor markers & Roughly 320 marks per floor. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Cart for the survey, hands for the trajectories}
+
+The cart is right for the dense grid because it gives precision, repeatability and
+constant geometry. It is \emph{wrong} for the trajectory sessions, because a cart is not
+how anyone carries a phone, and body attenuation and carry mode are part of the science.
+
+\textbf{Use the cart for Steps 2 and 3. Use human carriage for Step 4.} Do not substitute
+one for the other.
+
+\section{Protocol}
+
+\subsection{Step 0 --- Verify plan scale (half a day, all floors)}
+
+Scale is solved for CMU-Q and EC Parking, so this is verification rather than derivation,
+but it must still be recorded because every geometric result depends on it.
+
+\begin{enumerate}
+\item Measure two long known distances per floor with the rangefinder: one full corridor
+run, and one perpendicular span.
+\item Locate the same two features on the plan PNG in pixels.
+\item Derive metres per pixel \textbf{per floor and per axis}.
+\item If the x and y values disagree, the plan is anisotropic and must be rectified
+before use.
+\end{enumerate}
+
+\textbf{Record the result in the released metadata.} The current code applies a single
+global constant of 0.032\,m/px to every site, and all four plans are 1650$\times$1169
+pixels despite covering different real areas, so a per-floor number is a genuine
+correction rather than bookkeeping.
+
+\subsection{Step 1 --- Lay the grid (half a day per floor)}
+
+\begin{enumerate}
+\item Establish the frame from two perpendicular walls.
+\item Mark a regular \textbf{1.5\,m} grid across all walkable space.
+\item Target under \textbf{0.3\,m} positional error, one fifth of the pitch.
+\item Number every mark and record its coordinate in the frame.
+\end{enumerate}
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Floor & Gross area & Walkable (est.) & Grid points at 1.5\,m & Versus today \\ \midrule
+CMU-Q f2 & 1199\,m$^2$ & $\sim$700\,m$^2$ & $\sim$310 & 3.7$\times$ \\
+CMU-Q f1 & 1200\,m$^2$ & $\sim$700\,m$^2$ & $\sim$310 & 3.7$\times$ \\
+EC Parking f1 & 573\,m$^2$ & $\sim$450\,m$^2$ & $\sim$200 & 5.9$\times$ \\
+\midrule
+\textbf{Total} & & & \textbf{$\sim$820} & \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Why 1.5\,m: at 2.0\,m the floor yields only 175 points, which is the bare minimum for
+block hold-out. At 1.0\,m it yields 700 and costs three to four days. 1.5\,m is the knee.
+
+\subsection{Step 2 --- Cart survey of the grid (1.5 days per floor)}
+
+At every mark:
+
+\begin{enumerate}
+\item Position the cart on the mark.
+\item \textbf{Dwell 45 seconds.}
+\item Log every visible cell on all seven phones, and \B{log the non-detections too}.
+A phone failing to hear a cell is a measurement, not a gap. The detection-heterogeneity
+result depends entirely on it: cross-device heard-set overlap is 0.299, and binary
+heard-set matching (8.41\,m) \emph{beats} signal matching (9.25\,m). That finding is only
+computable if absences are recorded.
+\item Record the cart \textbf{heading}.
+\item At every \textbf{tenth mark}, repeat the measurement at a second heading, so
+orientation effects are quantified rather than assumed away.
+\end{enumerate}
+
+Timing: 45\,s dwell plus roughly 20\,s to move and settle the cart is 65\,s per point.
+310 points is about 5.6 hours of collection.
+
+\subsection{Step 3 --- Transmitter survey (half a day per floor)}
+
+This is new work at every site. No public radio-map dataset has it, and \textbf{without it
+the occlusion feature cannot be computed on real data at all}, because the feature works
+by casting a ray from a source.
+
+\begin{enumerate}
+\item Physically locate every reachable antenna, femtocell, booster and repeater.
+\item Record each position in the Step 0 frame, plus \textbf{mounting height}.
+\item Record \textbf{which cell identifiers each physical unit broadcasts}.
+\item Photograph each unit with its label.
+\end{enumerate}
+
+Twenty units per floor is sufficient. Currently only \B{17.9\%} of cells yield a
+locatable source by signal fitting, with no external reference to validate against. This
+step converts ``boosters share cell identifiers'' from an inference into a published fact.
+
+\subsection{Step 4 --- Human-carried trajectories (1 day per floor)}
+
+Existing mobile walks carry \texttt{rpNumber} $=-1$. They have \B{no position labels at
+all}, so every order-awareness and active-sensing result is computed on sequences whose
+location is unknown.
+
+\begin{enumerate}
+\item Walk routes that start, end and pass through marked grid points, pressing the app's
+\textbf{marker button} at each, so position between fixes is interpolated from known
+anchors rather than guessed.
+\item Four route types per floor:
+\begin{itemize}
+\item corridor loop
+\item a route crossing at least four walls
+\item a route into a deep non-line-of-sight pocket
+\item an open-space control
+\end{itemize}
+\item Three phones carried together per walk, in three carry modes: \textbf{hand, pocket,
+bag}, logged per session.
+\item Three times of day, three separate days.
+\item Vary walking speed deliberately across repeats: slow, normal, brisk. Speed aliasing
+is an unmeasured confound in the order argument.
+\end{enumerate}
+
+\subsection{Step 5 --- Device calibration capture (2 hours per campaign)}
+
+All seven phones on the cart, same orientation, two-minute dwell, at \textbf{five points
+spanning strong to weak signal}. Repeat at the start and the end of the campaign to
+capture drift.
+
+This yields a ground-truth offset \textbf{as a function of signal level}. It matters
+because the current model assumes one additive scalar per device, while offsets are
+estimable at 0.78--0.89 correlation yet calibration buys only 0.18--2.04\% in
+reconstruction, which suggests the additive assumption is wrong.
+
+\subsection{Step 6 --- Clock discipline (every session)}
+
+\begin{enumerate}
+\item Synchronise all phones to one NTP source at session start.
+\item Log both wall-clock and monotonic time per sample.
+\item Begin every session with a shared physical event, all phones held together for ten
+seconds, so residual offset is recoverable in post-processing.
+\end{enumerate}
+
+\section{Application capability checklist}
+
+The app exists, so this is a confirmation list rather than a build. Four features the
+protocol depends on:
+
+\begin{center}\small
+\begin{tabular}{@{}p{4.6cm}p{11.4cm}@{}}
+\toprule
+Capability & Why the protocol needs it \\ \midrule
+\textbf{Non-detection logging} & Must record cells that were scanned for and \emph{not}
+heard, not only the ones received. Without this the detection-heterogeneity result cannot
+be computed. If the app only stores received cells, this is the one change worth making
+before collection starts. \\
+\textbf{Marker / waypoint button} & Stamps a known ground-truth position mid-walk so
+trajectory position is interpolable. \\
+\textbf{Inertial streams} & Accelerometer and gyroscope at $\ge$50\,Hz, magnetometer at
+$\ge$25\,Hz, barometer at $\ge$1\,Hz, orientation quaternion, step counter. No radio-map
+dataset currently carries these, so this is a differentiator as well as a requirement. \\
+\textbf{Dual clocks} & Monotonic alongside wall-clock, so cross-device drift is
+recoverable after the fact. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{What ships}
+
+The contribution is a packaged artifact, not raw logs.
+
+\begin{enumerate}
+\item Dense reference fields for three floors, seven devices per point, \textbf{including
+non-detections}
+\item Surveyed transmitter positions, heights, and the physical-unit to cell-identifier
+mapping
+\item Located trajectories with inertial streams and carry-mode labels
+\item Floor plans as occupancy rasters in the calibrated frame, with \textbf{per-floor,
+per-axis} metres-per-pixel recorded
+\item Per-device calibration curves as a function of signal level
+\item \textbf{Frozen evaluation splits}, including the block hold-out region definitions
+\item A datasheet documenting collection, devices, coverage and limitations
+\item Baseline results for the 18 methods already implemented
+\end{enumerate}
+
+Item 6 is the one most often omitted and the one that makes a benchmark comparable rather
+than merely available. The repository currently has no split manifest at all.
+
+\section{Timeline}
+
+\begin{center}\small
+\begin{tabular}{@{}llr@{}}
+\toprule
+Phase & Content & Days \\ \midrule
+App confirmation & Verify the four capabilities, pilot one corridor end to end & 1 \\
+Scale verification & Step 0, all three floors & 0.5 \\
+CMU-Q f2 & Steps 1--4 & 3 \\
+CMU-Q f1 & Steps 1--4 & 3 \\
+EC Parking f1 & Steps 1--4, smaller floor & 2.5 \\
+Calibration & Step 5, both ends of campaign & 0.5 \\
+Processing & Registration, splits, datasheet, anonymisation & 3 \\
+\midrule
+\textbf{Total} & & \textbf{13.5} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Against ten weeks to the CVPR deadline of 16 November 2026. The pilot is the only serial
+dependency, so run it first.
+
+\section{Quality gates}
+
+Do not leave a floor until each of these passes. Re-surveying is far more expensive than
+checking.
+
+\begin{enumerate}
+\item \textbf{Scale} --- x and y metres-per-pixel agree within 2\%, or the plan is
+explicitly marked anisotropic.
+\item \textbf{Grid closure} --- walking the grid perimeter returns to the origin within
+0.3\,m.
+\item \textbf{Coverage} --- every marked point has $\ge$7 device records, and the number
+of distinct cells heard per point is within expectation for the floor.
+\item \textbf{Non-detections present} --- spot-check that absent cells are recorded as
+absent rather than omitted.
+\item \textbf{Clock} --- the shared start event is visible in all seven logs and residual
+offset is under 100\,ms after correction.
+\item \textbf{Transmitter coverage} --- at least 15 physical units located per floor, each
+mapped to its broadcast identifiers.
+\item \textbf{Trajectory anchoring} --- every walk contains $\ge$4 marker presses and
+starts and ends on a marked point.
+\end{enumerate}
+
+\section{Minimum viable, if time collapses}
+
+Collect strictly in this order and stop wherever you must. Each prefix stands alone.
+
+\begin{enumerate}
+\item \textbf{CMU-Q f2 dense grid plus its transmitter survey.} This alone rescues the
+real-data section and makes the geometry claim testable for the first time. 3 days.
+\item \textbf{EC Parking f1, same two steps.} Adds the negative control, which is the
+strongest single piece of evidence in the design. 2.5 days.
+\item \textbf{CMU-Q f1.} Adds the cross-floor axis. 3 days.
+\item Trajectories, inertial streams and device calibration across all three.
+\end{enumerate}
+
+Items 1 and 2 together, 5.5 days, deliver a defensible dataset contribution with a
+treatment and a control. Everything after that widens it.
+
+\end{document}
