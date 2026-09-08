@@ -23,8 +23,52 @@
 
 \section{Objective}
 
-Produce the first publicly released \textbf{dense ground-truth indoor radio map} with
-surveyed transmitters, multi-device measurements and inertial streams.
+Produce the \textbf{largest publicly released measured indoor radio map with surveyed
+transmitter positions}, with multi-device measurements and inertial streams.
+
+\subsection{Novelty claim, audited 8 September 2026}
+
+An earlier draft claimed the \emph{first} dense ground-truth indoor radio map. \B{That
+claim is false} and must not be used. A literature audit found four measured indoor
+counterexamples, and one of them already claims a ``first'' of its own.
+
+\begin{center}\small
+\begin{tabular}{@{}p{4.3cm}p{5.0cm}p{6.4cm}@{}}
+\toprule
+Counterexample & What it has & Where it loses to us \\ \midrule
+Milosheski et al., \emph{Data in Brief} 2026 (arXiv 2511.00494) & Measured, indoor, WiFi,
+\textbf{20 surveyed AP positions published}, 53 points at 2\,m & 53 points over
+$\sim$212\,m$^2$, one device, one building, no inertial data \\
+OpenCSI (arXiv 2104.07963) & Measured LTE CSI, 1\,cm spacing, surveyed ceiling
+transmitter. Already claims ``first publicly available radio map containing CSI'' &
+17.5\,m$^2$ total, one transmitter, sampled along 8 lines rather than areally, CSI not
+calibrated RSS \\
+DICHASUS, KU~Leuven MaMIMO & 178k--427k points, millimetre position accuracy &
+The \textbf{surveyed nodes are receivers}, transmitter is mobile; CSI/SNR, not pathloss;
+KU~Leuven covers $1.25\times1.25$\,m \\
+NeRF$^2$ BLE (MobiCom 2023) & $\sim$6000 points over $\sim$1394\,m$^2$, 50 surveyed
+gateways & Gateways are receivers; uncalibrated commodity BLE RSSI \\
+Romero et al.\ (arXiv 2310.11036) & Claims ``first public RME datasets with real data'' &
+\textbf{Outdoor} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{What does survive, and it is the useful half.} The indoor radio-map benchmark
+canon is entirely simulated. The ICASSP~2025 and MLSP~2025 Indoor Radio Map Dataset is
+\G{ray-traced with Ranplan Wireless} at 0.25\,m, confirmed from the challenge site, the
+overview paper and the IEEE DataPort record. A March 2026 tutorial surveying 16 public
+radio-map datasets finds only two involve measurement at all, and \emph{every} 2-D indoor
+pathloss dataset is simulated.
+
+\textbf{Claim to use.} ``Indoor radio-map benchmarks are ray-traced. Public measured
+indoor releases are either sparse (53 points at 2\,m), confined to a few square metres,
+or publish receiver rather than transmitter geometry. We release $\sim$820 measured
+points at 1.5\,m across three floors in two buildings, with surveyed transmitters, seven
+devices and inertial streams.'' Every clause there is individually citable.
+
+\textbf{Must cite.} Milosheski et al., OpenCSI, NeRF$^2$, DICHASUS and Romero et al. A
+reviewer who finds any of these uncited will assume we did not look.
 
 The existing UniCellular corpus is already published, so it cannot itself be our
 contribution. What we collect now can be. The scientific target is not more data but a
