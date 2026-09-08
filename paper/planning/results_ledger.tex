@@ -1,0 +1,343 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[margin=1.9cm]{geometry}
+\usepackage{booktabs,array,longtable,multirow}
+\usepackage[table]{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage[colorlinks,allcolors=blue!55!black]{hyperref}
+\usepackage{parskip}
+\definecolor{hd}{RGB}{18,48,88}
+\definecolor{bad}{RGB}{150,20,20}
+\definecolor{good}{RGB}{20,110,45}
+\titleformat{\section}{\large\bfseries\color{hd}}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{hd}}{\thesubsection}{0.6em}{}
+\newcommand{\B}[1]{\textcolor{bad}{\textbf{#1}}}
+\newcommand{\G}[1]{\textcolor{good}{\textbf{#1}}}
+\setlist{itemsep=1.5pt,topsep=2pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.15}
+
+\title{\vspace{-1.4cm}\textbf{COMPASS: Verified Results Ledger}\\[1.5mm]
+\large Every number checked against its source file, with the integrity issues\\that must be fixed before any of it goes in a paper}
+\date{8 September 2026}
+\author{}
+\begin{document}\maketitle\vspace{-9mm}\hrule\vspace{3mm}
+
+\section{Read this first}
+
+I read all 44 result files, the ten STAGE findings documents, the audit and narrative
+documents, and the full code inventory. Three conclusions dominate everything else.
+
+\textbf{One, the synthetic win is real but rests entirely on one channel.}
+\texttt{COMPASS-wnet\_occ} at \G{8.645}~dB [8.415, 8.856] beats \texttt{radiounet} at
+9.934 [9.678, 10.179] with non-overlapping intervals, $p=2.5\!\times\!10^{-52}$. But
+plain \texttt{COMPASS-wnet} is 10.112, which \emph{loses} to RadioUNet. The margin is
+the occlusion channel and nothing else. Your own audit already recorded that occlusion
+conditioning is a known technique (FadeNet, PLNet, TGPP), so this cannot be sold as a
+novel method.
+
+\textbf{Two, most of the original innovations are measurably inert.} The results files
+themselves record this. \texttt{order\_matters.json} carries the flag
+\B{"order\_helps\_under\_correlated\_noise": false}. \texttt{active\_learned.json}
+carries \B{"physics\_aware\_uncertainty\_helps": false}. In
+\texttt{benchmark.json}, the ablations for order-blind, order-shuffle, no-device and
+no-rcl are all non-significant at $p\ge0.108$. Only building map and transmitter
+position matter.
+
+\textbf{Three, there are data integrity problems that would not survive review.}
+Section 2 lists them. Two are severe enough that any claim resting on them is currently
+unsupported.
+
+\section{Integrity issues, ranked. Fix before writing.}
+
+\begin{longtable}{@{}p{0.5cm}p{2.6cm}p{13.4cm}@{}}
+\toprule
+\# & Where & Issue \\ \midrule
+1 & \texttt{deep\_real.json} & \B{\texttt{"epochs": 0}}. The CNP-deep model was scored
+without ever being trained, because \texttt{deepsets.py:137} loops
+\texttt{for \_ in range(epochs)}. This is why geometry (9.056) and no-geometry (9.055)
+are identical to three decimals. \textbf{The conclusion ``a deep model fails on real
+data, and geometry does not help it'' is not supported by this file.} The figure is
+already quarantined on disk as \texttt{.deep\_real\_CORRUPT.png}. The
+\texttt{residual-GBT} rows in the same file are sklearn and unaffected. \\
+2 & 3 files & \B{The key \texttt{rmse\_ci} does not contain a CI of the RMSE.} It holds
+a bootstrap CI of the \emph{MAE} (\texttt{bootstrap\_ci(np.abs(e))}). So
+\texttt{learned\_real} reports RMSE 6.195 and ``\texttt{rmse\_ci}'' 4.664 for the same
+method. Affects \texttt{learned\_real}, \texttt{realdata\_dl\_transfer},
+\texttt{cross\_device}. Never quote the two together. \\
+3 & localization & The same method on the same 27 phones has \B{three different values}:
+6.87 (\texttt{benchmark}), 6.99 (\texttt{ablation}), 7.03 (\texttt{learned}). The
+same-device ceiling is 2.88 or 2.81. On \texttt{ec\_parking\_f1} the spread is 7.44
+versus 8.07, which is large enough to change a claim. Pick one file and cite only it. \\
+4 & \texttt{localization\_dial} & \texttt{delta\_vs\_learned\_m = 0.51} is stored
+\emph{positive} with no sign convention, but DIAL at 7.38\,m is \B{worse} than the plain
+embedding at 6.87\,m. Read naively the sign inverts the finding. \\
+5 & \texttt{cross\_device} & Anchor calibration is \B{net harmful} at $k=1,2,3,5$ against
+\texttt{rmse\_nocal}=5.089 (6.36, 5.83, 5.38, 5.12) and only wins at $k=8$ by 1.9\%,
+with no CI on the baseline to test it. \\
+6 & \texttt{complexity\_real} & The wall-aware advantage is \B{non-monotonic}: 1.22\%
+low, 6.91\% medium, \B{0.66\%} high. The highest-complexity tercile shows almost no
+gain, which contradicts the natural dose-response reading of the walls story. \\
+7 & \texttt{learned\_real} & \B{No significance test exists} for learned versus classical
+reconstruction on real data anywhere in the repository, although
+\texttt{paired\_wilcoxon} is imported by the script. \\
+8 & \texttt{realdata\_recon} & \texttt{buffer\_0m} and \texttt{buffer\_1m} are
+byte-identical, so the 1\,m exclusion buffer \B{removed no test points}. Only the 2\,m
+buffer bites, and it costs 27\% RMSE. \\
+9 & \texttt{learned\_real} & \texttt{picp\_1sigma = 0.161} where a calibrated Gaussian
+would give 0.68. The MC-dropout uncertainty is \B{severely overconfident} on real data. \\
+10 & \texttt{uq\_recalibration} & PICP 0.144\,$\to$\,0.901 is achieved by multiplying
+every standard deviation by 10.869. Sharpness degrades \B{1.253\,$\to$\,13.623\,dB},
+i.e.\ intervals become 10.9$\times$ wider. That cost appears in the JSON but in none of
+the write-ups. \\
+11 & \texttt{active\_realdata} & Uncertainty-guided acquisition \B{never beats
+space-filling} at any budget (all $p\ge0.166$). It beats only coverage and random. The
+same pattern holds on synthetic. \\
+12 & 2 files & Literal \texttt{NaN} tokens make \texttt{dl\_baselines.json} and
+\texttt{active\_realdata.json} invalid strict JSON. \texttt{benchmark.csv} column 2
+contains a stringified Python dict. \\
+13 & protocols & The same checkpoint is reported as \B{8.645 / 8.684 / 8.616 / 9.455}
+under four different eval protocols. One canonical protocol must be chosen per table. \\
+\bottomrule
+\end{longtable}
+
+\section{Canonical synthetic benchmark}
+
+Source \texttt{results/dl\_baselines.json}, $n=320$ test samples, identical eval set for
+every method. This is the table to build Table 1 on. Free-unobserved RMSE in dB.
+
+\begin{center}\small
+\begin{tabular}{@{}lrlrrr@{}}
+\toprule
+Method & RMSE & 95\% CI & SSIM & LoS & NLoS \\ \midrule
+\rowcolor{green!8}\textbf{COMPASS-WNet + occlusion} & \textbf{8.645} & [8.415, 8.856] & \textbf{0.841} & \textbf{3.846} & \textbf{9.789} \\
+RadioUNet & 9.934 & [9.678, 10.179] & 0.816 & 5.281 & 11.117 \\
+COMPASS-WNet & 10.112 & [9.816, 10.419] & 0.823 & 5.062 & 11.406 \\
+RadioMamba & 10.922 & [10.648, 11.192] & 0.795 & 6.997 & 12.098 \\
+RadioTransformer & 10.973 & [10.664, 11.281] & 0.791 & 6.533 & 12.193 \\
+URAM & 11.341 & [11.083, 11.574] & 0.800 & 7.679 & 12.473 \\
+RadioDiff & 11.398 & [11.044, 11.733] & 0.803 & 5.964 & 12.764 \\
+RadioGAN & 11.416 & [11.150, 11.666] & 0.788 & 7.093 & 12.628 \\
+COMPASS-full & 11.492 & [11.159, 11.837] & 0.797 & 6.446 & 12.826 \\
+PMNet & 14.116 & [13.714, 14.504] & 0.714 & 9.981 & 15.519 \\
+SparseUNet (no geometry) & 21.052 & [20.670, 21.420] & 0.656 & 26.890 & 20.173 \\
+RBF (multiquadric) & 25.644 & [24.853, 26.437] & 0.720 & 27.187 & 26.421 \\
+Ordinary Kriging & 26.993 & [26.397, 27.595] & 0.693 & 34.247 & 26.684 \\
+IDW ($p{=}1$) & 27.846 & [27.066, 28.597] & 0.699 & 27.805 & 28.921 \\
+GP (Kriging) & 28.092 & [27.466, 28.714] & 0.675 & 35.129 & 27.749 \\
+RMDM & 35.979 & [34.537, 37.340] & 0.715 & 11.300 & 39.804 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Not significant against COMPASS-full: RadioDiff ($p=0.276$), RadioGAN ($p=0.158$),
+URAM ($p=0.354$). Uncertainty correlation is undefined (\texttt{NaN}) for RadioUNet,
+PMNet, RadioDiff and RadioGAN because they emit a degenerate standard deviation.
+
+\subsection{The occlusion diagnostic, which is the real intellectual content}
+
+Controlled single-variable run, \texttt{results/nlos\_gap/}, same backbone, 40 epochs,
+identical seeds, occlusion channel on or off. This is the cleanest experiment in the
+project.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+& Without occlusion & With occlusion & $\Delta$ \\ \midrule
+Free-unobserved RMSE & 11.699 & \G{9.455} & $-2.244$ \\
+Line of sight & 7.113 & \G{3.556} & $-3.557$ \\
+Non line of sight & 12.610 & \G{10.472} & $-2.138$ \\
+Parameters & 6{,}993{,}601 & 6{,}994{,}033 & \G{$+432$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{432 parameters halve the line-of-sight error.} Every architecture in the panel,
+across six families and two orders of magnitude of design effort, plateaus in the same
+NLoS band. That is the signature of a missing input rather than insufficient capacity,
+and it is a statement about the problem rather than about our network. Framed as an
+analysis result it is defensible, interesting, and immune to the ``occlusion is known''
+objection, because the finding is precisely that the field has been scaling
+architectures against a bottleneck a known input removes.
+
+\section{Canonical real-data results}
+
+\subsection{Two disjoint cell sets are in play}
+
+\textbf{Do not mix these.} The 54-cell set uses \texttt{min\_rp=10} and $n=1924$ points.
+The 67-cell set uses \texttt{min\_rp=8} and $n=2061$ points. All four sites exist but
+\B{ezdan\_tower1 and ezdan\_tower4 contribute zero viable cells}, so every real number
+comes from CMU-Q (43) and EC Parking (33), out of 76 viable at $\ge8$ RPs.
+
+\subsection{Reconstruction: classical still wins, with one caveat}
+
+\begin{center}\small
+\begin{tabular}{@{}llrrl@{}}
+\toprule
+Set & Method & RMSE (dB) & 95\% CI & Note \\ \midrule
+54 & RBF (multiquadric) & \G{5.505} & --- & best learned-set classical \\
+54 & wall-aware IDW & 5.614 & --- & \\
+54 & IDW ($p{=}2$) & 5.790 & --- & \\
+54 & GP / Kriging & 5.952 & --- & \\
+54 & learned + walls & 6.195 & --- & \B{loses to classical} \\
+54 & learned, no walls & 6.296 & --- & \\
+\midrule
+67 & \textbf{residual-GBT} & \G{5.139} & [4.925, 5.366] & $p=2.1\times10^{-4}$ vs RBF \\
+67 & residual-GBT, no geometry & 5.214 & [5.008, 5.432] & $p=0.015$ \\
+67 & residual-Ridge & 5.405 & [5.160, 5.659] & $p=0.144$, n.s. \\
+67 & RBF (base) & 5.494 & [5.247, 5.744] & \\
+67 & CNP-deep & \B{9.056} & [8.690, 9.421] & \B{untrained, epochs=0} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Sim-to-real transfer: scratch 6.470, zero-shot 7.883, fine-tuned 6.302, classical 5.505,
+with the file flag \B{\texttt{finetuned\_beats\_classical: false}}.
+
+The residual model is the one learned method that wins, at $-6.5\%$ with
+$p=2.1\times10^{-4}$. Its confidence interval overlaps RBF's, so state it as a paired
+test rather than as separated intervals.
+
+\subsection{The geometry evidence is the best-designed experiment you have}
+
+CMU-Q, excess $|\Delta$RSS$|$ between reference-point pairs at matched separation, split
+by wall crossings. EC Parking is an open structure and serves as a negative control.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrrl@{}}
+\toprule
+Separation & High-wall & Low-wall & $\Delta$ & Bootstrap CIs \\ \midrule
+\multicolumn{5}{@{}l}{\textit{CMU-Q, real interior walls}} \\
+1--2\,m & 5.16 & 4.61 & $+0.55$ & overlap \\
+2--3\,m & 7.89 & 5.58 & \G{$+2.31$} & disjoint \\
+3--4\,m & 8.94 & 6.44 & \G{$+2.50$} & disjoint \\
+4--6\,m & 8.56 & 7.05 & \G{$+1.51$} & disjoint \\
+\midrule
+\multicolumn{5}{@{}l}{\textit{EC Parking, negative control}} \\
+3--4\,m & 4.52 & 4.54 & $-0.01$ & correlation $-0.057$ \\
+4--6\,m & 5.62 & 4.71 & $+0.91$ & overlap, correlation $-0.017$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Wall-aware interpolation gains \G{3.86\%} under cross-validation at CMU-Q with
+$\lambda$ picks [32, 16], and \G{0.00\%} at EC Parking where cross-validation selects
+$\lambda=0$ at both folds. \textbf{A real effect at the treatment site and exactly zero
+at the control site is the strongest causal evidence in the project.} The one weakness
+is that \texttt{complexity\_real} finds the gain non-monotonic across complexity
+terciles, which needs explaining or dropping.
+
+\subsection{Order, device and source}
+
+Order, model-free gap filling over 130 real walks: true 6.986, shuffled 12.351, mean
+baseline 9.921, $p=4.7\times10^{-23}$, lag-1 autocorrelation 0.984. Learned:
+GRU 1.788 against order-blind 9.788. \textbf{Caveat that must be disclosed:} the
+order-blind set model at 9.788 is \B{worse than the trivial mean baseline} at 9.758, and
+the GRU has 100{,}737 parameters against the set model's 12{,}673, so the comparison
+confounds order-awareness with capacity by a factor of 7.9.
+
+Device: offsets are highly estimable, split-half correlation 0.778 to 0.890, with median
+spread 4.12\,dB and maximum 27.77\,dB. But calibrating them buys \B{0.18\% to 2.04\%} in
+reconstruction. The single exception is EC Parking floor 2, the floor with the largest
+spread and fewest cells, where variance reduction reaches 0.512.
+
+Source: only \G{17.9\%} of cells (12 of 67) pass the reliability gate, which validates
+the transmitter-agnostic design. But the median $R^2$ across all cells is 0.31 against a
+gate of 0.30, so the count is fragile to the threshold, and \B{there is no ground-truth
+transmitter position anywhere}, so no localisation error can be claimed.
+
+\subsection{Localisation, the most novel result in the project}
+
+Leave-one-phone-out, 27 phone instances, median position error in metres. Cite
+\texttt{localization\_benchmark.json} only, per issue 3.
+
+\begin{center}\small
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+Method & Mean (m) & 95\% CI & Wilcoxon vs learned \\ \midrule
+Same-device ceiling & 2.88 & [2.46, 3.32] & --- \\
+\rowcolor{green!8}\textbf{Learned embedding} & \textbf{6.87} & [6.24, 7.48] & --- \\
+Detection-aware hybrid & 8.19 & [6.96, 9.40] & $p=3.0\times10^{-3}$ \\
+Binary heard-set & 8.41 & [7.28, 9.52] & $p=4.3\times10^{-4}$ \\
+Rank / weighted Jaccard & 8.56 & [7.28, 9.78] & $p=2.1\times10^{-4}$ \\
+Naive cross-device RSS & 9.25 & [7.98, 10.58] & $p=6.4\times10^{-7}$ \\
+Mean-normalised RSS & 10.40 & [8.88, 11.81] & $p=1.3\times10^{-6}$ \\
+Random & 16.05 & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The mechanism finding is the novel part and it is well supported. Cross-device heard-set
+Jaccard is \G{0.299}, and \emph{binary} matching (8.41) beats \emph{RSS} matching (9.25),
+meaning the values are corrupted enough across devices that ignoring them is better than
+using them. The standard toolbox for device heterogeneity targets RSS magnitude, which is
+the wrong failure mode here. Two honest negatives strengthen it: the heavier DIAL
+architecture is worse (7.38), and anchor calibration does essentially nothing (7.03 to
+6.85 at ten anchors).
+
+\section{What survives as a CVPR contribution}
+
+\begin{center}\small
+\begin{tabular}{@{}p{5.2cm}p{2.2cm}p{9.2cm}@{}}
+\toprule
+Asset & Status & Assessment \\ \midrule
+Comprehensive benchmark, 18 methods, one protocol, CIs and paired tests & \G{Strong} &
+The most complete comparison in this literature. Real contribution on its own. \\
+NLoS plateau diagnostic and the 432-parameter fix & \G{Strong} &
+The intellectual core. A statement about the problem, not the method. Immune to the
+novelty objection if framed as analysis. \\
+Walls with a clean negative control & \G{Strong} & Treatment site positive, control site
+exactly zero. Weakened only by the non-monotonic complexity stratification. \\
+Detection heterogeneity and the device-invariant embedding & \G{Strong} & The most novel
+finding. Mechanism, method, and two honest negatives. \\
+Real dataset, 4 sites, 61 floors, 5.06M rows & \G{Strong, once released} & Public release
+is now cleared, which makes it claimable. Needs dense ground truth to be decisive. \\
+Occlusion channel as a method & \B{Do not claim} & Known technique by your own audit. \\
+Order-aware conditioning & \B{Do not claim on synthetic} & File flag says it does not
+help under correlated noise. Real-data version is confounded by capacity. \\
+Physics-aware active sensing & \B{Do not claim} & Never beats space-filling anywhere. \\
+Calibrated uncertainty & \textcolor{orange!80!black}{\textbf{Qualify}} & Recalibration is
+a 10.9$\times$ interval widening. Report sharpness alongside coverage or a reviewer will. \\
+Learned real-data reconstruction & \B{Do not claim} & Loses to classical. Only the
+residual variant wins, and its intervals overlap. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The paper I would write}
+
+\textbf{Title direction.} \emph{What Transfers? A Benchmark and Diagnosis of Radio Field
+Reconstruction from Simulation to Real Crowdsensing.}
+
+\textbf{Claim structure.} Not ``we built a better network''. Instead: (i) we benchmark
+eighteen methods under one protocol and find every deep family plateaus at the same
+non-line-of-sight error; (ii) we show the bottleneck is a missing geometric input, not
+capacity, and that 432 parameters remove it; (iii) we release the first real
+crowdsensed benchmark with dense ground truth and show the simulation ranking does not
+survive transfer; (iv) we identify detection heterogeneity, not RSS offset, as the
+mechanism that breaks cross-device generalisation.
+
+This framing turns every current liability into evidence. Classical winning on real data
+becomes a finding about the protocol. Occlusion being known becomes the point. The inert
+innovations simply drop out of the claims.
+
+\section{Immediate actions, in order}
+
+\begin{enumerate}
+\item \textbf{Re-run \texttt{exp\_deep\_real.py} with \texttt{--epochs 400}}, or delete
+the CNP claim. It is currently a random network.
+\item \textbf{Rename the \texttt{rmse\_ci} key to \texttt{mae\_ci}} in the three affected
+scripts and regenerate, so no table can accidentally mix the two.
+\item \textbf{Choose one canonical eval protocol} and regenerate every headline number
+under it. Four values for one checkpoint cannot go to review.
+\item \textbf{Add the missing Wilcoxon} for learned versus classical on real data.
+\item \textbf{Open the IRB determination} with CMU-Q. This is the long pole and cannot be
+compressed later.
+\item \textbf{Resolve the licence conflict}: \texttt{pyproject.toml} says
+``Proprietary - research'' while \texttt{LICENSE} is MIT. Code and dataset normally need
+separate licences.
+\item \textbf{Begin the dense ground-truth survey} on CMU-Q floor 2, which has the most
+transmitters, the widest device spread at 13.5\,dB and six shared phones.
+\item Report sharpness wherever coverage is reported.
+\end{enumerate}
+
+\end{document}
