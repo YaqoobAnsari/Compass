@@ -16,7 +16,8 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from .compass_net import CompassConfig, DeviceHead, SequenceEncoder, occlusion_field, tx_heatmap
+from .compass_net import (CompassConfig, DeviceHead, SequenceEncoder, occlusion_field,
+                          measurement_occlusion_field, tx_heatmap)
 from .unet import ConditioningUNet
 
 
@@ -51,7 +52,11 @@ class CompassWNet(nn.Module):
             H, W = batch["sparse_rss"].shape[-2:]
             x.append(tx_heatmap(batch["tx_rowcol"], H, W, self.cfg.tx_scales))
         if self.cfg.use_occlusion:
-            x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
+            if self.cfg.occlusion_anchor == "measurement":
+                x.append(measurement_occlusion_field(
+                    batch["building"], batch["mask"], n_anchors=self.cfg.occlusion_anchors))
+            else:
+                x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
         return torch.cat(x, dim=1)
 
     def forward(self, batch: dict) -> torch.Tensor:

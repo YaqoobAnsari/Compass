@@ -31,6 +31,8 @@ class CompassConfig:
     use_order: bool = True       # sequence-aware (FiLM); False -> order-blind
     use_device: bool = True      # per-trajectory offset head
     use_occlusion: bool = False  # explicit ray-occlusion / diffraction geometry channel
+    occlusion_anchor: str = "tx"  # "tx" (standard) | "measurement" (transmitter-free)
+    occlusion_anchors: int = 16   # number of measurement anchors when anchor="measurement"
     tx_scales: int = 4
     base: int = 48
     depth: int = 4
@@ -58,6 +60,41 @@ def occlusion_field(building: torch.Tensor, tx_rowcol: torch.Tensor, n_steps: in
         acc += F.grid_sample(building, torch.stack([gx, gy], dim=-1),
                              mode="nearest", align_corners=True)[:, 0]
     return (acc / n_steps).unsqueeze(1)
+
+
+def measurement_occlusion_field(building: torch.Tensor, mask: torch.Tensor,
+                                n_steps: int = 32, n_anchors: int = 16,
+                                seed: int = 0) -> torch.Tensor:
+    """Transmitter-free occlusion. For each pixel, the MINIMUM over sampled measurement
+    locations of the fraction of the anchor->pixel ray that lies inside buildings.
+
+    The standard occlusion channel casts rays from the transmitter, so it is undefined
+    when the transmitter is unknown -- which is the normal case in crowdsensing (in our
+    real corpus only 17.9% of cells yield a locatable source). Anchoring the rays at the
+    measurements instead is defined whenever there is at least one observation.
+
+    Semantics: a low value means some measurement has a clear line of sight to this
+    pixel, so its value is supported by evidence. A high value means every measurement
+    is occluded from it, so the model must extrapolate through geometry. (B,1,H,W).
+    """
+    B, _, H, W = building.shape
+    dev = building.device
+    g = torch.Generator()
+    g.manual_seed(seed)
+
+    per_item = []
+    for b in range(B):
+        idx = torch.nonzero(mask[b, 0] > 0.5, as_tuple=False)  # (N,2) row,col
+        if idx.numel() == 0:  # no observations -> degenerate, treat as fully occluded
+            idx = torch.tensor([[H // 2, W // 2]], device=dev)
+        sel = torch.randint(0, idx.shape[0], (n_anchors,), generator=g).to(dev)
+        per_item.append(idx[sel].float())
+    anchors = torch.stack(per_item, dim=0)  # (B, n_anchors, 2)
+
+    out = torch.ones(B, 1, H, W, device=dev)
+    for k in range(n_anchors):
+        out = torch.minimum(out, occlusion_field(building, anchors[:, k, :], n_steps))
+    return out
 
 
 def tx_heatmap(tx_rowcol: torch.Tensor, H: int, W: int, scales: int) -> torch.Tensor:
@@ -137,7 +174,11 @@ class CompassNet(nn.Module):
             H, W = batch["sparse_rss"].shape[-2:]
             x.append(tx_heatmap(batch["tx_rowcol"], H, W, self.cfg.tx_scales))
         if self.cfg.use_occlusion:
-            x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
+            if self.cfg.occlusion_anchor == "measurement":
+                x.append(measurement_occlusion_field(
+                    batch["building"], batch["mask"], n_anchors=self.cfg.occlusion_anchors))
+            else:
+                x.append(occlusion_field(batch["building"], batch["tx_rowcol"]))
         x = torch.cat(x, dim=1)
 
         film_vec = None

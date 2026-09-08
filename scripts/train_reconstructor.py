@@ -43,6 +43,9 @@ def main() -> int:
     ap.add_argument("--batch-size", type=int, default=16)
     ap.add_argument("--use-occlusion", action="store_true",
                     help="add the explicit ray-occlusion / diffraction geometry channel")
+    ap.add_argument("--occlusion-anchor", default="tx", choices=["tx", "measurement"],
+                    help="where to cast occlusion rays from: the transmitter (standard) "
+                         "or the measurements themselves (transmitter-free)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
@@ -58,6 +61,7 @@ def main() -> int:
         batch_size=args.batch_size,
         arch=args.arch,
         use_occlusion=args.use_occlusion,
+        occlusion_anchor=args.occlusion_anchor,
         **ABLATIONS[args.name],
     )
     print(f"[train] variant={args.name} -> {out}  (train={len(cfg.train_maps)} maps x {cfg.tx_per_map} tx)")
