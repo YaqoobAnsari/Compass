@@ -121,9 +121,15 @@ def wall_isolation(pos_px, W, obs_idx, cand_idx, lam=8.0, m_per_px=M_PER_PX):
 
 def wall_aware_loro(pos_px: np.ndarray, rss: np.ndarray, W: np.ndarray, lam: float = 0.0,
                     power: float = 2.0, m_per_px: float = M_PER_PX, k: int = 12,
-                    buffer_m: float = 1.0, min_train: int = 4):
+                    buffer_m: float = 1.0, min_train: int = 4, align: bool = False):
     """Buffered leave-one-RP-out abs errors for wall-aware IDW with a precomputed
-    wall-length matrix W (m). lam=0 -> plain IDW."""
+    wall-length matrix W (m). lam=0 -> plain IDW.
+
+    With align=True the returned list has one entry per reference point, using NaN
+    where a point is skipped, so the errors stay index-aligned with another method
+    evaluated under the same buffer and min_train. Callers that only aggregate
+    should leave align=False to preserve the original compacted behaviour.
+    """
     pos_m = pos_px * m_per_px
     errs = []
     n = len(pos_px)
@@ -133,6 +139,8 @@ def wall_aware_loro(pos_px: np.ndarray, rss: np.ndarray, W: np.ndarray, lam: flo
         keep[i] = False
         idx = np.where(keep)[0]
         if len(idx) < min_train:
+            if align:
+                errs.append(float("nan"))
             continue
         deff = de[idx] + lam * W[i, idx]
         kk = min(k, len(idx))
@@ -141,4 +149,6 @@ def wall_aware_loro(pos_px: np.ndarray, rss: np.ndarray, W: np.ndarray, lam: flo
         yhat = float(np.sum(w * rss[idx][sel]) / np.sum(w))
         if np.isfinite(yhat):
             errs.append(abs(yhat - rss[i]))
+        elif align:
+            errs.append(float("nan"))
     return errs

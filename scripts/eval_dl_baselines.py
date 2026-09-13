@@ -60,7 +60,8 @@ def main() -> int:
 
     learned = {}
     # COMPASS variants for context — prefer the matched-budget long run; fall back to 40-ep.
-    for name in ("full", "wnet", "wnet_occ", "no_building", "no_tx"):
+    for name in ("full", "wnet", "wnet_base", "wnet_occ", "wnet_occ_meas",
+                 "unet_occ", "no_building", "no_tx"):
         ck = REPO / "experiments" / "reconstructors_long" / name / "best.ckpt"
         if not ck.exists():
             ck = REPO / "experiments" / "reconstructors" / name / "best.ckpt"

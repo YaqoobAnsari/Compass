@@ -24,7 +24,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 import torch  # noqa: E402
 
-from compass.eval.stats import bootstrap_ci, paired_wilcoxon  # noqa: E402
+from compass.eval.stats import bootstrap_ci, bootstrap_ci_rmse, paired_wilcoxon  # noqa: E402
 from compass.realdata.learned_interp import M_PER_PX, SetInterpolator, build_features, make_samples  # noqa: E402
 from compass.realdata.reconstruct import METHODS  # noqa: E402
 from compass.realdata.walls import cell_rp_tables_px, load_wall_mask, wall_aware_loro, wall_matrix_m  # noqa: E402
@@ -135,18 +135,37 @@ def main() -> int:
                         continue
                     try:
                         yh = float(METHODS[key](pm[keep], rss[keep], pm[i:i + 1])[0])
-                        if np.isfinite(yh):
-                            agg[label].append(abs(yh - rss[i]))
                     except Exception:  # noqa: BLE001
-                        pass
-            agg["wall-aware IDW"] += wall_aware_loro(pos, rss, W, lam=16.0, buffer_m=1.0)
+                        yh = float("nan")
+                    # append NaN rather than skipping so classical and learned errors
+                    # stay index-aligned and the paired Wilcoxon below compares the
+                    # same held-out reference points
+                    agg[label].append(abs(yh - rss[i]) if np.isfinite(yh) else float("nan"))
+            agg["wall-aware IDW"] += wall_aware_loro(pos, rss, W, lam=16.0, buffer_m=1.0, align=True)
         print(f"  fold {fi}: learned+walls RMSE={rmse(ew):.2f} nowalls={rmse(enw):.2f} "
               f"wall-IDW={rmse(agg['wall-aware IDW']):.2f}")
 
-    out = {"n_cells": len(cells), "folds": args.folds, "rmse": {}, "rmse_ci": {}}
+    out = {"n_cells": len(cells), "folds": args.folds, "rmse": {}, "rmse_ci": {}, "mae_ci": {}}
     for m, e in agg.items():
-        out["rmse"][m] = round(rmse(e), 3)
-        out["rmse_ci"][m] = bootstrap_ci(np.abs(e)) if e else None
+        ea = np.asarray(e, float)
+        out["rmse"][m] = round(rmse(ea[np.isfinite(ea)]), 3) if len(ea) else None
+        # mae_ci bounds the MEAN ABSOLUTE error, rmse_ci bounds the ROOT MEAN SQUARE
+        # error. These are different quantities and were previously both stored under
+        # "rmse_ci", which put an MAE interval next to an RMSE point estimate.
+        out["mae_ci"][m] = bootstrap_ci(ea) if len(ea) else None
+        out["rmse_ci"][m] = bootstrap_ci_rmse(ea) if len(ea) else None
+
+    # paired Wilcoxon over the same held-out reference points, learned vs each
+    # classical panel member. Reports an explicit error instead of a p-value if the
+    # arrays ever fall out of alignment, so a mismatch can never read as a result.
+    ref = np.asarray(agg["learned+walls"], float)
+    out["wilcoxon_learned_vs"] = {}
+    for m in ("learned-nowalls", "wall-aware IDW", "RBF(mq)", "IDW(p=2)", "GP/Kriging"):
+        cand = np.asarray(agg[m], float)
+        if len(cand) != len(ref):
+            out["wilcoxon_learned_vs"][m] = {"error": f"unpaired: {len(ref)} vs {len(cand)}"}
+        else:
+            out["wilcoxon_learned_vs"][m] = paired_wilcoxon(ref, cand)
     # UQ calibration on real
     us, ue = np.array(uq_std), np.array(uq_err)
     ok = us.std() > 1e-6
@@ -173,6 +192,9 @@ def main() -> int:
     for m in ms:
         print(f"  {m:18s} {out['rmse'][m]}")
     print(f"[learned-real] real UQ: {out['real_uq']}")
+    print("[learned-real] paired Wilcoxon (learned+walls vs):")
+    for m, w in out["wilcoxon_learned_vs"].items():
+        print(f"  {m:18s} {w}")
     print(f"[learned-real] -> {args.results}")
     return 0
 

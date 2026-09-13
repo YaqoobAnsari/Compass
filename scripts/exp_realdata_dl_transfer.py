@@ -31,7 +31,7 @@ import numpy as np  # noqa: E402
 import torch  # noqa: E402
 from PIL import Image  # noqa: E402
 
-from compass.eval.stats import bootstrap_ci  # noqa: E402
+from compass.eval.stats import bootstrap_ci, bootstrap_ci_rmse  # noqa: E402
 from compass.realdata.reconstruct import METHODS, M_PER_PX, loro_errors  # noqa: E402
 from compass.realdata.walls import cell_rp_tables_px, load_wall_mask  # noqa: E402
 from compass.recon.learned import LearnedReconstructor, load_compass  # noqa: E402
@@ -137,10 +137,12 @@ def main() -> int:
            "note": ("RadioUNet & PMNet require a TX-location input, which real crowdsensing "
                     "lacks (boosters; A5 18% locatable) -> INAPPLICABLE to the TX-agnostic real "
                     "task. Only TX-agnostic methods evaluated."),
-           "rmse": {}, "rmse_ci": {}}
+           "rmse": {}, "rmse_ci": {}, "mae_ci": {}}
     for m, e in errs.items():
         out["rmse"][m] = round(float(np.sqrt(np.mean(np.square(e)))), 3) if e else None
-        out["rmse_ci"][m] = bootstrap_ci(np.abs(e)) if e else None
+        # mae_ci bounds the mean absolute error, rmse_ci the root mean square error
+        out["mae_ci"][m] = bootstrap_ci(np.abs(e)) if e else None
+        out["rmse_ci"][m] = bootstrap_ci_rmse(np.abs(e)) if e else None
     Path(args.results).parent.mkdir(parents=True, exist_ok=True)
     Path(args.results).write_text(json.dumps(out, indent=2))
 

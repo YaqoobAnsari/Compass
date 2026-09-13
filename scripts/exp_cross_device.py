@@ -24,7 +24,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
 
-from compass.eval.stats import bootstrap_ci  # noqa: E402
+from compass.eval.stats import bootstrap_ci, bootstrap_ci_rmse  # noqa: E402
 from compass.realdata.device import device_long_table  # noqa: E402
 from compass.realdata.unicellular import PHONE_COL, RSS_COL, TX_COL  # noqa: E402
 
@@ -90,7 +90,10 @@ def main() -> int:
     out["rmse_nocal"] = round(float(np.sqrt(np.mean(np.square(errs["nocal"])))), 3)
     for k in K_ANCHORS:
         out["rmse_by_k"][str(k)] = round(float(np.sqrt(np.mean(np.square(errs[k])))), 3)
-    out["rmse_ci_by_k"] = {str(k): bootstrap_ci(np.abs(errs[k])) for k in K_ANCHORS}
+    # mae_ci bounds the mean absolute error, rmse_ci the root mean square error;
+    # rmse_by_k above is an RMSE, so rmse_ci_by_k must bootstrap the RMSE too
+    out["mae_ci_by_k"] = {str(k): bootstrap_ci(np.abs(errs[k])) for k in K_ANCHORS}
+    out["rmse_ci_by_k"] = {str(k): bootstrap_ci_rmse(np.abs(errs[k])) for k in K_ANCHORS}
 
     Path(args.results).parent.mkdir(parents=True, exist_ok=True)
     Path(args.results).write_text(json.dumps(out, indent=2))
