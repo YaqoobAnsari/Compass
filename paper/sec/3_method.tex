@@ -1,5 +1,5 @@
 %% 3_method
-\section{Geometry as a Conditioning Channel}
+\section{The Geometry a Convolution Cannot Form}
 \label{sec:method}
 
 \begin{figure*}[t]
@@ -15,9 +15,9 @@ directional structure that makes the channel useful.}
 \label{fig:concept}
 \end{figure*}
 
-\subsection{Problem setting}
+\subsection{Reconstruction from walks, not from samples}
 
-A radio field assigns a received power to every point of a scene. We write
+A radio field is a dense image that no sensor can capture in one exposure. We write
 $R : \Omega \to \mathbb{R}$ for the field over a discrete spatial domain
 $\Omega \subset \mathbb{Z}^2$ of $256 \times 256$ cells, with values in dBm. A
 reconstructor observes $R$ only at a small measured subset
@@ -33,7 +33,7 @@ uniformly thinned. Accuracy is reported on free-space cells that were never
 measured, since those are the cells a deployment actually needs and the ones
 interpolation cannot reach.
 
-\subsection{The occlusion field}
+\subsection{A line integral the backbone cannot build}
 
 Signal strength at a point is governed less by distance than by what the signal
 passed through on the way. For a transmitter at $\tau \in \Omega$ and a target cell
@@ -62,7 +62,7 @@ it once in closed form and append it as a single input channel. The cost is
 $432$ parameters in the first convolution of the single network, or $576$ spread
 over the two stages of the cascade, and no change anywhere else.
 
-\subsection{Backbones}
+\subsection{Two backbones, one variable}
 
 We study two backbones so that the effect of the channel can be separated from the
 effect of capacity. The first is a single encoder-decoder network with $48$ base
@@ -73,12 +73,13 @@ parameter budget. The cascade is the backbone RadioUNet uses, which makes it the
 right control for asking whether our gain comes from geometry or from borrowed
 architecture.
 
+Everything else is held identical so that the channel is the only thing that moves.
 Both backbones receive the sparse measurement raster, its binary mask, a coverage
-density map, the building raster and a multi-scale transmitter heatmap. Adding the
-occlusion channel is the single variable under study. Dropout is retained at
+density map, the building raster and a multi-scale transmitter heatmap, and adding
+the occlusion channel is the single variable under study. Dropout is retained at
 inference to give a per-pixel predictive spread by Monte Carlo sampling.
 
-\subsection{Removing the transmitter}
+\subsection{Dropping the transmitter anchor}
 \label{sec:txfree}
 
 \Cref{eq:occ} needs $\tau$, and that is a real liability. Indoor cellular
@@ -88,8 +89,9 @@ measurements only $17.9\%$ of cells yield a transmitter position that passes a
 reliability gate, which means a conditioning channel anchored at $\tau$ is
 unavailable for roughly four cells in five.
 
-We therefore tried to remove the dependence. Let $\mathcal{A} \subset \mathcal{M}$ be
-a sample of measurement locations, which are known without knowing the source.
+One obvious escape is to anchor the ray somewhere the deployment does know. Let
+$\mathcal{A} \subset \mathcal{M}$ be a sample of measurement locations, whose positions
+are recorded whether or not the source is identified.
 Define the transmitter-free field as the least obstructed path from any measurement
 to the target,
 %

@@ -32,11 +32,13 @@ INK = "#1a1a1a"; ACC = "#1f4e79"; HOT = "#b3202c"; MUT = "#8a8a8a"; GRN = "#1e6b
 def fig_plateau():
     """Every deep family plateaus in the same NLoS band while LoS varies widely."""
     d = R("dl_baselines.json")
+    # names match tab/main.tex: a dagger marks a family representative we built,
+    # not a reimplementation of the cited paper
     label = {"COMPASS-wnet_occ": "Ours, WNet+occ", "COMPASS-unet_occ": "Ours, UNet+occ",
              "COMPASS-wnet_base": "WNet", "full": "U-Net",
-             "radiounet": "RadioUNet", "radiomamba": "RadioMamba",
-             "radiotransformer": "RadioTransf.", "uram": "URAM",
-             "radiodiff": "RadioDiff", "radiogan": "RadioGAN", "pmnet": "PMNet"}
+             "radiounet": "RadioUNet", "radiomamba": "Mamba-UNet$^\\dagger$",
+             "radiotransformer": "CNN-Transf.$^\\dagger$", "uram": "Bayes. U-Net$^\\dagger$",
+             "radiodiff": "RadioDiff", "radiogan": "cGAN$^\\dagger$", "pmnet": "PMNet"}
     ours = {"COMPASS-wnet_occ", "COMPASS-unet_occ"}
     rows = [(n, d[k]["rmse_los"], d[k]["rmse_nlos"], k in ours)
             for k, n in label.items() if k in d and d[k].get("rmse_nlos") is not None]

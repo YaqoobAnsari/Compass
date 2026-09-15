@@ -2,11 +2,12 @@
 \section{What Happens on Real Measurements}
 \label{sec:real}
 
-\subsection{Measurements}
+\subsection{Four buildings, two of them usable}
 
-We evaluate on an indoor cellular crowdsensing corpus collected across four
-buildings, comprising $61$ floors, $204$ transmitters, six to seven handset models
-per site and $5.06$ million logged readings. Each reading carries a handset
+Five million real readings shrink to two usable sites once the evaluation demands
+repeat visits to the same place. The corpus spans four buildings, $61$ floors, $204$
+transmitters, six to seven handset models per site and $5.06$ million logged
+readings. Each reading carries a handset
 identifier, a reference-point index, a transmitter identifier and a received
 strength. Two of the four buildings, both residential towers, yield no cell with
 enough co-located repeat measurements to evaluate on, so all numbers below come
@@ -15,9 +16,10 @@ multi-storey car park. The car park serves throughout as a negative control,
 because an open concrete structure has the geometry of the problem without the
 walls.
 
-Reconstruction is scored by holding out reference points and predicting them from
-the rest of the same cell, with a $1$~m exclusion buffer so a held-out point is
-never predicted from a neighbour standing beside it. Two cell sets appear below and
+Scoring has to defend against a trivial shortcut, since reference points are dense.
+We hold out one point and predict it from the rest of the same cell behind a $1$~m
+exclusion buffer, so a held-out point is never recovered from a neighbour standing
+beside it. Two cell sets appear below and
 we keep them separate throughout. The reconstruction comparison uses the $54$ cells
 with at least ten reference points, giving $1924$ held-out predictions. The
 transmitter-locatability and residual-model analyses use the looser threshold of
@@ -88,9 +90,9 @@ benchmarks disagree.}
 
 \subsection{Classical interpolation wins, and the reason is instructive}
 
-\Cref{tab:real} reports reconstruction on the walled and control sites under
-leave-one-reference-point-out cross-validation. Classical interpolation is better
-than the learned reconstructor. Multiquadric radial basis interpolation reaches
+Classical interpolation beats the learned reconstructor on real measurements, and
+\cref{tab:real} reports the margin under leave-one-reference-point-out
+cross-validation. Multiquadric radial basis interpolation reaches
 $5.51$~dB against $6.20$~dB for the learned model with geometry, and the paired
 Wilcoxon test over $1924$ held-out points gives $p = 2.5 \times 10^{-30}$. This is
 not a marginal outcome that more training would reverse.
@@ -115,10 +117,10 @@ visited, and it is there that geometry conditioning pays. The two benchmarks
 disagree because they are not testing the same capability, and the field's practice
 of reporting only the second has allowed that distinction to stay hidden.
 
-\subsection{What this means for the benchmark}
+\subsection{A missing input, not a domain shift}
 
-Putting the three findings together gives a coherent account of why progress on
-this problem has been slower than the synthetic numbers suggest. The dominant error
+Read together, the three findings explain the transfer gap without appealing to
+domain shift at all. The dominant error
 mode is non-line-of-sight prediction, every architecture stalls at the same place,
 and the input that breaks the stall is a line integral anchored at the transmitter.
 On simulated data that anchor is given. On real crowdsensed cellular it is absent

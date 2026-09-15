@@ -2,7 +2,7 @@
 \section{What Limits Learned Reconstruction}
 \label{sec:experiments}
 
-\subsection{Protocol}
+\subsection{One protocol for every number}
 
 All results in this section come from one protocol applied identically to every
 method. We evaluate on RadioMapSeer, a ray-traced corpus of urban scenes with dense
@@ -13,8 +13,8 @@ were never measured, with bootstrap $95\%$ confidence intervals over $2000$
 resamples and paired Wilcoxon signed-rank tests over the $320$ scenes. Deep
 baselines are trained to the same budget of $150$ epochs on the same split.
 
-We distinguish two kinds of baseline and mark the distinction in
-\cref{tab:main}. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
+Two kinds of baseline appear in the panel and conflating them would misrepresent
+what we ran, so \cref{tab:main} marks the difference. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
 specific published architecture, following the paper in structure and differing only
 where our input setting requires it. The entries marked with a dagger are not
 reimplementations of one paper. They are matched-budget representatives of an
@@ -44,10 +44,10 @@ than any architectural substitution in the panel.}
 \label{tab:main}
 \end{table}
 
-\subsection{The benchmark}
+\subsection{One channel outranks every backbone}
 
-\Cref{tab:main} reports the full comparison. Two results organise everything that
-follows. The first is that geometry conditioning takes the cascade from $9.99$ to
+Geometry conditioning outranks every backbone substitution in \cref{tab:main}, and
+two results carry that conclusion. The first is that geometry conditioning takes the cascade from $9.99$ to
 $8.64$~dB, moving it from behind RadioUNet at $9.93$~dB to ahead of it with
 non-overlapping confidence intervals. The second is more surprising. A single
 network with the occlusion channel reaches $9.46$~dB and also beats RadioUNet,
@@ -108,8 +108,8 @@ how the model is built.
 \centering
 \includegraphics[width=\columnwidth]{fig/interaction.pdf}
 \caption{\textbf{Geometry and depth are substitutes.} Left, the $2\times2$ design.
-Right, the gains measured separately sum to $3.54$~dB while the joint configuration
-delivers $2.87$~dB. The $0.67$~dB shortfall is the interaction, and its sign means
+Right, the gains measured separately sum to $3.55$~dB while the joint configuration
+delivers $2.86$~dB. The $0.69$~dB shortfall is the interaction, and its sign means
 the cascade has less to add once the geometry is supplied.}
 \label{fig:interaction}
 \end{figure}
@@ -126,7 +126,7 @@ bootstrap interval of $[+0.50, +0.91]$ and $p = 4.7 \times 10^{-10}$ against zer
 a fifth of the expected joint benefit does not materialise. Each of the four
 single-factor comparisons is significant on its own at $p < 10^{-35}$.
 
-The reading is that the two mechanisms are partially redundant. A second network in
+Redundancy between the two mechanisms is the only reading that fits. A second network in
 series has the depth and the intermediate estimate to recover some of the shadow
 structure that \cref{eq:occ} supplies directly, so once the structure is given the
 cascade has less left to contribute. Stated the other way, geometry buys more where
@@ -145,8 +145,9 @@ $0.10$~dB, which a paired test does detect at $p = 2.3 \times 10^{-3}$ over the 
 scenes but which amounts to $7\%$ of the benefit the transmitter-anchored field
 delivers. The substitution is measurable and useless.
 
-\Cref{fig:concept} shows the mechanism of the failure. The minimum over anchors in
-\cref{eq:occmeas} is dominated by whichever measurement happens to sit closest to an
+The minimum operator is what destroys the field, as \cref{fig:concept} makes
+visible. Taking a minimum over anchors in \cref{eq:occmeas} lets the result be
+dominated by whichever measurement happens to sit closest to an
 unobstructed path, so the field collapses toward zero almost everywhere. Its mean
 value over the scene is $0.084$ against $0.298$ for the transmitter-anchored field,
 and the radial shadow structure that carries the signal is gone. The failure is
