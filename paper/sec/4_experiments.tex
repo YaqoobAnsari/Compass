@@ -13,6 +13,18 @@ were never measured, with bootstrap $95\%$ confidence intervals over $2000$
 resamples and paired Wilcoxon signed-rank tests over the $320$ scenes. Deep
 baselines are trained to the same budget of $150$ epochs on the same split.
 
+We distinguish two kinds of baseline and mark the distinction in
+\cref{tab:main}. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
+specific published architecture, following the paper in structure and differing only
+where our input setting requires it. The entries marked with a dagger are not
+reimplementations of one paper. They are matched-budget representatives of an
+architecture family, built to the same conditioning interface as everything else so
+that the family is the only variable, and the citation beside each names the work
+that family is drawn from rather than a method we reproduced. We prefer this for the
+question at hand. Comparing author implementations across families would confound
+the backbone with six different training recipes, whereas the claim we are testing is
+precisely whether the family matters once everything else is held fixed.
+
 One protocol for every number matters more here than it usually does. The same
 checkpoint scores between $8.6$ and $9.5$~dB under four evaluation conventions we
 found in use across this literature, which is a spread wide enough to reverse a
@@ -25,8 +37,10 @@ ranking, so mixing conventions across a table would make the table meaningless.
 \caption{\textbf{Free-space unobserved RMSE (dB) on $320$ held-out scenes},
 with bootstrap $95\%$ intervals, structural similarity, and the error split by
 line-of-sight visibility. Every method sees identical trajectories and identical
-held-out cells. Adding one geometric channel to a single U-Net is worth more than
-any architectural substitution in the panel.}
+held-out cells. A dagger marks a matched-budget representative of an architecture
+family rather than a reimplementation of the cited paper, as explained in
+\cref{sec:experiments}. Adding one geometric channel to a single U-Net is worth more
+than any architectural substitution in the panel.}
 \label{tab:main}
 \end{table}
 
@@ -66,7 +80,7 @@ Splitting the error by visibility exposes the structure the aggregate hides.
 learned method in the panel. Line-of-sight error separates the nine methods
 without the occlusion channel over a range of $5.18$ to $9.98$~dB, a coefficient of
 variation of $20.1\%$, which is what one expects when comparing convolutional, state-space,
-transformer, adversarial and diffusion families. Non-line-of-sight error does not
+transformer, adversarial and diffusion backbones. Non-line-of-sight error does not
 follow. The same nine methods fall between $11.12$ and $15.52$~dB at a coefficient
 of variation of $9.6\%$, less than half the variation seen in line of sight, and
 dropping PMNet as the one clear outlier tightens the band to $11.12$ to $12.84$~dB

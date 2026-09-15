@@ -205,11 +205,14 @@ def table_main():
         ("\\textit{Learned baselines}", [
             ("radiounet", "RadioUNet~\\cite{levie2021radiounet}"),
             ("COMPASS-wnet_base", "WNet (no occlusion)"),
-            ("radiomamba", "RadioMamba"), ("radiotransformer", "RadioTransf."),
-            ("uram", "URAM"), ("radiodiff", "RadioDiff"), ("radiogan", "RadioGAN"),
+            ("radiomamba", "Mamba-UNet$^\\dagger$~\\cite{jia2025radiomamba}"),
+            ("radiotransformer", "CNN-Transformer$^\\dagger$~\\cite{li2025rmtransformer}"),
+            ("uram", "Bayesian U-Net$^\\dagger$~\\cite{lu2025uram}"),
+            ("radiodiff", "RadioDiff~\\cite{wang2025radiodiff}"),
+            ("radiogan", "cGAN$^\\dagger$~\\cite{zhang2023rmegan}"),
             ("full", "U-Net (no occlusion)"),
             ("pmnet", "PMNet~\\cite{lee2024pmnet}"),
-            ("sparse_unet", "SparseUNet"), ("rmdm", "RMDM")]),
+            ("sparse_unet", "SparseUNet$^\\dagger$ (no geometry)"), ("rmdm", "RMDM~\\cite{jia2025rmdm}")]),
         ("\\textit{Input ablations}", [
             ("COMPASS-wnet_occ_meas", "Tx-free occlusion"),
             ("COMPASS-no_tx", "no Tx heatmap"),
