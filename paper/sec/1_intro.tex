@@ -25,7 +25,7 @@ coefficient of variation of $9.6\%$. Discarding the weakest member tightens the
 non-line-of-sight band to $11.12$ to $12.84$~dB at a coefficient of variation of $5.1\%$. Six
 architecture families and two orders of magnitude of design effort separate these
 methods, and in the regime that dominates the total error they are nearly
-indistinguishable. A plateau that survives this much variation is not a capacity
+indistinguishable. A floor that survives this much variation is not a capacity
 limit. It is the signature of a quantity that none of these models can form from the
 inputs it receives.
 
@@ -71,10 +71,10 @@ penalty of exactly zero.
 \noindent\textbf{Contributions.}
 \begin{enumerate}[itemsep=1pt,topsep=3pt,parsep=0pt,leftmargin=1.2em]
     \item A diagnostic showing that nine learned radio map reconstructors spanning
-    six architecture families share one non-line-of-sight plateau while differing
+    six architecture families share one non-line-of-sight error floor while differing
     widely in line of sight, which locates the bottleneck in the inputs rather than
     in the models.
-    \item A ray-occlusion conditioning channel that removes the plateau for under
+    \item A ray-occlusion conditioning channel that lowers that floor for under
     $600$ parameters, and a $2 \times 2$ analysis establishing that it is a substitute for
     architectural depth rather than a complement to it.
     \item A negative result, with its mechanism identified, showing that the

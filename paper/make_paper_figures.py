@@ -68,7 +68,7 @@ def fig_plateau():
                label="non line of sight")
     ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.45, 1.13),
               ncol=2, handletextpad=0.3, columnspacing=1.0)
-    ax.text((lo + hi) / 2, -0.7, f"plateau {lo:.1f}\u2013{hi:.1f} dB",
+    ax.text((lo + hi) / 2, -0.7, f"error floor {lo:.1f}\u2013{hi:.1f} dB",
             fontsize=6, color=ACC, ha="center", va="center")
     fig.savefig(FIG / "plateau.pdf"); plt.close(fig)
     print(f"  plateau.pdf  NLoS band {lo:.2f}-{hi:.2f} dB over {len(band)} non-occlusion methods; "

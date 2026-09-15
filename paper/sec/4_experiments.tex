@@ -78,7 +78,7 @@ below it on both axes.}
 \label{fig:plateau}
 \end{figure}
 
-\subsection{The Non-Line-of-Sight Plateau}
+\subsection{The Non-Line-of-Sight Error Floor}
 
 Separating the error by visibility shows that architecture moves line-of-sight
 accuracy substantially while leaving non-line-of-sight accuracy, which dominates the
@@ -94,7 +94,7 @@ dropping PMNet as the one clear outlier tightens the band to $11.12$ to $12.84$~
 at a coefficient of variation of $5.1\%$. These methods span two orders of
 magnitude of design effort.
 
-A plateau that survives this much architectural variation indicates a missing input
+A floor that survives this much architectural variation indicates a missing input
 rather than insufficient capacity, and supplying that input moves both error modes
 below every method in the panel for a few hundred parameters. It is the signature of a quantity no member of the
 panel can form from the inputs it is given. Adding \cref{eq:occ} cuts line-of-sight
@@ -122,7 +122,7 @@ the cascade has less to add once the geometry is supplied.}
 \label{fig:interaction}
 \end{figure}
 
-\subsection{Interaction Between Geometry and Depth}
+\subsection{Interaction Between Occlusion and Cascade Depth}
 \label{sec:interaction}
 
 The occlusion channel and the cascade do not address different deficiencies, because
