@@ -39,9 +39,10 @@ and moves both error modes at once, taking line-of-sight error to $3.85$~dB and
 non-line-of-sight error to $9.79$~dB, below the band that every other method
 shares.
 
-The consequences run against the usual intuition about scale. In a controlled
-$2 \times 2$ design, geometry conditioning and a second network in series turn out to
-be substitutes rather than complements. Measured separately they are worth $2.04$ and
+Geometry conditioning and architectural depth turn out to be substitutes rather than
+complements, which runs against the usual intuition that better inputs and more
+capacity compound. In a controlled $2 \times 2$ design their gains overlap rather than
+add. Measured separately they are worth $2.04$ and
 $1.51$~dB, and applied together they deliver $2.86$~dB rather than the $3.55$~dB
 their sum predicts. A plain single network given the geometry outperforms a cascade
 denied it. Effort spent computing the right input buys more than effort spent adding
@@ -60,11 +61,12 @@ at $5.51$ against $6.20$~dB with $p = 2.5 \times 10^{-30}$ over $1924$ held-out
 points. The gap between simulated and deployed accuracy is not a domain shift that
 fine-tuning closes. It is an input that one setting has and the other does not.
 
-We validate the underlying premise on measurements rather than assuming it. At a
-walled site, reference-point pairs separated by walls differ by an additional $2.31$
-to $2.50$~dB at matched distance with disjoint confidence intervals, while at an
-open car park used as a negative control the same measurement returns nothing and
-cross-validation selects a wall penalty of exactly zero.
+The wall attenuation that motivates the channel is visible in the measurements
+themselves, at a walled site and not at an open control site. Reference-point pairs
+separated by walls differ by an additional $2.31$ to $2.50$~dB at matched distance
+with disjoint confidence intervals, while at an open car park used as a negative
+control the same measurement returns nothing and cross-validation selects a wall
+penalty of exactly zero.
 
 \noindent\textbf{Contributions.}
 \begin{enumerate}[itemsep=1pt,topsep=3pt,parsep=0pt,leftmargin=1.2em]
