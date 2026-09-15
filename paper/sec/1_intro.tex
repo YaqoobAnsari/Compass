@@ -30,10 +30,10 @@ limit. It is the signature of a quantity that none of these models can form from
 inputs it receives.
 
 That quantity is a line integral. The fraction of the transmitter-to-pixel ray that
-passes through building material is a soft shadow depth, it is fully determined by
-inputs the networks already have, and it is nonetheless not something a stack of
-local operators computes cheaply, because it is a long thin path-dependent sum
-between two points that may be two hundred cells apart. Supplying it as one extra
+passes through building material is a soft shadow depth, fully determined by inputs
+the networks already receive. It is nonetheless not something a stack of local
+operators computes cheaply, because it is a long thin path-dependent sum between two
+points that may be two hundred cells apart. Supplying it as one extra
 input channel costs $432$ parameters in a single network and $576$ in the cascade,
 and moves both error modes at once, taking line-of-sight error to $3.85$~dB and
 non-line-of-sight error to $9.78$~dB, below the band that every other method
