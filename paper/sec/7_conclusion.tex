@@ -1,0 +1,34 @@
+%% 7_conclusion
+\section{Conclusion}
+\label{sec:conclusion}
+
+Architectures for radio field reconstruction have been compared against each other
+for several years without the comparison revealing what actually limits them. Under
+one protocol, nine learned methods spanning convolutional, cascaded, state-space,
+transformer, adversarial and diffusion designs vary over $20.1\%$ in line-of-sight
+error and only $9.6\%$ in non-line-of-sight error, which is the regime that
+dominates the total. A plateau that indifferent to design is a statement about the
+inputs, not the models.
+
+The missing input is a line integral. Supplying the fraction of the
+transmitter-to-pixel ray that lies inside building material costs $432$ parameters
+and moves the result past every method in the comparison, including in a plain
+single network that has none of the architectural machinery its competitors carry.
+Geometry and depth turn out to be substitutes rather than complements, and a third
+of their combined expected benefit is lost to overlap, which is a reason to spend
+effort on conditioning rather than on capacity.
+
+The same finding explains why this literature transfers poorly. The line integral
+is anchored at the transmitter, and indoor cellular crowdsensing locates the
+transmitter in fewer than one cell in five. Marginalising the anchor away destroys
+the field it was supposed to preserve, and on real measurements classical
+interpolation remains ahead of every learned reconstructor we trained. The gap
+between simulated and deployed performance is therefore not a domain shift to be
+closed by fine-tuning. It is an input that is present in one setting and absent in
+the other.
+
+That reframing sets the agenda we think is worth pursuing. Estimating propagation
+direction from the measurements themselves, rather than assuming a known source or
+discarding direction entirely, is the step that would make geometry conditioning
+deployable. The failure in \cref{sec:txfree_result} is specific and diagnosable,
+which makes it a starting point rather than a wall.

@@ -49,3 +49,12 @@
 %%
 % \usepackage{soul}
 % \setuldepth{foobar}
+%%
+%% Added for this paper.
+%% cvpr.sty loads cleveref itself via AtEndPreamble, so we must not load it again.
+%%
+%%
+%% cvpr.sty already provides amsmath, amssymb, graphicx, booktabs, xspace,
+%% enumitem and cleveref, so only the genuinely missing pieces are added here.
+\usepackage{microtype}
+\setlength{\abovecaptionskip}{.45em}

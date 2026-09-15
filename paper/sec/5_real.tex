@@ -1,0 +1,122 @@
+%% 5_real
+\section{What Happens on Real Measurements}
+\label{sec:real}
+
+\subsection{Measurements}
+
+We evaluate on an indoor cellular crowdsensing corpus collected across four
+buildings, comprising $61$ floors, $204$ transmitters, six to seven handset models
+per site and $5.06$ million logged readings. Each reading carries a handset
+identifier, a reference-point index, a transmitter identifier and a received
+strength. Two of the four buildings, both residential towers, yield no cell with
+enough co-located repeat measurements to evaluate on, so all numbers below come
+from the remaining two, a university building with interior partitions and an open
+multi-storey car park. The car park serves throughout as a negative control,
+because an open concrete structure has the geometry of the problem without the
+walls.
+
+Reconstruction is scored by holding out reference points and predicting them from
+the rest of the same cell, with a $1$~m exclusion buffer so a held-out point is
+never predicted from a neighbour standing beside it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/walls.pdf}
+\caption{\textbf{Walls attenuate at the treatment site and not at the control
+site.} Excess absolute difference in received strength between reference-point
+pairs at matched separation, split by how many walls separate them. Error bars are
+bootstrap $95\%$ intervals. The open car park has the geometry of the problem
+without the partitions and shows no effect.}
+\label{fig:walls}
+\end{figure}
+
+\subsection{Walls attenuate, and the control site confirms it}
+
+The premise of \cref{eq:occ} is testable directly on measurements, without any
+model. For pairs of reference points at matched separation we compare the excess
+absolute difference in received strength between pairs separated by many walls and
+pairs separated by few. \Cref{fig:walls} reports the result.
+
+At the walled site the effect is present and ordered. Pairs separated by walls
+differ by an additional $2.31$~dB at two to three metres, $2.50$~dB at three to
+four metres and $1.51$~dB at four to six metres, with disjoint bootstrap intervals
+in all three bands. At one to two metres the gap is $0.55$~dB and the intervals
+overlap, which is the expected behaviour when the separation is shorter than the
+spacing between partitions. At the open control site the same measurement returns
+$-0.02$~dB and $+0.91$~dB with overlapping intervals and wall correlations of
+$-0.057$ and $-0.017$, which is to say nothing.
+
+The same contrast survives when the effect is put to work. Cross-validated
+wall-aware interpolation improves accuracy by $3.86\%$ at the walled site, with the
+penalty weight selected as $32$ and $16$ on the two folds. At the control site the
+gain is $0.00\%$ and cross-validation selects a penalty of exactly zero on both
+folds, which is the procedure declining to use geometry when there is none. A real
+effect at the treatment site and an exact null at the control site is the strongest
+causal evidence we have that the mechanism in \cref{eq:occ} is the right one.
+
+\subsection{The transmitter is usually not locatable}
+\label{sec:locatable}
+
+\Cref{eq:occ} needs a source position, and real indoor cellular does not reliably
+provide one. Fitting a point source per cell and gating on fit quality, stability
+and cross-split agreement, only $12$ of $67$ cells pass, which is $17.9\%$. The
+remainder are consistent with distributed or repeated sources, which is what indoor
+boosters sharing a cell identifier produce. The median coefficient of determination
+across all cells is $0.31$ against a gate of $0.30$, so the count is sensitive to
+where the gate is placed, and no ground-truth transmitter position exists anywhere
+in the corpus against which a localisation error could be quoted.
+
+This is the crux of the transfer problem. The input that carries the synthetic
+result is available for roughly one cell in five, and \cref{sec:txfree_result}
+showed that the obvious way to dispense with it does not work.
+
+\begin{table}[t]
+\centering\footnotesize
+\input{tab/real}
+\caption{\textbf{Reconstruction on real indoor cellular measurements}, held-out
+reference points with a $1$~m exclusion buffer, $1924$ points over $54$ cells. The
+right column is a paired Wilcoxon test against the learned model with geometry.
+Classical interpolation wins here, and \cref{sec:real} explains why the two
+benchmarks disagree.}
+\label{tab:real}
+\end{table}
+
+\subsection{Classical interpolation wins, and the reason is instructive}
+
+\Cref{tab:real} reports reconstruction on the walled and control sites under
+leave-one-reference-point-out cross-validation. Classical interpolation is better
+than the learned reconstructor. Multiquadric radial basis interpolation reaches
+$5.51$~dB against $6.20$~dB for the learned model with geometry, and the paired
+Wilcoxon test over $1924$ held-out points gives $p = 2.5 \times 10^{-30}$. This is
+not a marginal outcome that more training would reverse.
+
+Two smaller results sharpen the picture rather than soften it. Geometry still helps
+the learned model, which improves from $6.30$ to $6.20$~dB when wall information is
+supplied, at $p = 7.0 \times 10^{-6}$, so the mechanism is intact even where the
+model loses. And a residual formulation that learns a correction on top of the
+classical prediction does win, reaching $5.14$~dB against $5.49$~dB for the same
+interpolator at $p = 2.1 \times 10^{-4}$, though the confidence intervals overlap
+and we report it as a paired comparison rather than as separated intervals.
+
+The reason classical wins here is a property of the evaluation, not a defect of the
+learned model. Real reference points are dense and clustered inside each cell, so
+holding one out leaves neighbours a metre or two away and asks for interpolation
+between nearby samples of the same process. That is the regime in which radial
+basis interpolation is close to optimal by construction. The synthetic benchmark
+asks a different question, namely extrapolation into free space that no trajectory
+visited, and it is there that geometry conditioning pays. The two benchmarks
+disagree because they are not testing the same capability, and the field's practice
+of reporting only the second has allowed that distinction to stay hidden.
+
+\subsection{What this means for the benchmark}
+
+Putting the three findings together gives a coherent account of why progress on
+this problem has been slower than the synthetic numbers suggest. The dominant error
+mode is non-line-of-sight prediction, every architecture stalls at the same place,
+and the input that breaks the stall is a line integral anchored at the transmitter.
+On simulated data that anchor is given. On real crowdsensed cellular it is absent
+four times in five, and marginalising it away destroys the signal. The gap between
+the two regimes is therefore not a domain shift that fine-tuning closes. It is a
+missing input, and closing it requires either transmitter infrastructure that
+crowdsensing does not have or a directional geometry estimator that does not yet
+exist.

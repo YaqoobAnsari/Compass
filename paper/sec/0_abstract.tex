@@ -1,5 +1,25 @@
 %% 0_abstract
 \begin{abstract}
-% TODO: written after the intro and results are settled.
-Placeholder abstract.
+Radio map reconstruction recovers a dense signal-strength field from sparse
+measurements, and progress on it has been pursued almost entirely by varying the
+architecture. We show that architecture is not the binding constraint. Evaluating
+nine learned reconstructors spanning convolutional, cascaded, state-space,
+transformer, adversarial and diffusion families under a single protocol, we find
+that they separate in line of sight, with a coefficient of variation of $20.1\%$, and barely
+separate at all in non line of sight, at $9.6\%$, even though non line
+of sight dominates the total error. A plateau that indifferent to design indicates a missing
+input rather than insufficient capacity. The missing input is a line integral,
+namely the fraction of the transmitter-to-pixel ray that lies inside building
+material. Supplying it as one channel costs $432$ parameters and pushes both error
+modes below the entire panel. A controlled $2 \times 2$ shows that this geometry and
+a deeper cascaded backbone are substitutes rather than complements, delivering
+$2.87$~dB jointly where their separate gains predict $3.54$~dB, so a plain network
+given the geometry beats a cascade denied it. The same result explains a transfer
+failure. The integral is anchored at the transmitter, and on real indoor cellular
+crowdsensing only $17.9\%$ of cells yield a locatable source. We show that
+marginalising the anchor over measurement locations destroys the directional
+structure that makes the channel work, and that on real measurements classical
+interpolation still beats every learned reconstructor we trained. We validate the
+underlying wall-attenuation premise directly on measurements against an open-plan
+negative control.
 \end{abstract}

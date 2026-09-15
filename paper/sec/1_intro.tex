@@ -3,82 +3,81 @@
 \label{sec:intro}
 
 Recovering a dense physical field from sparse, irregularly placed samples is a
-recurring inverse problem in vision. Radio maps are an instance of it that is
-unusually well posed for visual reasoning, because the field is shaped by geometry
-that is directly observable. A transmitter illuminates a scene, walls absorb and
-diffract the wavefront, and the received signal strength at a pixel is largely
+recurring inverse problem in vision, and radio maps are an instance of it that is
+unusually well posed for visual reasoning. A transmitter illuminates a scene, walls
+absorb and diffract the wavefront, and the received strength at a point is largely
 determined by what lies along the straight path back to the source. The structure is
-the same one that governs shading and shadowing, and it is visible in a floor plan.
+the one that governs shading and cast shadows, and unlike most inverse problems the
+geometry that produces it is directly observable in a building raster.
 
-Yet the methods that dominate this problem are evaluated in a regime that does not
-occur. Learned reconstructors such as RadioUNet~\cite{levie2021radiounet} and
-PMNet~\cite{lee2024pmnet} are trained and benchmarked on ray-traced simulations in
-which samples are drawn uniformly at random and the transmitter location is supplied
-as an input. Real measurements violate both assumptions. They are crowdsensed, which
-means they arrive along the paths people actually walk and leave whole regions with no
-observation at all, and the transmitter is frequently unlocatable because indoor
-boosters share cell identifiers. Reported accuracy under the benchmark regime therefore
-overstates what these models deliver once deployed.
+The field has responded to this problem the way vision usually does, by varying the
+architecture. Convolutional encoder-decoders~\cite{levie2021radiounet},
+transformers, state-space models, adversarial networks and diffusion models have all
+been proposed for radio map estimation, each reporting an improvement over the last.
+What has not been asked is whether architecture is the binding constraint. We ask
+it directly, and the answer is that it is not.
 
-We study the deployed regime directly, on real indoor cellular measurements alongside
-the standard synthetic benchmark, and we find that the gap is not a matter of degree.
-Three properties of real crowdsensed data are absent from the simulation setting and
-each one changes what a model should condition on.
+Evaluating nine learned methods under one protocol on identical held-out scenes, we
+find that they separate cleanly in line of sight and barely at all in non line of
+sight. Line-of-sight error spans $5.18$ to $9.98$~dB across the panel, a coefficient of
+variation of $20.1\%$, while non-line-of-sight error spans $11.12$ to $15.52$~dB at a
+coefficient of variation of $9.6\%$. Discarding the weakest member tightens the
+non-line-of-sight band to $11.12$ to $12.84$~dB at a coefficient of variation of $5.1\%$. Six
+architecture families and two orders of magnitude of design effort separate these
+methods, and in the regime that dominates the total error they are nearly
+indistinguishable. A plateau that survives this much variation is not a capacity
+limit. It is the signature of a quantity that none of these models can form from the
+inputs it receives.
 
-\noindent\textbf{Walls attenuate rather than block.} On real data, pairs of
-measurements separated by a wall differ by an additional $2$ to $3$~dB at matched
-distance. The wall does not terminate the signal, it casts a soft shadow whose depth
-grows with the amount of material traversed. Convolutional backbones cannot construct
-this quantity: it is a long, thin integral along a line joining two points, whereas a
-receptive field aggregates over a neighbourhood. We show that unrelated architectures
-plateau at the \emph{same} non-line-of-sight error, which is the signature of a missing
-input rather than of insufficient capacity, and we supply the missing input as a
-differentiable ray-occlusion field.
+That quantity is a line integral. The fraction of the transmitter-to-pixel ray that
+passes through building material is a soft shadow depth, it is fully determined by
+inputs the networks already have, and it is nonetheless not something a stack of
+local operators computes cheaply, because it is a long thin path-dependent sum
+between two points that may be two hundred cells apart. Supplying it as one extra
+input channel costs $432$ parameters and moves both error modes at once, taking
+line-of-sight error to $3.85$~dB and non-line-of-sight error to $9.78$~dB, below the
+band that every other method shares.
 
-\noindent\textbf{Measurement order carries signal.} Crowdsensed samples are not a set.
-They are a walk, and consecutive readings are correlated at $0.984$. A model that
-consumes the same measurements as an ordered sequence reaches $1.79$~dB against
-$9.79$~dB for an order-blind model on the same data ($p = 4.7\!\times\!10^{-23}$), and
-the effect transfers across sites.
+The consequences run against the usual intuition about scale. In a controlled
+$2 \times 2$ design, geometry conditioning and a second network in series turn out to
+be substitutes rather than complements. Measured separately they are worth $2.04$ and
+$1.50$~dB, and applied together they deliver $2.87$~dB rather than the $3.54$~dB
+their sum predicts. A plain single network given the geometry outperforms a cascade
+denied it. Effort spent computing the right input buys more than effort spent adding
+capacity.
 
-\noindent\textbf{The sensor is not calibrated.} Handsets disagree by a median of
-$4.1$~dB and by as much as $27.8$~dB on the same signal. Treating measurements as
-absolute, as every simulation-trained model does, injects an error larger than the
-quantity being predicted.
+The same finding explains a transfer failure that the benchmark literature has not
+confronted. The line integral is anchored at the transmitter, and on real indoor
+cellular measurements the transmitter is usually not locatable, because indoor
+boosters share cell identifiers with the macro network. Across $67$ measured cells
+only $17.9\%$ admit a reliable point source. We therefore tried to remove the anchor
+by taking a minimum over measurement locations, and we report that it does not work.
+Marginalising over anchors collapses the field toward zero and discards exactly the
+directional structure that made it useful. On real measurements classical
+interpolation consequently remains ahead of every learned reconstructor we trained,
+at $5.51$ against $6.20$~dB with $p = 2.5 \times 10^{-30}$ over $1924$ held-out
+points. The gap between simulated and deployed accuracy is not a domain shift that
+fine-tuning closes. It is an input that one setting has and the other does not.
 
-These three observations motivate \methodname, a geometry-conditioned reconstructor
-that takes the acquisition process as part of its input rather than as a nuisance. The
-model conditions on a ray-occlusion field that integrates building occupancy along the
-transmitter-to-pixel segment, on the order in which measurements were collected, and on
-a per-device offset estimated jointly with the field. It predicts a dense map together
-with a calibrated per-pixel uncertainty, which we then use to decide where to measure
-next.
-
-On the synthetic benchmark, \methodname matches the strongest learned reconstructor on
-accuracy at $9.97$~dB free-unobserved RMSE against $10.00$~dB, attains the best
-structural fidelity at $0.814$ SSIM, and is the only method in the comparison that also
-supplies uncertainty which survives calibration. Nine deep and classical baselines are
-evaluated under an identical protocol with bootstrap confidence intervals and paired
-tests. We report an outcome that the benchmark framing would have concealed: on sparse
-real measurements, classical interpolation remains the stronger reconstructor at
-$5.51$~dB against $6.30$~dB. We therefore do not claim learned reconstruction as the
-contribution. The contribution is the geometry, order and calibration structure that
-learning does supply, each validated independently on real data, and the demonstration
-that uncertainty derived from it guides acquisition better than space-filling
-alternatives.
+We validate the underlying premise on measurements rather than assuming it. At a
+walled site, reference-point pairs separated by walls differ by an additional $2.31$
+to $2.50$~dB at matched distance with disjoint confidence intervals, while at an
+open car park used as a negative control the same measurement returns nothing and
+cross-validation selects a wall penalty of exactly zero.
 
 \noindent\textbf{Contributions.}
-\begin{enumerate}[itemsep=1pt,topsep=2pt,parsep=0pt]
-    \item A ray-occlusion field that gives a convolutional reconstructor the
-    line-integral geometry it cannot otherwise form, motivated by a diagnostic showing
-    that unrelated backbones share one non-line-of-sight plateau.
-    \item Order-aware and device-aware conditioning, each isolated on real indoor
-    cellular data with negative controls, and a transmitter-agnostic design justified
-    by the finding that only $18\%$ of cells yield a reliable point source.
-    \item Calibrated per-pixel uncertainty, recalibrated to near-nominal coverage, and
-    an acquisition rule built on it that outperforms space-filling collection on walled
-    sites ($p = 0.039$).
-    \item An evaluation on real crowdsensed measurements alongside the standard
-    synthetic benchmark, which quantifies how far the two regimes diverge and states
-    explicitly where learning does and does not help.
+\begin{enumerate}[itemsep=1pt,topsep=3pt,parsep=0pt,leftmargin=1.2em]
+    \item A diagnostic showing that nine learned radio map reconstructors spanning
+    six architecture families share one non-line-of-sight plateau while differing
+    widely in line of sight, which locates the bottleneck in the inputs rather than
+    in the models.
+    \item A ray-occlusion conditioning channel that removes the plateau for $432$
+    parameters, and a $2 \times 2$ analysis establishing that it is a substitute for
+    architectural depth rather than a complement to it.
+    \item A negative result, with its mechanism identified, showing that the
+    transmitter anchor cannot be marginalised away, together with the measurement
+    evidence that the anchor is unavailable in four of five real cells.
+    \item An evaluation on real indoor cellular crowdsensing with a negative control
+    site, which quantifies how far the simulated and deployed regimes diverge and
+    states explicitly where learning does and does not help.
 \end{enumerate}

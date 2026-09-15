@@ -1,5 +1,137 @@
 %% 4_experiments
-\section{Experiments}
+\section{What Limits Learned Reconstruction}
 \label{sec:experiments}
 
-%% TODO
+\subsection{Protocol}
+
+All results in this section come from one protocol applied identically to every
+method. We evaluate on RadioMapSeer, a ray-traced corpus of urban scenes with dense
+ground truth, using $40$ held-out maps and $8$ transmitters each for $320$ test
+scenes. Every method sees the same trajectories, the same measurement noise and the
+same held-out cells. We report root mean square error over free-space cells that
+were never measured, with bootstrap $95\%$ confidence intervals over $2000$
+resamples and paired Wilcoxon signed-rank tests over the $320$ scenes. Deep
+baselines are trained to the same budget of $150$ epochs on the same split.
+
+One protocol for every number matters more here than it usually does. The same
+checkpoint scores between $8.6$ and $9.5$~dB under four evaluation conventions we
+found in use across this literature, which is a spread wide enough to reverse a
+ranking, so mixing conventions across a table would make the table meaningless.
+
+\begin{table}[t]
+\centering\scriptsize
+\setlength{\tabcolsep}{3pt}
+\input{tab/main}
+\caption{\textbf{Free-space unobserved RMSE (dB) on $320$ held-out scenes},
+with bootstrap $95\%$ intervals, structural similarity, and the error split by
+line-of-sight visibility. Every method sees identical trajectories and identical
+held-out cells. Adding one geometric channel to a single U-Net is worth more than
+any architectural substitution in the panel.}
+\label{tab:main}
+\end{table}
+
+\subsection{The benchmark}
+
+\Cref{tab:main} reports the full comparison. Two results organise everything that
+follows. The first is that geometry conditioning takes the cascade from $10.01$ to
+$8.64$~dB, moving it from behind RadioUNet at $9.93$~dB to ahead of it with
+non-overlapping confidence intervals. The second is more surprising. A single
+network with the occlusion channel reaches $9.47$~dB and also beats RadioUNet,
+while the cascade without the channel does not. The margin there is narrower and
+the intervals touch, so we rest it on the paired test rather than on separation of
+intervals, but the ordering is clear and the conclusion does not depend on that one
+comparison. The architecture is not what separates these methods.
+
+Classical interpolation sits far back on this benchmark, between $25.6$ and
+$28.1$~dB, because the trajectory-structured sampling leaves large regions with no
+nearby observation to interpolate from. That gap is a property of the sampling
+regime, and \cref{sec:real} shows it reverses on real data.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/plateau.pdf}
+\caption{\textbf{Architecture moves line of sight and leaves non line of sight
+alone.} Open markers are line-of-sight error, filled markers non-line-of-sight
+error, one row per method. The nine methods without the occlusion channel spread
+over $20.1\%$ in line of sight but only $9.6\%$ in non line of sight, where they fall
+inside the shaded band. The two occlusion-conditioned models (red) are the only ones
+below it on both axes.}
+\label{fig:plateau}
+\end{figure}
+
+\subsection{Every deep family stops at the same wall}
+
+Splitting the error by visibility exposes the structure the aggregate hides.
+\Cref{fig:plateau} plots line-of-sight against non-line-of-sight error for every
+learned method in the panel. Line-of-sight error separates the nine methods
+without the occlusion channel over a range of $5.18$ to $9.98$~dB, a coefficient of
+variation of $20.1\%$, which is what one expects when comparing convolutional, state-space,
+transformer, adversarial and diffusion families. Non-line-of-sight error does not
+follow. The same nine methods fall between $11.12$ and $15.52$~dB at a coefficient
+of variation of $9.6\%$, less than half the variation seen in line of sight, and
+dropping PMNet as the one clear outlier tightens the band to $11.12$ to $12.84$~dB
+at a coefficient of variation of $5.1\%$. These methods span two orders of
+magnitude of design effort.
+
+A plateau that survives this much architectural variation is not a capacity
+limit. It is the signature of a quantity no member of the panel can form from the
+inputs it is given. Adding \cref{eq:occ} moves both numbers at once, cutting
+line-of-sight error to $3.85$~dB and pulling non-line-of-sight error to $9.78$~dB.
+Both sit below every member of the panel, and the single-network variant at $3.95$
+and $10.73$~dB does the same. The channel costs $432$ parameters,
+which is a $0.006\%$ increase over a $7.2$~million parameter backbone.
+
+The ablations in \cref{tab:main} make the same point from the other side. Removing
+the transmitter heatmap costs $4.75$~dB and removing the building raster costs
+$7.31$~dB. The entire learned panel without the occlusion channel, spanning six
+architecture families, spreads over $4.18$~dB from best to worst. Withholding one
+geometric input therefore moves the result further than every architectural choice
+in the comparison put together. What the model is told about the scene dominates
+how the model is built.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/interaction.pdf}
+\caption{\textbf{Geometry and depth are substitutes.} Left, the $2\times2$ design.
+Right, the gains measured separately sum to $3.54$~dB while the joint configuration
+delivers $2.87$~dB. The $0.67$~dB shortfall is the interaction, and its sign means
+the cascade has less to add once the geometry is supplied.}
+\label{fig:interaction}
+\end{figure}
+
+\subsection{Geometry substitutes for depth}
+\label{sec:interaction}
+
+If the occlusion channel and the cascade were addressing different deficiencies,
+their gains would accumulate. \Cref{fig:interaction} shows they do not. Measured
+separately against the plain single network, the channel is worth $2.04$~dB and the
+cascade is worth $1.50$~dB, for a combined expectation of $3.54$~dB. Applied
+together they deliver $2.87$~dB. The interaction term is
+$+0.67$~dB, so a third of the expected joint benefit does not materialise.
+
+The reading is that the two mechanisms are partially redundant. A second network in
+series has the depth and the intermediate estimate to recover some of the shadow
+structure that \cref{eq:occ} supplies directly, so once the structure is given the
+cascade has less left to contribute. Stated the other way, geometry buys more where
+there is less architecture to spend, which is why the single network gains more
+from the channel than the cascade does. A practitioner with a fixed budget is
+better served by computing the right input than by stacking a second network.
+
+\subsection{Removing the transmitter does not work}
+\label{sec:txfree_result}
+
+The measurement-anchored field of \cref{eq:occmeas} was an attempt to keep the
+benefit without needing the source. It fails. Substituting $\tilde{O}$ for $O$ in
+the cascade gives $9.88$~dB against $8.64$~dB for the transmitter-anchored field,
+giving back $1.24$~dB of the $1.37$~dB the channel was worth, and leaving a result
+statistically indistinguishable from supplying no geometry at all.
+
+\Cref{fig:concept} shows the mechanism of the failure. The minimum over anchors in
+\cref{eq:occmeas} is dominated by whichever measurement happens to sit closest to an
+unobstructed path, so the field collapses toward zero almost everywhere. Its mean
+value over the scene is $0.084$ against $0.298$ for the transmitter-anchored field,
+and the radial shadow structure that carries the signal is gone. The failure is
+informative rather than incidental. It says the benefit comes specifically from
+knowing where the energy originated, not from knowing the building layout, and any
+route to a transmitter-free geometry channel has to preserve directionality rather
+than marginalise over it.

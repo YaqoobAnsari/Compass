@@ -1,0 +1,36 @@
+%% 6_discussion
+\section{Limitations}
+\label{sec:limitations}
+
+We state the boundaries of these claims plainly, because several of them constrain
+the conclusion.
+
+\noindent\textbf{One simulated corpus.} The plateau in \cref{fig:plateau} is
+measured on RadioMapSeer, which is ray traced with a single propagation engine. A
+plateau shared by nine architectures on one corpus is strong evidence about that
+corpus and suggestive about the problem. It would be stronger across two
+independently generated corpora, and we have not shown that.
+
+\noindent\textbf{Two real sites, not four.} The corpus spans four buildings but
+only two yield cells with enough co-located repeats to evaluate on. The wall effect
+and its control therefore rest on one treatment site and one control site. A second
+walled site would turn a clean contrast into a replicated one.
+
+\noindent\textbf{The real evaluation cannot test extrapolation.} Reference points
+are clustered, so holding one out asks for interpolation among near neighbours.
+This is the honest limit of measurements collected without a dense ground-truth
+survey, and it is why we do not read the classical win in \cref{tab:real} as
+evidence against learned reconstruction in general. Settling that question needs a
+densely surveyed floor, which we did not have.
+
+\noindent\textbf{Uncertainty does not transfer.} Monte Carlo dropout is reasonably
+ordered on simulated data, with an error-uncertainty correlation of $0.56$, but on
+real measurements the nominal one-sigma interval covers $16.1\%$ of held-out points
+where a calibrated Gaussian would cover $68\%$. Recalibration restores coverage
+only by widening intervals roughly elevenfold, which is a change in sharpness large
+enough that we do not report the recalibrated model as usable.
+
+\noindent\textbf{A negative result is not an impossibility proof.}
+\Cref{sec:txfree_result} shows one transmitter-free construction fails and explains
+why. It does not show that no such construction exists, and \cref{sec:conclusion}
+argues the opposite is worth attempting.

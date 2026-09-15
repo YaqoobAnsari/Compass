@@ -1,5 +1,105 @@
 %% 3_method
-\section{Method}
+\section{Geometry as a Conditioning Channel}
 \label{sec:method}
 
-%% TODO
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig/concept.pdf}
+\caption{\textbf{The missing input.} Given a building layout and a transmitter
+(left, red star), the occlusion field of \cref{eq:occ} integrates building occupancy
+along each transmitter-to-pixel ray and recovers the radial shadow structure that
+shapes the true field (right). Replacing the transmitter anchor with a minimum over
+measurement locations (\cref{eq:occmeas}, third panel) collapses the field toward
+zero, with a scene mean of $0.084$ against $0.298$, and destroys exactly the
+directional structure that makes the channel useful.}
+\label{fig:concept}
+\end{figure*}
+
+\subsection{Problem setting}
+
+A radio field assigns a received power to every point of a scene. We write
+$R : \Omega \to \mathbb{R}$ for the field over a discrete spatial domain
+$\Omega \subset \mathbb{Z}^2$ of $256 \times 256$ cells, with values in dBm. A
+reconstructor observes $R$ only at a small measured subset
+$\mathcal{M} \subset \Omega$ and must predict it everywhere, including in the free
+space it never visited.
+
+The acquisition process decides what $\mathcal{M}$ looks like, and that is where
+this problem departs from the sparse-to-dense tasks vision usually studies.
+Crowdsensed measurements arrive along walks. We therefore draw $k=3$ trajectories of
+$100$ points each per scene, giving $300$ observations, which covers a small
+fraction of the free space and leaves whole regions unobserved rather than
+uniformly thinned. Accuracy is reported on free-space cells that were never
+measured, since those are the cells a deployment actually needs and the ones
+interpolation cannot reach.
+
+\subsection{The occlusion field}
+
+Signal strength at a point is governed less by distance than by what the signal
+passed through on the way. For a transmitter at $\tau \in \Omega$ and a target cell
+$p \in \Omega$, define the occlusion field as the fraction of the segment
+$\overline{\tau p}$ that lies inside building material,
+%
+\begin{equation}
+O(p) \;=\; \frac{1}{N}\sum_{i=1}^{N} B\!\left(\tau + \tfrac{i}{N}\,(p - \tau)\right),
+\qquad N = 32,
+\label{eq:occ}
+\end{equation}
+%
+where $B : \Omega \to \{0,1\}$ is the building raster and intermediate positions are
+resolved by bilinear sampling, which makes $O$ differentiable in $\tau$. The
+quantity is a soft shadow depth. It is zero along clear line of sight, rises as the
+ray clips a corner, and saturates when the path is buried in material.
+
+\Cref{eq:occ} is a line integral between two points that may be two hundred cells
+apart, and that is exactly the operation a convolutional stack is poorly equipped to
+perform. A convolution aggregates over a compact neighbourhood, so forming $O$
+internally would require the receptive field to span the scene and then to learn a
+path-dependent selection within it. The field is fully determined by inputs the
+network already receives, namely the building raster and the transmitter position,
+yet it is not a function any local operator computes cheaply. We therefore compute
+it once in closed form and append it as a single input channel. The cost is
+$432$ parameters in the first convolution and no change anywhere else.
+
+\subsection{Backbones}
+
+We study two backbones so that the effect of the channel can be separated from the
+effect of capacity. The first is a single encoder-decoder network with $48$ base
+channels and depth $4$. The second is a cascade of two such networks in series, the
+second taking the first network's output alongside the original inputs, with the
+base width scaled to $0.72$ so the pair roughly matches the single network's
+parameter budget. The cascade is the backbone RadioUNet uses, which makes it the
+right control for asking whether our gain comes from geometry or from borrowed
+architecture.
+
+Both backbones receive the sparse measurement raster, its binary mask, a coverage
+density map, the building raster and a multi-scale transmitter heatmap. Adding the
+occlusion channel is the single variable under study. Dropout is retained at
+inference to give a per-pixel predictive spread by Monte Carlo sampling.
+
+\subsection{Removing the transmitter}
+\label{sec:txfree}
+
+\Cref{eq:occ} needs $\tau$, and that is a real liability. Indoor cellular
+deployments place boosters that share cell identifiers with the macro network, so
+the source of a measured signal is frequently not locatable at all. On our real
+measurements only $17.9\%$ of cells yield a transmitter position that passes a
+reliability gate, which means a conditioning channel anchored at $\tau$ is
+unavailable for roughly four cells in five.
+
+We therefore tried to remove the dependence. Let $\mathcal{A} \subset \mathcal{M}$ be
+a sample of measurement locations, which are known without knowing the source.
+Define the transmitter-free field as the least obstructed path from any measurement
+to the target,
+%
+\begin{equation}
+\tilde{O}(p) \;=\; \min_{a \in \mathcal{A}} \; \frac{1}{N}\sum_{i=1}^{N}
+ B\!\left(a + \tfrac{i}{N}\,(p - a)\right),
+\qquad |\mathcal{A}| = 16 .
+\label{eq:occmeas}
+\end{equation}
+%
+The intuition is that a cell visible from some point at which the signal was
+observed should behave like a cell in line of sight. \Cref{sec:txfree_result}
+reports what happened, which is that the substitution does not work, and
+\cref{fig:concept} shows why.

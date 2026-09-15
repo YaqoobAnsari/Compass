@@ -21,7 +21,6 @@
 @String(AAAI = {AAAI})
 @String(CVPRW= {IEEE Conf. Comput. Vis. Pattern Recog. Worksh.})
 @String(CSVT = {IEEE Trans. Circuit Syst. Video Technol.})
-
 @String(SPL	= {IEEE Sign. Process. Letters})
 @String(VR   = {Vis. Res.})
 @String(JOV	 = {J. Vis.})
@@ -29,8 +28,6 @@
 @String(JCST  = {J. Comput. Sci. Tech.})
 @String(CGF  = {Comput. Graph. Forum})
 @String(CVM = {Computational Visual Media})
-
-
 @String(PAMI  = {IEEE TPAMI})
 @String(IJCV  = {IJCV})
 @String(CVPR  = {CVPR})
@@ -56,59 +53,22 @@
 @String(CVPRW= {CVPRW})
 @String(CSVT = {IEEE TCSVT})
 
+% =====================================================================
+% refs_draft.bib — verified bibliography draft for the COMPASS CVPR paper
+%
+% Every entry below was checked against arXiv abstract pages, publisher
+% records (IEEE/ACM/Springer/Elsevier), Semantic Scholar's API, or the
+% authors' own citation blocks. Fields not confirmed were left out rather
+% than guessed. Notes marked "NOTE:" flag discrepancies worth knowing.
+%
+% natbib-compatible. Venue names are written out in full so this file is
+% standalone (no at-sign String macros required from main.bib).
+% =====================================================================
 
 
-@misc{Authors14,
- author = {FirstName LastName},
- title = {The frobnicatable foo filter},
- note = {Face and Gesture submission ID 324. Supplied as supplemental material {\tt fg324.pdf}},
- year = 2014
-}
-
-@misc{Authors14b,
- author = {FirstName LastName},
- title = {Frobnication tutorial},
- note = {Supplied as supplemental material {\tt tr.pdf}},
- year = 2014
-}
-
-@article{Alpher02,
-author = {FirstName Alpher},
-title = {Frobnication},
-journal = PAMI,
-volume = 12,
-number = 1,
-pages = {234--778},
-year = 2002
-}
-
-@article{Alpher03,
-author = {FirstName Alpher and  FirstName Fotheringham-Smythe},
-title = {Frobnication revisited},
-journal = {Journal of Foo},
-volume = 13,
-number = 1,
-pages = {234--778},
-year = 2003
-}
-
-@article{Alpher04,
-author = {FirstName Alpher and FirstName Fotheringham-Smythe and FirstName Gamow},
-title = {Can a machine frobnicate?},
-journal = {Journal of Foo},
-volume = 14,
-number = 1,
-pages = {234--778},
-year = 2004
-}
-
-@inproceedings{Alpher05,
-author = {FirstName Alpher and FirstName Gamow},
-title = {Can a computer frobnicate?},
-booktitle = CVPR,
-pages = {234--778},
-year = 2005
-}
+% =====================================================================
+% A. RADIO MAP RECONSTRUCTION — direct baselines
+% =====================================================================
 
 @article{levie2021radiounet,
   author  = {Levie, Ron and Yapar, {\c{C}}a{\u{g}}kan and Kutyniok, Gitta and Caire, Giuseppe},
@@ -118,6 +78,7 @@ year = 2005
   number  = {6},
   pages   = {4001--4015},
   year    = {2021},
+  doi     = {10.1109/TWC.2021.3054977},
 }
 
 @article{lee2024pmnet,
@@ -128,4 +89,368 @@ year = 2005
   number  = {11},
   pages   = {17793--17806},
   year    = {2024},
+}
+
+@article{wang2025radiodiff,
+  author  = {Wang, Xiucheng and Tao, Keda and Cheng, Nan and Yin, Zhisheng and Li, Zan and Zhang, Yuan and Shen, Xuemin},
+  title   = {{RadioDiff}: An Effective Generative Diffusion Model for Sampling-Free Dynamic Radio Map Construction},
+  journal = {IEEE Transactions on Cognitive Communications and Networking},
+  volume  = {11},
+  number  = {2},
+  pages   = {738--750},
+  year    = {2025},
+  doi     = {10.1109/TCCN.2024.3504489},
+}
+
+% NOTE: this is the paper commonly cited as "RMDM". The first author is
+% Haozhe JIA, not Xu — the "Xu et al." attribution used in our earlier
+% TrajectoryDiff write-ups is WRONG. Also, arXiv v3 (Sep 2025) renamed the
+% paper; v1/v2 were titled "RMDM: Radio Map Diffusion Model with Physics
+% Informed". No peer-reviewed venue is listed on arXiv as of Sep 2026.
+@article{jia2025rmdm,
+  author  = {Jia, Haozhe and Chen, Wenshuo and Huang, Zhihui and Wang, Lei and Xiao, Hongru and Jia, Nanqian and Wu, Keming and Lai, Songning and Tian, Bowen and Yue, Yutao},
+  title   = {Physics-Informed Representation Alignment for Sparse Radio-Map Reconstruction},
+  journal = {arXiv preprint arXiv:2501.19160},
+  year    = {2025},
+  note    = {Cited in the text as {RMDM}, its name in earlier versions},
+}
+
+% NOTE: this is the real GAN-based radio-map estimator. "RadioGAN" is NOT a
+% radio-map paper (see report).
+@article{zhang2023rmegan,
+  author  = {Zhang, Songyang and Wijesinghe, Achintha and Ding, Zhi},
+  title   = {{RME-GAN}: A Learning Framework for Radio Map Estimation Based on Conditional Generative Adversarial Network},
+  journal = {IEEE Internet of Things Journal},
+  volume  = {10},
+  number  = {20},
+  pages   = {18016--18027},
+  year    = {2023},
+  doi     = {10.1109/JIOT.2023.3278235},
+}
+
+@article{jia2025radiomamba,
+  author  = {Jia, Honggang and Cheng, Nan and Wang, Xiucheng and Zhou, Conghao and Sun, Ruijin and Shen, Xuemin},
+  title   = {{RadioMamba}: Breaking the Accuracy-Efficiency Trade-off in Radio Map Construction via a Hybrid {Mamba-UNet}},
+  journal = {arXiv preprint arXiv:2508.09140},
+  year    = {2025},
+}
+
+% NOTE: arXiv v1 was titled "RadioTransformer"; v2 (the current version)
+% renames the method to "RMTransformer". Same authors, same paper.
+@article{li2025rmtransformer,
+  author  = {Li, Yuxuan and Zhang, Cheng and Wang, Wen and Huang, Yongming},
+  title   = {{RMTransformer}: Accurate Radio Map Construction and Coverage Prediction},
+  journal = {arXiv preprint arXiv:2501.05190},
+  year    = {2025},
+  note    = {Cited in the text as {RadioTransformer}, its name in arXiv v1},
+}
+
+@article{fang2025radioformer,
+  author  = {Fang, Zheng and Liu, Kangjun and Chen, Ke and Liu, Qingyu and Zhang, Jianguo and Song, Lingyang and Wang, Yaowei},
+  title   = {{RadioFormer}: A Multiple-Granularity Radio Map Estimation Transformer with 0.01\% Spatial Sampling},
+  journal = {arXiv preprint arXiv:2504.19161},
+  year    = {2025},
+}
+
+% NOTE: "URAM" is the method name inside this paper; the paper itself is
+% titled "Bayesian-Driven Graph Reasoning for Active Radio Map Construction".
+@article{lu2025uram,
+  author  = {Lu, Wenlihan and Gao, Shijian and Wen, Miaowen and Liang, Yuxuan and Yang, Liuqing and Chae, Chan-Byoung and Poor, H. Vincent},
+  title   = {Bayesian-Driven Graph Reasoning for Active Radio Map Construction},
+  journal = {arXiv preprint arXiv:2508.09142},
+  year    = {2025},
+  note    = {Cited in the text as {URAM}},
+}
+
+% The RadioMapSeer dataset was introduced with RadioUNet; this is the
+% dedicated dataset paper describing it (and the ToA extension).
+@article{yapar2023dataset,
+  author  = {Yapar, {\c{C}}a{\u{g}}kan and Levie, Ron and Kutyniok, Gitta and Caire, Giuseppe},
+  title   = {Dataset of Pathloss and {ToA} Radio Maps With Localization Application},
+  journal = {arXiv preprint arXiv:2212.11777},
+  year    = {2022},
+  note    = {The {RadioMapSeer} dataset},
+}
+
+
+% =====================================================================
+% B. GEOMETRY AND VISIBILITY CONDITIONING IN RADIO PROPAGATION
+% =====================================================================
+
+@article{ratnam2021fadenet,
+  author  = {Ratnam, Vishnu V. and Chen, Hao and Pawar, Sameer and Zhang, Bingwen and Zhang, Charlie Jianzhong and Kim, Young-Jin and Lee, Soonyoung and Cho, Minsung and Yoon, Sung-Rok},
+  title   = {{FadeNet}: Deep Learning-Based mm-Wave Large-Scale Channel Fading Prediction and its Applications},
+  journal = {IEEE Access},
+  volume  = {9},
+  pages   = {3278--3290},
+  year    = {2021},
+  doi     = {10.1109/ACCESS.2020.3048583},
+}
+
+@article{bakirtzis2022emdeepray,
+  author  = {Bakirtzis, Stefanos and Chen, Jiming and Qiu, Kehai and Zhang, Jie and Wassell, Ian},
+  title   = {{EM DeepRay}: An Expedient, Generalizable, and Realistic Data-Driven Indoor Propagation Model},
+  journal = {IEEE Transactions on Antennas and Propagation},
+  volume  = {70},
+  number  = {6},
+  pages   = {4140--4154},
+  year    = {2022},
+  doi     = {10.1109/TAP.2022.3172221},
+}
+
+@article{dempsey2025mapbased,
+  author  = {Dempsey, Ryan G. and Ethier, Jonathan and Yanikomeroglu, Halim},
+  title   = {Map-Based Path Loss Prediction in Multiple Cities Using Convolutional Neural Networks},
+  journal = {IEEE Antennas and Wireless Propagation Letters},
+  volume  = {24},
+  number  = {7},
+  pages   = {1989--1993},
+  year    = {2025},
+}
+
+@article{thrane2020modelaided,
+  author  = {Thrane, Jakob and Zibar, Darko and Christiansen, Henrik L.},
+  title   = {Model-Aided Deep Learning Method for Path Loss Prediction in Mobile Communication Systems at 2.6 {GHz}},
+  journal = {IEEE Access},
+  volume  = {8},
+  pages   = {7925--7936},
+  year    = {2020},
+  doi     = {10.1109/ACCESS.2020.2964103},
+}
+
+@article{kouyoumjian1974utd,
+  author  = {Kouyoumjian, Robert G. and Pathak, Prabhakar H.},
+  title   = {A Uniform Geometrical Theory of Diffraction for an Edge in a Perfectly Conducting Surface},
+  journal = {Proceedings of the IEEE},
+  volume  = {62},
+  number  = {11},
+  pages   = {1448--1461},
+  year    = {1974},
+}
+
+@article{deygout1966knifeedge,
+  author  = {Deygout, Jacques},
+  title   = {Multiple Knife-Edge Diffraction of Microwaves},
+  journal = {IEEE Transactions on Antennas and Propagation},
+  volume  = {14},
+  number  = {4},
+  pages   = {480--489},
+  year    = {1966},
+}
+
+
+% =====================================================================
+% C. RF MEETS VISION / NEURAL FIELDS
+% =====================================================================
+
+@inproceedings{zhao2023nerf2,
+  author    = {Zhao, Xiaopeng and An, Zhenlin and Pan, Qingrui and Yang, Lei},
+  title     = {{NeRF2}: Neural Radio-Frequency Radiance Fields},
+  booktitle = {Proceedings of the 29th Annual International Conference on Mobile Computing and Networking (MobiCom)},
+  year      = {2023},
+  doi       = {10.1145/3570361.3592527},
+}
+
+@inproceedings{chi2024rfdiffusion,
+  author    = {Chi, Guoxuan and Yang, Zheng and Wu, Chenshu and Xu, Jingao and Gao, Yuchong and Liu, Yunhao and Han, Tony Xiao},
+  title     = {{RF-Diffusion}: Radio Signal Generation via Time-Frequency Diffusion},
+  booktitle = {Proceedings of the 30th Annual International Conference on Mobile Computing and Networking (MobiCom)},
+  year      = {2024},
+  doi       = {10.1145/3636534.3649348},
+}
+
+@article{zhang2024rf3dgs,
+  author  = {Zhang, Lihao and Sun, Haijian and Berweger, Samuel and Gentile, Camillo and Hu, Rose Qingyang},
+  title   = {{RF-3DGS}: Wireless Channel Modeling with Radio Radiance Field and {3D} Gaussian Splatting},
+  journal = {arXiv preprint arXiv:2411.19420},
+  year    = {2024},
+}
+
+@inproceedings{wen2025wrfgs,
+  author    = {Wen, Chaozheng and Tong, Jingwen and Hu, Yingdong and Lin, Zehong and Zhang, Jun},
+  title     = {{WRF-GS}: Wireless Radiation Field Reconstruction with {3D} Gaussian Splatting},
+  booktitle = {IEEE INFOCOM 2025 -- IEEE Conference on Computer Communications},
+  year      = {2025},
+}
+
+@inproceedings{euchner2021dichasus,
+  author    = {Euchner, Florian and Gauger, Marc and D{\"o}rner, Sebastian and ten Brink, Stephan},
+  title     = {A Distributed Massive {MIMO} Channel Sounder for ``{Big CSI Data}''-driven Machine Learning},
+  booktitle = {25th International ITG Workshop on Smart Antennas (WSA)},
+  year      = {2021},
+  address   = {Sophia Antipolis, France},
+  note      = {The {DICHASUS} channel sounder and dataset collection},
+}
+
+
+% =====================================================================
+% D. VISION METHODS THE PAPER LEANS ON
+% =====================================================================
+
+@inproceedings{ronneberger2015unet,
+  author    = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+  title     = {{U-Net}: Convolutional Networks for Biomedical Image Segmentation},
+  booktitle = {Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
+  pages     = {234--241},
+  year      = {2015},
+}
+
+@inproceedings{ma2018sparsetodense,
+  author    = {Ma, Fangchang and Karaman, Sertac},
+  title     = {Sparse-to-Dense: Depth Prediction from Sparse Depth Samples and a Single Image},
+  booktitle = {IEEE International Conference on Robotics and Automation (ICRA)},
+  year      = {2018},
+  doi       = {10.1109/ICRA.2018.8460184},
+}
+
+@inproceedings{liu2018partialconv,
+  author    = {Liu, Guilin and Reda, Fitsum A. and Shih, Kevin J. and Wang, Ting-Chun and Tao, Andrew and Catanzaro, Bryan},
+  title     = {Image Inpainting for Irregular Holes Using Partial Convolutions},
+  booktitle = {European Conference on Computer Vision (ECCV)},
+  pages     = {85--100},
+  year      = {2018},
+}
+
+@inproceedings{ho2020ddpm,
+  author    = {Ho, Jonathan and Jain, Ajay and Abbeel, Pieter},
+  title     = {Denoising Diffusion Probabilistic Models},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {33},
+  pages     = {6840--6851},
+  year      = {2020},
+}
+
+@inproceedings{song2021ddim,
+  author    = {Song, Jiaming and Meng, Chenlin and Ermon, Stefano},
+  title     = {Denoising Diffusion Implicit Models},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021},
+}
+
+@inproceedings{gal2016dropout,
+  author    = {Gal, Yarin and Ghahramani, Zoubin},
+  title     = {Dropout as a {Bayesian} Approximation: Representing Model Uncertainty in Deep Learning},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  pages     = {1050--1059},
+  year      = {2016},
+}
+
+@inproceedings{lakshminarayanan2017ensembles,
+  author    = {Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles},
+  title     = {Simple and Scalable Predictive Uncertainty Estimation using Deep Ensembles},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  pages     = {6402--6413},
+  year      = {2017},
+}
+
+@article{lei2018conformal,
+  author  = {Lei, Jing and G'Sell, Max and Rinaldo, Alessandro and Tibshirani, Ryan J. and Wasserman, Larry},
+  title   = {Distribution-Free Predictive Inference for Regression},
+  journal = {Journal of the American Statistical Association},
+  volume  = {113},
+  number  = {523},
+  pages   = {1094--1111},
+  year    = {2018},
+  doi     = {10.1080/01621459.2017.1307116},
+}
+
+@article{angelopoulos2023conformal,
+  author  = {Angelopoulos, Anastasios N. and Bates, Stephen},
+  title   = {Conformal Prediction: A Gentle Introduction},
+  journal = {Foundations and Trends in Machine Learning},
+  volume  = {16},
+  number  = {4},
+  pages   = {494--591},
+  year    = {2023},
+  doi     = {10.1561/2200000101},
+}
+
+
+% =====================================================================
+% E. INDOOR LOCALISATION AND CROWDSENSING
+% =====================================================================
+
+@inproceedings{bahl2000radar,
+  author    = {Bahl, Paramvir and Padmanabhan, Venkata N.},
+  title     = {{RADAR}: An In-Building {RF}-Based User Location and Tracking System},
+  booktitle = {Proceedings IEEE INFOCOM 2000},
+  volume    = {2},
+  pages     = {775--784},
+  year      = {2000},
+}
+
+@inproceedings{youssef2005horus,
+  author    = {Youssef, Moustafa and Agrawala, Ashok},
+  title     = {The {Horus} {WLAN} Location Determination System},
+  booktitle = {Proceedings of the 3rd International Conference on Mobile Systems, Applications, and Services (MobiSys)},
+  pages     = {205--218},
+  year      = {2005},
+}
+
+@article{zafari2019survey,
+  author  = {Zafari, Faheem and Gkelias, Athanasios and Leung, Kin K.},
+  title   = {A Survey of Indoor Localization Systems and Technologies},
+  journal = {IEEE Communications Surveys and Tutorials},
+  volume  = {21},
+  number  = {3},
+  pages   = {2568--2599},
+  year    = {2019},
+}
+
+@article{kjaergaard2011heterogeneous,
+  author  = {Kj{\ae}rgaard, Mikkel Baun},
+  title   = {Indoor Location Fingerprinting with Heterogeneous Clients},
+  journal = {Pervasive and Mobile Computing},
+  volume  = {7},
+  number  = {1},
+  pages   = {31--43},
+  year    = {2011},
+  doi     = {10.1016/j.pmcj.2010.04.005},
+}
+
+% SODIndoorLoc: 3 buildings, multiple floors, dense uniformly-spaced
+% reference points (< 1.2 m apart), AP locations + channel info, CAD floor
+% plans; 9 training and 5 testing sheets.
+@article{bi2022sodindoorloc,
+  author  = {Bi, Jingxue and Wang, Yunjia and Yu, Baoguo and Cao, Hongji and Shi, Tongguang and Huang, Lu},
+  title   = {Supplementary Open Dataset for {WiFi} Indoor Localization Based on Received Signal Strength},
+  journal = {Satellite Navigation},
+  volume  = {3},
+  number  = {1},
+  pages   = {25},
+  year    = {2022},
+  doi     = {10.1186/s43020-022-00086-y},
+  note    = {The {SODIndoorLoc} dataset},
+}
+
+% TUJI1: 5 heterogeneous commercial devices, ~9000 fingerprints on a fine
+% grid (< 45 cm spacing), 310 APs, one floor of ESPAITEC 2, UJI, Spain.
+% Built specifically to study device heterogeneity at high sample density.
+@article{klus2024tuji1,
+  author  = {Klus, Lucie and Klus, Roman and Lohan, Elena Simona and Nurmi, Jari and Granell, Carlos and Valkama, Mikko and Talvitie, Jukka and Casteleyn, Sven and Torres-Sospedra, Joaqu{\'\i}n},
+  title   = {{TUJI1} Dataset: Multi-Device Dataset for Indoor Localization with High Measurement Density},
+  journal = {Data in Brief},
+  volume  = {54},
+  pages   = {110356},
+  year    = {2024},
+  doi     = {10.1016/j.dib.2024.110356},
+}
+
+% PerfLoc: time-stamped traces from 4 Android phones across 4 large
+% buildings — environmental/position/motion sensors, Wi-Fi and cellular
+% signal strengths, and GPS fixes where available. Trajectory-style data
+% collection, not a gridded fingerprint database.
+@inproceedings{moayeri2016perfloc,
+  author    = {Moayeri, Nader and Ergin, Mustafa Onur and Lemic, Filip and Handziski, Vlado and Wolisz, Adam},
+  title     = {{PerfLoc} (Part 1): An Extensive Data Repository for Development of Smartphone Indoor Localization Apps},
+  booktitle = {IEEE 27th Annual International Symposium on Personal, Indoor, and Mobile Radio Communications (PIMRC)},
+  year      = {2016},
+}
+
+@inproceedings{moayeri2018perfloc2,
+  author    = {Moayeri, Nader and Li, Chang and Shi, Lu},
+  title     = {{PerfLoc} (Part 2): Performance Evaluation of the Smartphone Indoor Localization Apps},
+  booktitle = {International Conference on Indoor Positioning and Indoor Navigation (IPIN)},
+  year      = {2018},
+  address   = {Nantes, France},
 }

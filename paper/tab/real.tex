@@ -1,0 +1,12 @@
+\begin{tabular}{@{}lrl@{}}
+\toprule
+Method & RMSE (dB)$\downarrow$ & vs.\ learned \\
+\midrule
+RBF (multiquadric) & \textbf{5.50}\,\tiny[5.26,5.77] & $p{=}$2e-30 \\
+wall-aware IDW & 5.61\,\tiny[5.37,5.88] & $p{=}$1e-19 \\
+IDW ($p{=}2$) & 5.79\,\tiny[5.54,6.06] & $p{=}$4e-18 \\
+GP / Kriging & 5.95\,\tiny[5.69,6.22] & $p{=}$7e-07 \\
+learned, with geometry & 6.20\,\tiny[5.95,6.44] & -- \\
+learned, no geometry & 6.30\,\tiny[6.05,6.55] & $p{=}$7e-06 \\
+\bottomrule
+\end{tabular}
