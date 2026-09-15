@@ -10,8 +10,8 @@
 along each transmitter-to-pixel ray and recovers the radial shadow structure that
 shapes the true field (right). Replacing the transmitter anchor with a minimum over
 measurement locations (\cref{eq:occmeas}, third panel) collapses the field toward
-zero, with a scene mean of $0.084$ against $0.298$, and destroys exactly the
-directional structure that makes the channel useful.}
+zero, with a scene mean of $0.084$ against $0.298$, and removes the directional
+structure the channel depends on. The two occlusion panels share one scale.}
 \label{fig:concept}
 \end{figure*}
 
@@ -64,11 +64,22 @@ it once in closed form and append it as a single input channel. The cost is
 $432$ parameters in the first convolution of the single network, or $576$ spread
 over the two stages of the cascade, and no change anywhere else.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig/architecture.pdf}
+\caption{\textbf{Conditioning and backbones.} Six rasters are concatenated as input
+channels. The occlusion field of \cref{eq:occ} is the only one under study and costs
+$432$ parameters in the first convolution. The single backbone stops after stage one.
+The cascade adds a second network that also receives the coarse map from the first.
+Dropout is retained at inference, giving a predictive mean and spread.}
+\label{fig:arch}
+\end{figure}
+
 \subsection{Backbone Architectures}
 
 Separating the contribution of the channel from the contribution of capacity requires
-two backbones of comparable size, one of which is the cascade RadioUNet itself uses.
-The first is a single encoder-decoder network with $48$ base
+two backbones of comparable size, shown in \cref{fig:arch}, one of which is the
+cascade RadioUNet itself uses. The first is a single encoder-decoder network with $48$ base
 channels and depth $4$. The second is a cascade of two such networks in series, the
 second taking the first network's output alongside the original inputs, with the
 base width scaled to $0.72$ so the pair roughly matches the single network's

@@ -104,17 +104,14 @@ $5.51$~dB against $6.20$~dB for the learned model with geometry, and the paired
 Wilcoxon test over $1924$ held-out points gives $p = 2.5 \times 10^{-30}$. This is
 not a marginal outcome that more training would reverse.
 
-Two smaller results sharpen that outcome rather than soften it, since geometry still
-helps the learned model and a residual formulation built on top of the classical
-prediction does win. Geometry still helps
-the learned model, which improves from $6.30$ to $6.20$~dB when wall information is
-supplied, at $p = 7.0 \times 10^{-6}$, so the mechanism is intact even where the
-model loses. And a residual formulation that learns a correction on top of the
-classical prediction does win, reaching $5.14$~dB against $5.49$~dB for the same
-interpolator at $p = 2.1 \times 10^{-4}$. That pair is measured on the $67$-cell set
-rather than the $54$-cell set of \cref{tab:real}, which is why the interpolator reads
-$5.49$ here and $5.51$ there, and its confidence intervals overlap, so we report it
-as a paired comparison rather than as separated intervals.
+Two smaller results sharpen that outcome rather than soften it. Wall information
+still improves the learned model, from $6.30$ to $6.20$~dB at
+$p = 7.0 \times 10^{-6}$, so the mechanism is intact even where the model loses. A
+residual formulation that corrects the classical prediction does win, at $5.14$
+against $5.49$~dB for the same interpolator, $p = 2.1 \times 10^{-4}$. That pair uses
+the $67$-cell set rather than the $54$-cell set of \cref{tab:real}, which is why the
+interpolator reads $5.49$ here and $5.51$ there, and its intervals overlap, so we
+report it as a paired comparison.
 
 Classical wins here because of what the real evaluation is able to ask, not because
 of a defect in the learned model. Real reference points are dense and clustered inside each cell, so

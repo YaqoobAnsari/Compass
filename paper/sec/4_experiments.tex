@@ -14,18 +14,15 @@ were never measured, with bootstrap $95\%$ confidence intervals over $2000$
 resamples and paired Wilcoxon signed-rank tests over the $320$ scenes. Deep
 baselines are trained to the same budget of $150$ epochs on the same split.
 
-Holding that budget fixed forces a decision about what a baseline is, and we resolve
-it by separating faithful reimplementations from matched-budget representatives of an
-architecture family, a distinction \cref{tab:main} marks throughout. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
-specific published architecture, following the paper in structure and differing only
-where our input setting requires it. The entries marked with a dagger are not
-reimplementations of one paper. They are matched-budget representatives of an
-architecture family, built to the same conditioning interface as everything else so
-that the family is the only variable, and the citation beside each names the work
-that family is drawn from rather than a method we reproduced. We prefer this for the
-question at hand. Comparing author implementations across families would confound
-the backbone with six different training recipes, whereas the claim we are testing is
-precisely whether the family matters once everything else is held fixed.
+Holding that budget fixed forces a decision about what a baseline is, and
+\cref{tab:main} marks the two kinds apart. RadioUNet, PMNet, RadioDiff and RMDM
+follow a specific published architecture, differing only where our input setting
+requires it. Daggered entries reproduce no single paper. They are matched-budget
+representatives of an architecture family, built to the same conditioning interface
+as everything else, and the citation names the work the family is drawn from.
+Comparing author implementations would confound the backbone with six training
+recipes, whereas the question here is whether the family matters once everything
+else is fixed.
 
 Protocol discipline matters more in this literature than in most, because the
 conventions in circulation disagree by enough to reverse a ranking. The same
@@ -157,14 +154,10 @@ $0.10$~dB, which a paired test does detect at $p = 2.3 \times 10^{-3}$ over the 
 scenes but which amounts to $7\%$ of the benefit the transmitter-anchored field
 delivers. The substitution is measurable and useless.
 
-The minimum over anchors is what destroys the field, and the reason matters, because
-it places the benefit in the transmitter's direction rather than in the building
-layout. Taking a minimum over anchors in \cref{eq:occmeas} lets the result be
-dominated by whichever measurement happens to sit closest to an
-unobstructed path, so the field collapses toward zero almost everywhere. Its mean
-value over the scene is $0.084$ against $0.298$ for the transmitter-anchored field,
-and the radial shadow structure that carries the signal is gone. The failure is
-informative rather than incidental. It says the benefit comes specifically from
-knowing where the energy originated, not from knowing the building layout, and any
-route to a transmitter-free geometry channel has to preserve directionality rather
-than marginalise over it.
+The minimum over anchors is what destroys the field, which locates the benefit in
+the transmitter's direction rather than in the building layout. The minimum in
+\cref{eq:occmeas} is dominated by whichever measurement sits closest to an
+unobstructed path, so the field collapses toward zero almost everywhere. Its scene
+mean is $0.084$ against $0.298$ for the transmitter-anchored field, and the radial
+shadow structure is gone. A transmitter-free geometry channel must therefore
+preserve directionality rather than marginalise over it.

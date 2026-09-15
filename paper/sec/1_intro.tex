@@ -48,18 +48,16 @@ their sum predicts. A plain single network given the geometry outperforms a casc
 denied it. Effort spent computing the right input buys more than effort spent adding
 capacity.
 
-The same finding explains a transfer failure that the benchmark literature has not
-confronted. The line integral is anchored at the transmitter, and on real indoor
-cellular measurements the transmitter is usually not locatable, because indoor
-boosters share cell identifiers with the macro network. Across $67$ measured cells
-only $17.9\%$ admit a reliable point source. We therefore tried to remove the anchor
-by taking a minimum over measurement locations, and we report that it does not work.
-Marginalising over anchors collapses the field toward zero and discards exactly the
-directional structure that made it useful. On real measurements classical
-interpolation consequently remains ahead of every learned reconstructor we trained,
-at $5.51$ against $6.20$~dB with $p = 2.5 \times 10^{-30}$ over $1924$ held-out
-points. The gap between simulated and deployed accuracy is not a domain shift that
-fine-tuning closes. It is an input that one setting has and the other does not.
+The same finding explains a transfer failure the benchmark literature has not
+confronted. The line integral is anchored at the transmitter, and indoor boosters
+share cell identifiers with the macro network, so only $17.9\%$ of $67$ measured
+cells admit a reliable point source. Removing the anchor by minimising over
+measurement locations does not work, because that collapses the field toward zero and
+discards the directional structure which made it useful. Classical interpolation
+therefore remains ahead of every learned reconstructor we trained on real data, at
+$5.51$ against $6.20$~dB with $p = 2.5 \times 10^{-30}$ over $1924$ held-out points.
+The gap is not a domain shift that fine-tuning closes. It is an input that one
+setting has and the other does not.
 
 The wall attenuation that motivates the channel is visible in the measurements
 themselves, at a walled site and not at an open control site. Reference-point pairs

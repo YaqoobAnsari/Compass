@@ -61,14 +61,15 @@ def fig_plateau():
         if r[3]:
             t.set_color(HOT); t.set_weight("bold")
     ax.set_xlabel("RMSE (dB)")
-    ax.set_ylim(-0.8, len(rows) - 0.2)
+    ax.set_ylim(-1.5, len(rows) - 0.2)
     ax.scatter([], [], s=22, marker="o", facecolor="white", edgecolor=INK,
                linewidths=1.0, label="line of sight")
     ax.scatter([], [], s=24, marker="o", color=INK, linewidths=0,
                label="non line of sight")
     ax.legend(frameon=False, loc="upper center", bbox_to_anchor=(0.45, 1.13),
               ncol=2, handletextpad=0.3, columnspacing=1.0)
-    ax.text((lo + hi) / 2, -0.7, f"error floor {lo:.1f}\u2013{hi:.1f} dB",
+    # "to" rather than an en dash, matching the prose convention in the paper
+    ax.text((lo + hi) / 2, -1.05, f"error floor {lo:.1f} to {hi:.1f} dB",
             fontsize=6, color=ACC, ha="center", va="center")
     fig.savefig(FIG / "plateau.pdf"); plt.close(fig)
     print(f"  plateau.pdf  NLoS band {lo:.2f}-{hi:.2f} dB over {len(band)} non-occlusion methods; "
@@ -174,21 +175,29 @@ def fig_concept():
     mocc = measurement_occlusion_field(b, mask)[0, 0].numpy()
     rm = s["radio_map_dbm"][0].numpy() if "radio_map_dbm" in s else s["radio_map"][0].numpy()
 
-    panels = [(b[0, 0].numpy(), "building layout + Tx", "gray_r", None),
-              (occ, r"occlusion $O(p)$, Tx-anchored", "magma", (0, 1)),
-              (mocc, r"$O(p)$, Tx-free (fails)", "magma", (0, 1)),
-              (rm, "ground-truth field", "viridis", None)]
+    # cividis is perceptually uniform, colour-vision safe and far less loud than
+    # magma beside the line figures. The two occlusion panels are the same quantity
+    # on the same scale, so they share one colourbar instead of carrying two.
     fig, axes = plt.subplots(1, 4, figsize=(7.0, 1.95))
-    for ax, (im, t, cm, lim) in zip(axes, panels):
-        kw = dict(vmin=lim[0], vmax=lim[1]) if lim else {}
+    for ax, (im, t, cm) in zip(axes, [(b[0, 0].numpy(), "building layout $+$ Tx", "gray_r"),
+                                      (occ, r"occlusion $O(p)$, Tx-anchored", "cividis"),
+                                      (mocc, r"$\tilde{O}(p)$, Tx-free", "cividis"),
+                                      (rm, "ground-truth field", "viridis")]):
+        kw = dict(vmin=0, vmax=1) if cm == "cividis" else {}
         h = ax.imshow(im, cmap=cm, **kw)
-        ax.set_title(t, fontsize=7.5); ax.set_xticks([]); ax.set_yticks([])
-        for sp in ax.spines.values(): sp.set_visible(False)
+        ax.set_title(t, fontsize=7.2); ax.set_xticks([]); ax.set_yticks([])
+        for sp in ax.spines.values():
+            sp.set_visible(False)
         if t.startswith("building"):
             ax.plot(txrc[0, 1], txrc[0, 0], marker="*", ms=9, color=HOT, mew=0)
-        if lim:
-            plt.colorbar(h, ax=ax, fraction=0.046, pad=0.02).ax.tick_params(labelsize=5)
-    fig.tight_layout(w_pad=0.5)
+        if t.startswith("ground"):
+            cb = plt.colorbar(h, ax=ax, fraction=0.046, pad=0.03)
+            cb.ax.tick_params(labelsize=5); cb.set_label("dBm", fontsize=5.5)
+        if t.startswith(r"$\tilde"):
+            shared = h
+    cb = fig.colorbar(shared, ax=axes[1:3].tolist(), fraction=0.023, pad=0.012)
+    cb.ax.tick_params(labelsize=5)
+    cb.set_ticks([0, 0.5, 1.0])
     fig.savefig(FIG / "concept.pdf"); plt.close(fig)
     print(f"  concept.pdf  map {mid}  Tx-free field mean {mocc.mean():.3f} vs Tx-anchored {occ.mean():.3f}")
 
@@ -267,11 +276,91 @@ def table_real():
     print("  tab/real.tex")
 
 
+
+def fig_architecture():
+    """Where the occlusion channel enters, and how the two backbones differ.
+
+    Coordinates are laid out on an explicit 105x82 grid with reserved bands so no
+    label can land on a box: boxes occupy y in [14,64], captions sit above y=66 or
+    below y=12, and the output annotations live right of x=92.
+    """
+    from matplotlib.patches import FancyArrowPatch, Rectangle, Polygon
+
+    fig, ax = plt.subplots(figsize=(3.35, 2.15))
+    ax.set_xlim(0, 105); ax.set_ylim(0, 82); ax.axis("off")
+
+    # ---- conditioning inputs, the studied channel picked out --------------
+    chans = [("sparse RSS", False), ("mask", False), ("coverage", False),
+             ("building", False), ("Tx heatmap", False), (r"occlusion $O(p)$", True)]
+    x0, w, h, gap = 1.0, 27.0, 6.4, 1.6
+    top = 64.0
+    for i, (name, studied) in enumerate(chans):
+        y = top - i * (h + gap)
+        c = HOT if studied else MUT
+        ax.add_patch(Rectangle((x0, y - h), w, h,
+                               facecolor="#f6dee0" if studied else "#f0f0f0",
+                               edgecolor=c, linewidth=1.1 if studied else 0.7, zorder=2))
+        # the studied row is bold and carries math, so it needs a smaller size to
+        # stay clear of the box border it sits inside
+        ax.text(x0 + w / 2, y - h / 2, name, ha="center", va="center",
+                fontsize=5.6 if studied else 6.0, color=HOT if studied else INK,
+                weight="bold" if studied else "normal", zorder=3)
+    ax.text(x0 + w / 2, 68.5, "conditioning inputs", ha="center", fontsize=6.3,
+            color=INK, style="italic")
+    ax.text(x0 + w / 2, 6.0, "$+432$ parameters", ha="center", fontsize=5.8, color=HOT)
+
+    # ---- the two stages ---------------------------------------------------
+    def unet(cx, label):
+        for pts in ([(cx - 9, 52), (cx - 1.8, 45), (cx - 1.8, 33), (cx - 9, 26)],
+                    [(cx + 1.8, 45), (cx + 9, 52), (cx + 9, 26), (cx + 1.8, 33)]):
+            ax.add_patch(Polygon(pts, closed=True, facecolor="#e7edf3",
+                                 edgecolor=ACC, linewidth=0.8, zorder=2))
+        ax.plot([cx - 1.8, cx + 1.8], [39, 39], color=ACC, lw=0.8, zorder=2)
+        ax.text(cx, 54.4, label, ha="center", fontsize=6.0, color=ACC, zorder=3)
+        return cx - 9, cx + 9
+
+    l1, r1 = unet(46, "stage 1")
+    l2, r2 = unet(76, "stage 2")
+
+    def arrow(xa, xb, y, c=INK, ls="-"):
+        ax.add_patch(FancyArrowPatch((xa, y), (xb, y), arrowstyle="-|>", mutation_scale=7,
+                                     lw=0.8, color=c, linestyle=ls, shrinkA=0, shrinkB=0,
+                                     zorder=4))
+
+    arrow(x0 + w + 1.2, l1 - 1.0, 39)
+    arrow(r1 + 1.0, l2 - 1.0, 39)
+    arrow(r2 + 1.0, 91.0, 39)
+
+    # stage 1's estimate re-entering stage 2 is what makes it a cascade
+    ax.add_patch(FancyArrowPatch((r1 - 2.0, 25.0), (l2 + 2.0, 25.0), arrowstyle="-|>",
+                                 mutation_scale=6, lw=0.7, color=ACC,
+                                 linestyle=(0, (2.5, 1.5)),
+                                 connectionstyle="arc3,rad=0.45", zorder=3))
+    ax.text((r1 + l2) / 2, 15.5, "coarse map", ha="center", fontsize=5.6, color=ACC)
+
+    # ---- the two backbones under study ------------------------------------
+    ax.add_patch(Rectangle((l1 - 3.0, 20.0), (r1 + 3.0) - (l1 - 3.0), 38.0, fill=False,
+                           edgecolor=GRN, linewidth=0.9, linestyle=(0, (3, 2)), zorder=1))
+    ax.text(46, 60.0, "single U-Net", ha="center", fontsize=6.1, color=GRN)
+    ax.add_patch(Rectangle((l1 - 5.5, 13.0), (r2 + 5.5) - (l1 - 5.5), 52.0, fill=False,
+                           edgecolor=INK, linewidth=0.9, zorder=1))
+    ax.text(61, 68.5, "WNet cascade", ha="center", fontsize=6.4, color=INK)
+
+    # ---- outputs, clear of every box --------------------------------------
+    ax.text(92.5, 39, r"$\hat{R}$", ha="left", va="center", fontsize=8, color=INK)
+    ax.text(92.5, 30.5, r"$\hat{\sigma}$", ha="left", va="center", fontsize=8, color=MUT)
+    ax.text(92.5, 23.5, "MC\ndropout", ha="left", va="center", fontsize=5.4, color=MUT,
+            linespacing=1.15)
+
+    fig.savefig(FIG / "architecture.pdf"); plt.close(fig)
+    print("  architecture.pdf")
+
+
 if __name__ == "__main__":
     print("[figures] ->", FIG)
     (REPO / "paper" / "tab").mkdir(parents=True, exist_ok=True)
-    for fn in (fig_plateau, fig_interaction, fig_walls, fig_concept,
-               table_main, table_real):
+    for fn in (fig_architecture, fig_plateau, fig_interaction, fig_walls,
+               fig_concept, table_main, table_real):
         try:
             fn()
         except Exception as ex:  # noqa: BLE001
