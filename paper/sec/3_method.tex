@@ -1,5 +1,5 @@
 %% 3_method
-\section{The Geometry a Convolution Cannot Form}
+\section{Ray-Occlusion Conditioning}
 \label{sec:method}
 
 \begin{figure*}[t]
@@ -15,7 +15,7 @@ directional structure that makes the channel useful.}
 \label{fig:concept}
 \end{figure*}
 
-\subsection{Reconstruction from walks, not from samples}
+\subsection{Problem Formulation}
 
 Radio map reconstruction asks for a dense field over a scene given measurements at a
 small subset of its cells, including in the free space that no measurement reached.
@@ -35,7 +35,7 @@ uniformly thinned. Accuracy is reported on free-space cells that were never
 measured, since those are the cells a deployment actually needs and the ones
 interpolation cannot reach.
 
-\subsection{A line integral the backbone cannot build}
+\subsection{The Ray-Occlusion Field}
 
 Received strength depends less on distance than on the material the signal crossed on
 the way, and a single scalar per pixel captures that dependence. For a transmitter at $\tau \in \Omega$ and a target cell
@@ -64,7 +64,7 @@ it once in closed form and append it as a single input channel. The cost is
 $432$ parameters in the first convolution of the single network, or $576$ spread
 over the two stages of the cascade, and no change anywhere else.
 
-\subsection{Two backbones, one variable}
+\subsection{Backbones and Conditioning}
 
 Separating the contribution of the channel from the contribution of capacity requires
 two backbones of comparable size, one of which is the cascade RadioUNet itself uses.
@@ -82,7 +82,7 @@ density map, the building raster and a multi-scale transmitter heatmap, and addi
 the occlusion channel is the single variable under study. Dropout is retained at
 inference to give a per-pixel predictive spread by Monte Carlo sampling.
 
-\subsection{Dropping the transmitter anchor}
+\subsection{A Transmitter-Free Variant}
 \label{sec:txfree}
 
 The channel's dependence on a known transmitter position is a liability rather than a

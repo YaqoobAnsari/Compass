@@ -1,8 +1,8 @@
 %% 5_real
-\section{What Happens on Real Measurements}
+\section{Evaluation on Real Measurements}
 \label{sec:real}
 
-\subsection{Four buildings, two of them usable}
+\subsection{Measurement Corpus}
 
 The measurement corpus is large but only partly usable, because evaluating
 reconstruction requires repeat visits to the same place and two of its four buildings
@@ -39,7 +39,7 @@ without the partitions and shows no effect.}
 \label{fig:walls}
 \end{figure}
 
-\subsection{Walls attenuate, and the control site confirms it}
+\subsection{Wall Attenuation and Negative Control}
 
 The premise behind \cref{eq:occ} can be tested on the measurements alone, without any
 model, by comparing reference-point pairs at matched separation that differ in how
@@ -67,7 +67,7 @@ folds, which is the procedure declining to use geometry when there is none. A re
 walls exist and an exact null where they do not is what separates a causal reading
 from a correlational one.
 
-\subsection{The transmitter is usually not locatable}
+\subsection{Transmitter Locatability}
 \label{sec:locatable}
 
 The transmitter position that \cref{eq:occ} requires is recoverable in only $12$ of
@@ -95,7 +95,7 @@ benchmarks disagree.}
 \label{tab:real}
 \end{table}
 
-\subsection{Classical interpolation wins, and the reason is instructive}
+\subsection{Comparison with Classical Interpolation}
 
 Classical interpolation beats the learned reconstructor on real measurements by a
 margin that further training would not reverse, as \cref{tab:real} reports under
@@ -126,7 +126,7 @@ visited, and it is there that geometry conditioning pays. The two benchmarks
 disagree because they are not testing the same capability, and the field's practice
 of reporting only the second has allowed that distinction to stay hidden.
 
-\subsection{A missing input, not a domain shift}
+\subsection{Why the Two Regimes Disagree}
 
 Read together, the three findings account for the transfer gap without appealing to
 domain shift at all. The dominant error

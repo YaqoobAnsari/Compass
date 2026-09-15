@@ -1,8 +1,8 @@
 %% 4_experiments
-\section{What Limits Learned Reconstruction}
+\section{Experiments}
 \label{sec:experiments}
 
-\subsection{One protocol for every number}
+\subsection{Evaluation Protocol}
 
 Every number in this section comes from one protocol, under which all methods see the
 same scenes, the same trajectories and the same held-out cells, and are trained to
@@ -47,7 +47,7 @@ than any architectural substitution in the panel.}
 \label{tab:main}
 \end{table}
 
-\subsection{One channel outranks every backbone}
+\subsection{Comparison with Existing Methods}
 
 Geometry conditioning outranks every architectural substitution in the panel, and two
 comparisons in \cref{tab:main} establish it. The first is that geometry conditioning takes the cascade from $9.99$ to
@@ -78,7 +78,7 @@ below it on both axes.}
 \label{fig:plateau}
 \end{figure}
 
-\subsection{Every deep family stops at the same wall}
+\subsection{The Non-Line-of-Sight Plateau}
 
 Separating the error by visibility shows that architecture moves line-of-sight
 accuracy substantially while leaving non-line-of-sight accuracy, which dominates the
@@ -122,7 +122,7 @@ the cascade has less to add once the geometry is supplied.}
 \label{fig:interaction}
 \end{figure}
 
-\subsection{Geometry substitutes for depth}
+\subsection{Interaction Between Geometry and Depth}
 \label{sec:interaction}
 
 The occlusion channel and the cascade do not address different deficiencies, because
@@ -145,7 +145,7 @@ there is less architecture to spend, which is why the single network gains more
 from the channel than the cascade does. A practitioner with a fixed budget is
 better served by computing the right input than by stacking a second network.
 
-\subsection{Removing the transmitter does not work}
+\subsection{Ablating the Transmitter Anchor}
 \label{sec:txfree_result}
 
 The measurement-anchored field of \cref{eq:occmeas} recovers almost none of what the

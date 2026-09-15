@@ -2,7 +2,7 @@
 \section{Related Work}
 \label{sec:related}
 
-\paragraph{The backbone has been the variable.}
+\paragraph{Architectures for radio map estimation.}
 The dominant line of work treats the problem as image-to-image translation from a
 building raster and a transmitter marker to a dense field.
 RadioUNet~\cite{levie2021radiounet} established the template with a cascade of two
@@ -18,7 +18,7 @@ under one protocol and find that the substitutions move line-of-sight error and
 leave the dominant non-line-of-sight error largely where it was, which reframes the
 sequence as variation against a fixed bottleneck.
 
-\paragraph{Geometry as an input is not our idea.}
+\paragraph{Geometry-aware conditioning.}
 We do not present the occlusion channel as a novel mechanism, because supplying
 propagation geometry to a learned predictor is established practice. FadeNet~\cite{ratnam2021fadenet} and EM
 DeepRay~\cite{bakirtzis2022emdeepray} supply ray-derived or visibility-derived
@@ -33,7 +33,7 @@ measurement of what it is worth relative to architecture, the finding that the t
 are substitutes, and the demonstration that the input cannot survive removal of its
 transmitter anchor.
 
-\paragraph{Neural fields fit one scene, not many.}
+\paragraph{Neural fields for radio propagation.}
 A parallel line represents the radio field continuously.
 NeRF$^2$~\cite{zhao2023nerf2} adapts neural radiance fields to RF propagation,
 RF-Diffusion~\cite{chi2024rfdiffusion} generates RF signals with diffusion, and
@@ -44,7 +44,7 @@ but they share our premise that the geometry of the environment is the right
 inductive bias. Measured channel corpora such as DICHASUS~\cite{euchner2021dichasus}
 supply the real data these methods increasingly need.
 
-\paragraph{The task is a completion problem.}
+\paragraph{Sparse-to-dense prediction.}
 Vision has studied this shape of problem for years under other names. Depth
 completion~\cite{ma2018sparsetodense} recovers a dense map from sparse range
 returns, and inpainting with irregular masks~\cite{liu2018partialconv} handles the
@@ -57,7 +57,7 @@ reference. Diffusion baselines in our panel follow the standard
 formulation~\cite{ho2020ddpm} and its accelerated
 sampler~\cite{song2021ddim}.
 
-\paragraph{No public corpus pairs a dense field with surveyed sources.}
+\paragraph{Indoor measurement corpora.}
 Indoor radio measurement has a long history in
 localisation~\cite{bahl2000radar, youssef2005horus}, where device
 heterogeneity~\cite{kjaergaard2011heterogeneous, zafari2019survey} is a recognised
