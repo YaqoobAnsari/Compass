@@ -4,8 +4,9 @@
 
 \subsection{One protocol for every number}
 
-All results in this section come from one protocol applied identically to every
-method. We evaluate on RadioMapSeer, a ray-traced corpus of urban scenes with dense
+Every number in this section comes from one protocol, under which all methods see the
+same scenes, the same trajectories and the same held-out cells, and are trained to
+the same budget. We evaluate on RadioMapSeer, a ray-traced corpus of urban scenes with dense
 ground truth, using $40$ held-out maps and $8$ transmitters each for $320$ test
 scenes. Every method sees the same trajectories, the same measurement noise and the
 same held-out cells. We report root mean square error over free-space cells that
@@ -13,8 +14,9 @@ were never measured, with bootstrap $95\%$ confidence intervals over $2000$
 resamples and paired Wilcoxon signed-rank tests over the $320$ scenes. Deep
 baselines are trained to the same budget of $150$ epochs on the same split.
 
-Two kinds of baseline appear in the panel and conflating them would misrepresent
-what we ran, so \cref{tab:main} marks the difference. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
+Holding that budget fixed forces a decision about what a baseline is, and we resolve
+it by separating faithful reimplementations from matched-budget representatives of an
+architecture family, a distinction \cref{tab:main} marks throughout. RadioUNet, PMNet, RadioDiff and RMDM are reimplementations of a
 specific published architecture, following the paper in structure and differing only
 where our input setting requires it. The entries marked with a dagger are not
 reimplementations of one paper. They are matched-budget representatives of an
@@ -25,7 +27,8 @@ question at hand. Comparing author implementations across families would confoun
 the backbone with six different training recipes, whereas the claim we are testing is
 precisely whether the family matters once everything else is held fixed.
 
-One protocol for every number matters more here than it usually does. The same
+Protocol discipline matters more in this literature than in most, because the
+conventions in circulation disagree by enough to reverse a ranking. The same
 checkpoint scores between $8.6$ and $9.5$~dB under four evaluation conventions we
 found in use across this literature, which is a spread wide enough to reverse a
 ranking, so mixing conventions across a table would make the table meaningless.
@@ -46,8 +49,8 @@ than any architectural substitution in the panel.}
 
 \subsection{One channel outranks every backbone}
 
-Geometry conditioning outranks every backbone substitution in \cref{tab:main}, and
-two results carry that conclusion. The first is that geometry conditioning takes the cascade from $9.99$ to
+Geometry conditioning outranks every architectural substitution in the panel, and two
+comparisons in \cref{tab:main} establish it. The first is that geometry conditioning takes the cascade from $9.99$ to
 $8.64$~dB, moving it from behind RadioUNet at $9.93$~dB to ahead of it with
 non-overlapping confidence intervals. The second is more surprising. A single
 network with the occlusion channel reaches $9.46$~dB and also beats RadioUNet,
@@ -56,10 +59,12 @@ the intervals touch, so we rest it on the paired test rather than on separation 
 intervals, but the ordering is clear and the conclusion does not depend on that one
 comparison. The architecture is not what separates these methods.
 
-Classical interpolation sits far back on this benchmark, between $25.6$ and
-$28.1$~dB, because the trajectory-structured sampling leaves large regions with no
-nearby observation to interpolate from. That gap is a property of the sampling
-regime, and \cref{sec:real} shows it reverses on real data.
+Classical interpolation sits far behind every learned method here, between $25.6$ and
+$28.1$~dB, though that gap reflects the trajectory sampling regime rather than a
+general ranking and reverses on real measurements. Trajectory-structured sampling
+leaves large regions with no nearby observation to interpolate from, which is the
+condition classical estimators are least suited to and the one \cref{sec:real}
+removes.
 
 \begin{figure}[t]
 \centering
@@ -75,7 +80,9 @@ below it on both axes.}
 
 \subsection{Every deep family stops at the same wall}
 
-Splitting the error by visibility exposes the structure the aggregate hides.
+Separating the error by visibility shows that architecture moves line-of-sight
+accuracy substantially while leaving non-line-of-sight accuracy, which dominates the
+total, almost unchanged.
 \Cref{fig:plateau} plots line-of-sight against non-line-of-sight error for every
 learned method in the panel. Line-of-sight error separates the nine methods
 without the occlusion channel over a range of $5.18$ to $9.98$~dB, a coefficient of
@@ -87,16 +94,17 @@ dropping PMNet as the one clear outlier tightens the band to $11.12$ to $12.84$~
 at a coefficient of variation of $5.1\%$. These methods span two orders of
 magnitude of design effort.
 
-A plateau that survives this much architectural variation is not a capacity
-limit. It is the signature of a quantity no member of the panel can form from the
-inputs it is given. Adding \cref{eq:occ} moves both numbers at once, cutting
-line-of-sight error to $3.85$~dB and pulling non-line-of-sight error to $9.79$~dB.
-Both sit below every member of the panel, and the single-network variant at $3.95$
-and $10.72$~dB does the same. The channel costs $432$ parameters in the single
+A plateau that survives this much architectural variation indicates a missing input
+rather than insufficient capacity, and supplying that input moves both error modes
+below every method in the panel for a few hundred parameters. It is the signature of a quantity no member of the
+panel can form from the inputs it is given. Adding \cref{eq:occ} cuts line-of-sight
+error to $3.85$~dB and non-line-of-sight error to $9.79$~dB, and the single-network
+variant reaches $3.95$ and $10.72$~dB. The channel costs $432$ parameters in the single
 network and $576$ in the cascade, increases of $0.006\%$ and $0.009\%$ over
 backbones of $7.2$ and $6.4$~million parameters.
 
-The ablations in \cref{tab:main} make the same point from the other side. Removing
+The input ablations make the same point in reverse, since withholding a single
+geometric input costs more than the entire spread of the architecture panel. Removing
 the transmitter heatmap costs $4.76$~dB and removing the building raster costs
 $7.32$~dB. The entire learned panel without the occlusion channel, spanning six
 architecture families, spreads over $4.18$~dB from best to worst. Withholding one
@@ -117,8 +125,9 @@ the cascade has less to add once the geometry is supplied.}
 \subsection{Geometry substitutes for depth}
 \label{sec:interaction}
 
-If the occlusion channel and the cascade were addressing different deficiencies,
-their gains would accumulate. \Cref{fig:interaction} shows they do not. Measured
+The occlusion channel and the cascade do not address different deficiencies, because
+their separate gains fail to accumulate by a margin that is itself significant. Were
+the two independent, \cref{fig:interaction} would show their benefits adding. Measured
 separately against the plain single network, the channel is worth $2.04$~dB and the
 cascade is worth $1.51$~dB, for a combined expectation of $3.55$~dB. Applied
 together they deliver $2.86$~dB. The interaction term is $+0.69$~dB with a paired
@@ -126,7 +135,9 @@ bootstrap interval of $[+0.50, +0.91]$ and $p = 4.7 \times 10^{-10}$ against zer
 a fifth of the expected joint benefit does not materialise. Each of the four
 single-factor comparisons is significant on its own at $p < 10^{-35}$.
 
-Redundancy between the two mechanisms is the only reading that fits. A second network in
+Partial redundancy is the only reading consistent with that shortfall, and it implies
+that a fixed budget is better spent computing the right input than adding a second
+network. A second network in
 series has the depth and the intermediate estimate to recover some of the shadow
 structure that \cref{eq:occ} supplies directly, so once the structure is given the
 cascade has less left to contribute. Stated the other way, geometry buys more where
@@ -137,16 +148,18 @@ better served by computing the right input than by stacking a second network.
 \subsection{Removing the transmitter does not work}
 \label{sec:txfree_result}
 
-The measurement-anchored field of \cref{eq:occmeas} was an attempt to keep the
-benefit without needing the source. It fails. Substituting $\tilde{O}$ for $O$ in
+The measurement-anchored field of \cref{eq:occmeas} recovers almost none of what the
+transmitter-anchored field delivers, even though a paired test can detect the
+difference it makes. Substituting $\tilde{O}$ for $O$ in
 the cascade gives $9.89$~dB against $8.64$~dB for the transmitter-anchored field,
 giving back $1.25$~dB of the $1.35$~dB the channel was worth. What remains is
 $0.10$~dB, which a paired test does detect at $p = 2.3 \times 10^{-3}$ over the $320$
 scenes but which amounts to $7\%$ of the benefit the transmitter-anchored field
 delivers. The substitution is measurable and useless.
 
-The minimum operator is what destroys the field, as \cref{fig:concept} makes
-visible. Taking a minimum over anchors in \cref{eq:occmeas} lets the result be
+The minimum over anchors is what destroys the field, and the reason matters, because
+it places the benefit in the transmitter's direction rather than in the building
+layout. Taking a minimum over anchors in \cref{eq:occmeas} lets the result be
 dominated by whichever measurement happens to sit closest to an
 unobstructed path, so the field collapses toward zero almost everywhere. Its mean
 value over the scene is $0.084$ against $0.298$ for the transmitter-anchored field,

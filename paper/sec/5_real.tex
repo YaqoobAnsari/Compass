@@ -4,8 +4,9 @@
 
 \subsection{Four buildings, two of them usable}
 
-Five million real readings shrink to two usable sites once the evaluation demands
-repeat visits to the same place. The corpus spans four buildings, $61$ floors, $204$
+The measurement corpus is large but only partly usable, because evaluating
+reconstruction requires repeat visits to the same place and two of its four buildings
+never received them. The corpus spans four buildings, $61$ floors, $204$
 transmitters, six to seven handset models per site and $5.06$ million logged
 readings. Each reading carries a handset
 identifier, a reference-point index, a transmitter identifier and a received
@@ -16,8 +17,9 @@ multi-storey car park. The car park serves throughout as a negative control,
 because an open concrete structure has the geometry of the problem without the
 walls.
 
-Scoring has to defend against a trivial shortcut, since reference points are dense.
-We hold out one point and predict it from the rest of the same cell behind a $1$~m
+Dense reference points create a shortcut that scoring has to exclude, and the
+thresholds we use to exclude it give rise to the two cell sets reported below. We
+hold out one point and predict it from the rest of the same cell behind a $1$~m
 exclusion buffer, so a held-out point is never recovered from a neighbour standing
 beside it. Two cell sets appear below and
 we keep them separate throughout. The reconstruction comparison uses the $54$ cells
@@ -39,12 +41,14 @@ without the partitions and shows no effect.}
 
 \subsection{Walls attenuate, and the control site confirms it}
 
-The premise of \cref{eq:occ} is testable directly on measurements, without any
-model. For pairs of reference points at matched separation we compare the excess
+The premise behind \cref{eq:occ} can be tested on the measurements alone, without any
+model, by comparing reference-point pairs at matched separation that differ in how
+much wall lies between them. For pairs of reference points at matched separation we compare the excess
 absolute difference in received strength between pairs separated by many walls and
 pairs separated by few. \Cref{fig:walls} reports the result.
 
-At the walled site the effect is present and ordered. Pairs separated by walls
+The effect appears at the walled site in every separation band wide enough to contain
+a partition, and at the open control site it does not appear at all. Pairs separated by walls
 differ by an additional $2.31$~dB at two to three metres, $2.50$~dB at three to
 four metres and $1.51$~dB at four to six metres, with disjoint bootstrap intervals
 in all three bands. At one to two metres the gap is $0.55$~dB and the intervals
@@ -53,19 +57,22 @@ spacing between partitions. At the open control site the same measurement return
 $-0.02$~dB and $+0.91$~dB with overlapping intervals and wall correlations of
 $-0.057$ and $-0.017$, which is to say nothing.
 
-The same contrast survives when the effect is put to work. Cross-validated
+The same contrast survives when the effect is put to work, and the exact null at the
+control site is the strongest causal evidence in this paper that \cref{eq:occ}
+identifies the right mechanism. Cross-validated
 wall-aware interpolation improves accuracy by $3.86\%$ at the walled site, with the
 penalty weight selected as $32$ and $16$ on the two folds. At the control site the
 gain is $0.00\%$ and cross-validation selects a penalty of exactly zero on both
-folds, which is the procedure declining to use geometry when there is none. A real
-effect at the treatment site and an exact null at the control site is the strongest
-causal evidence we have that the mechanism in \cref{eq:occ} is the right one.
+folds, which is the procedure declining to use geometry when there is none. A real effect where
+walls exist and an exact null where they do not is what separates a causal reading
+from a correlational one.
 
 \subsection{The transmitter is usually not locatable}
 \label{sec:locatable}
 
-\Cref{eq:occ} needs a source position, and real indoor cellular does not reliably
-provide one. Fitting a point source per cell and gating on fit quality, stability
+The transmitter position that \cref{eq:occ} requires is recoverable in only $12$ of
+the $67$ measured cells, and the corpus holds no ground truth against which even
+those could be checked. Fitting a point source per cell and gating on fit quality, stability
 and cross-split agreement, only $12$ of $67$ cells pass, which is $17.9\%$. The
 remainder are consistent with distributed or repeated sources, which is what indoor
 boosters sharing a cell identifier produce. The median coefficient of determination
@@ -73,9 +80,9 @@ across all cells is $0.31$ against a gate of $0.30$, so the count is sensitive t
 where the gate is placed, and no ground-truth transmitter position exists anywhere
 in the corpus against which a localisation error could be quoted.
 
-This is the crux of the transfer problem. The input that carries the synthetic
-result is available for roughly one cell in five, and \cref{sec:txfree_result}
-showed that the obvious way to dispense with it does not work.
+That scarcity is the crux of the transfer problem, because the input carrying the
+simulated result is available one time in five and \cref{sec:txfree_result} showed
+the obvious substitute for it failing.
 
 \begin{table}[t]
 \centering\footnotesize
@@ -90,14 +97,16 @@ benchmarks disagree.}
 
 \subsection{Classical interpolation wins, and the reason is instructive}
 
-Classical interpolation beats the learned reconstructor on real measurements, and
-\cref{tab:real} reports the margin under leave-one-reference-point-out
-cross-validation. Multiquadric radial basis interpolation reaches
+Classical interpolation beats the learned reconstructor on real measurements by a
+margin that further training would not reverse, as \cref{tab:real} reports under
+leave-one-reference-point-out cross-validation. Multiquadric radial basis interpolation reaches
 $5.51$~dB against $6.20$~dB for the learned model with geometry, and the paired
 Wilcoxon test over $1924$ held-out points gives $p = 2.5 \times 10^{-30}$. This is
 not a marginal outcome that more training would reverse.
 
-Two smaller results sharpen the picture rather than soften it. Geometry still helps
+Two smaller results sharpen that outcome rather than soften it, since geometry still
+helps the learned model and a residual formulation built on top of the classical
+prediction does win. Geometry still helps
 the learned model, which improves from $6.30$ to $6.20$~dB when wall information is
 supplied, at $p = 7.0 \times 10^{-6}$, so the mechanism is intact even where the
 model loses. And a residual formulation that learns a correction on top of the
@@ -107,8 +116,8 @@ rather than the $54$-cell set of \cref{tab:real}, which is why the interpolator 
 $5.49$ here and $5.51$ there, and its confidence intervals overlap, so we report it
 as a paired comparison rather than as separated intervals.
 
-The reason classical wins here is a property of the evaluation, not a defect of the
-learned model. Real reference points are dense and clustered inside each cell, so
+Classical wins here because of what the real evaluation is able to ask, not because
+of a defect in the learned model. Real reference points are dense and clustered inside each cell, so
 holding one out leaves neighbours a metre or two away and asks for interpolation
 between nearby samples of the same process. That is the regime in which radial
 basis interpolation is close to optimal by construction. The synthetic benchmark
@@ -119,7 +128,7 @@ of reporting only the second has allowed that distinction to stay hidden.
 
 \subsection{A missing input, not a domain shift}
 
-Read together, the three findings explain the transfer gap without appealing to
+Read together, the three findings account for the transfer gap without appealing to
 domain shift at all. The dominant error
 mode is non-line-of-sight prediction, every architecture stalls at the same place,
 and the input that breaks the stall is a line integral anchored at the transmitter.
