@@ -59,7 +59,8 @@ path-dependent selection within it. The field is fully determined by inputs the
 network already receives, namely the building raster and the transmitter position,
 yet it is not a function any local operator computes cheaply. We therefore compute
 it once in closed form and append it as a single input channel. The cost is
-$432$ parameters in the first convolution and no change anywhere else.
+$432$ parameters in the first convolution of the single network, or $576$ spread
+over the two stages of the cascade, and no change anywhere else.
 
 \subsection{Backbones}
 

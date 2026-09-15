@@ -138,7 +138,12 @@ def fig_walls():
         ax.set_xticks(x); ax.set_xticklabels([b.replace("m", "") for b in bs])
         ax.set_xlabel("separation (m)"); ax.set_title(title, fontsize=7)
     axes[0].set_ylabel(r"excess $|\Delta$RSS$|$ (dB)")
-    axes[0].legend(frameon=False, loc="upper left")
+    # headroom so the legend never sits on a bar or its error cap
+    top = max(ax.get_ylim()[1] for ax in axes)
+    for ax in axes:
+        ax.set_ylim(0, top * 1.30)
+    axes[0].legend(frameon=False, loc="upper left", ncol=2, handlelength=1.0,
+                   handletextpad=0.4, columnspacing=0.8, borderaxespad=0.2)
     fig.tight_layout(w_pad=0.8)
     fig.savefig(FIG / "walls.pdf"); plt.close(fig)
     print("  walls.pdf")

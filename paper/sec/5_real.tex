@@ -17,7 +17,12 @@ walls.
 
 Reconstruction is scored by holding out reference points and predicting them from
 the rest of the same cell, with a $1$~m exclusion buffer so a held-out point is
-never predicted from a neighbour standing beside it.
+never predicted from a neighbour standing beside it. Two cell sets appear below and
+we keep them separate throughout. The reconstruction comparison uses the $54$ cells
+with at least ten reference points, giving $1924$ held-out predictions. The
+transmitter-locatability and residual-model analyses use the looser threshold of
+eight reference points, which admits $67$ cells. Numbers from the two sets are never
+compared against each other.
 
 \begin{figure}[t]
 \centering
@@ -95,8 +100,10 @@ the learned model, which improves from $6.30$ to $6.20$~dB when wall information
 supplied, at $p = 7.0 \times 10^{-6}$, so the mechanism is intact even where the
 model loses. And a residual formulation that learns a correction on top of the
 classical prediction does win, reaching $5.14$~dB against $5.49$~dB for the same
-interpolator at $p = 2.1 \times 10^{-4}$, though the confidence intervals overlap
-and we report it as a paired comparison rather than as separated intervals.
+interpolator at $p = 2.1 \times 10^{-4}$. That pair is measured on the $67$-cell set
+rather than the $54$-cell set of \cref{tab:real}, which is why the interpolator reads
+$5.49$ here and $5.51$ there, and its confidence intervals overlap, so we report it
+as a paired comparison rather than as separated intervals.
 
 The reason classical wins here is a property of the evaluation, not a defect of the
 learned model. Real reference points are dense and clustered inside each cell, so
