@@ -90,7 +90,11 @@ def eval_learned(model, cells, use_walls, device, n_mc=16):
 
 
 def rmse(e):
-    return float(np.sqrt(np.mean(np.square(e)))) if e else float("nan")
+    """RMSE over finite entries. Accepts a list or an array; NaN padding used to
+    keep methods index-aligned is dropped here rather than counted as zero error."""
+    v = np.asarray(e, float)
+    v = v[np.isfinite(v)]
+    return float(np.sqrt(np.mean(np.square(v)))) if len(v) else float("nan")
 
 
 def main() -> int:
@@ -148,7 +152,7 @@ def main() -> int:
     out = {"n_cells": len(cells), "folds": args.folds, "rmse": {}, "rmse_ci": {}, "mae_ci": {}}
     for m, e in agg.items():
         ea = np.asarray(e, float)
-        out["rmse"][m] = round(rmse(ea[np.isfinite(ea)]), 3) if len(ea) else None
+        out["rmse"][m] = round(rmse(ea), 3) if len(ea) else None
         # mae_ci bounds the MEAN ABSOLUTE error, rmse_ci bounds the ROOT MEAN SQUARE
         # error. These are different quantities and were previously both stored under
         # "rmse_ci", which put an MAE interval next to an RMSE point estimate.
