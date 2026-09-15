@@ -47,10 +47,10 @@ than any architectural substitution in the panel.}
 \subsection{The benchmark}
 
 \Cref{tab:main} reports the full comparison. Two results organise everything that
-follows. The first is that geometry conditioning takes the cascade from $10.01$ to
+follows. The first is that geometry conditioning takes the cascade from $9.99$ to
 $8.64$~dB, moving it from behind RadioUNet at $9.93$~dB to ahead of it with
 non-overlapping confidence intervals. The second is more surprising. A single
-network with the occlusion channel reaches $9.47$~dB and also beats RadioUNet,
+network with the occlusion channel reaches $9.46$~dB and also beats RadioUNet,
 while the cascade without the channel does not. The margin there is narrower and
 the intervals touch, so we rest it on the paired test rather than on separation of
 intervals, but the ordering is clear and the conclusion does not depend on that one
@@ -90,15 +90,15 @@ magnitude of design effort.
 A plateau that survives this much architectural variation is not a capacity
 limit. It is the signature of a quantity no member of the panel can form from the
 inputs it is given. Adding \cref{eq:occ} moves both numbers at once, cutting
-line-of-sight error to $3.85$~dB and pulling non-line-of-sight error to $9.78$~dB.
+line-of-sight error to $3.85$~dB and pulling non-line-of-sight error to $9.79$~dB.
 Both sit below every member of the panel, and the single-network variant at $3.95$
-and $10.73$~dB does the same. The channel costs $432$ parameters in the single
+and $10.72$~dB does the same. The channel costs $432$ parameters in the single
 network and $576$ in the cascade, increases of $0.006\%$ and $0.009\%$ over
 backbones of $7.2$ and $6.4$~million parameters.
 
 The ablations in \cref{tab:main} make the same point from the other side. Removing
-the transmitter heatmap costs $4.75$~dB and removing the building raster costs
-$7.31$~dB. The entire learned panel without the occlusion channel, spanning six
+the transmitter heatmap costs $4.76$~dB and removing the building raster costs
+$7.32$~dB. The entire learned panel without the occlusion channel, spanning six
 architecture families, spreads over $4.18$~dB from best to worst. Withholding one
 geometric input therefore moves the result further than every architectural choice
 in the comparison put together. What the model is told about the scene dominates
@@ -120,9 +120,11 @@ the cascade has less to add once the geometry is supplied.}
 If the occlusion channel and the cascade were addressing different deficiencies,
 their gains would accumulate. \Cref{fig:interaction} shows they do not. Measured
 separately against the plain single network, the channel is worth $2.04$~dB and the
-cascade is worth $1.50$~dB, for a combined expectation of $3.54$~dB. Applied
-together they deliver $2.87$~dB. The interaction term is
-$+0.67$~dB, so a third of the expected joint benefit does not materialise.
+cascade is worth $1.51$~dB, for a combined expectation of $3.55$~dB. Applied
+together they deliver $2.86$~dB. The interaction term is $+0.69$~dB with a paired
+bootstrap interval of $[+0.50, +0.91]$ and $p = 4.7 \times 10^{-10}$ against zero, so
+a fifth of the expected joint benefit does not materialise. Each of the four
+single-factor comparisons is significant on its own at $p < 10^{-35}$.
 
 The reading is that the two mechanisms are partially redundant. A second network in
 series has the depth and the intermediate estimate to recover some of the shadow
@@ -137,9 +139,11 @@ better served by computing the right input than by stacking a second network.
 
 The measurement-anchored field of \cref{eq:occmeas} was an attempt to keep the
 benefit without needing the source. It fails. Substituting $\tilde{O}$ for $O$ in
-the cascade gives $9.88$~dB against $8.64$~dB for the transmitter-anchored field,
-giving back $1.24$~dB of the $1.37$~dB the channel was worth, and leaving a result
-statistically indistinguishable from supplying no geometry at all.
+the cascade gives $9.89$~dB against $8.64$~dB for the transmitter-anchored field,
+giving back $1.25$~dB of the $1.35$~dB the channel was worth. What remains is
+$0.10$~dB, which a paired test does detect at $p = 2.3 \times 10^{-3}$ over the $320$
+scenes but which amounts to $7\%$ of the benefit the transmitter-anchored field
+delivers. The substitution is measurable and useless.
 
 \Cref{fig:concept} shows the mechanism of the failure. The minimum over anchors in
 \cref{eq:occmeas} is dominated by whichever measurement happens to sit closest to an

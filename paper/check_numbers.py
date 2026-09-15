@@ -27,13 +27,13 @@ for a, b in cells.items():
           f"LoS {d[b]['rmse_los']:6.3f}  NLoS {d[b]['rmse_nlos']:6.3f}")
 u0, u1, w0, w1 = (m(cells[k]) for k in ("unet_noocc", "unet_occ", "wnet_noocc", "wnet_occ"))
 print(f"\n  occlusion in U-Net   {u0-u1:+.3f}   (paper: 2.04)")
-print(f"  occlusion in WNet    {w0-w1:+.3f}   (paper: 1.37)")
-print(f"  cascade, no occ      {u0-w0:+.3f}   (paper: 1.50)")
-print(f"  joint                {u0-w1:+.3f}   (paper: 2.87)")
-print(f"  sum of parts         {(u0-u1)+(u0-w0):+.3f}   (paper: 3.54)")
-print(f"  INTERACTION          {((u0-u1)+(u0-w0))-(u0-w1):+.3f}   (paper: 0.67)")
-print(f"\n  Tx-free vs Tx-anchored {m(cells['wnet_meas'])-w1:+.3f}  (paper: 1.24)")
-print(f"  Tx-free vs no occ      {m(cells['wnet_meas'])-w0:+.3f}")
+print(f"  occlusion in WNet    {w0-w1:+.3f}   (paper: 1.35)")
+print(f"  cascade, no occ      {u0-w0:+.3f}   (paper: 1.51)")
+print(f"  joint                {u0-w1:+.3f}   (paper: 2.86)")
+print(f"  sum of parts         {(u0-u1)+(u0-w0):+.3f}   (paper: 3.55)")
+print(f"  INTERACTION          {((u0-u1)+(u0-w0))-(u0-w1):+.3f}   (paper: 0.69)")
+print(f"\n  Tx-free vs Tx-anchored {m(cells['wnet_meas'])-w1:+.3f}  (paper: 1.25)")
+print(f"  Tx-free vs no occ      {m(cells['wnet_meas'])-w0:+.3f}   (paper: -0.10)")
 print(f"  radiounet              {m('radiounet'):.3f}")
 
 panel = ["radiounet", "COMPASS-wnet_base", "radiomamba", "radiotransformer", "uram",
@@ -47,10 +47,10 @@ n2 = np.array([d[k]["rmse_nlos"] for k in p2])
 print(f"  minus PMNet {n2.min():.2f}-{n2.max():.2f}  CV {n2.std()/n2.mean()*100:.1f}%  (paper: 11.12-12.84, 5.1%)")
 sp = [m(k) for k in panel]
 print(f"  panel RMSE span {max(sp)-min(sp):.2f} dB  (paper: 4.18)")
-print(f"  no_tx  {m('COMPASS-no_tx')-u0:+.3f}  no_building {m('COMPASS-no_building')-u0:+.3f}  (paper: 4.75, 7.31)")
+print(f"  no_tx  {m('COMPASS-no_tx')-u0:+.3f}  no_building {m('COMPASS-no_building')-u0:+.3f}  (paper: 4.76, 7.32)")
 cl = [m(k) for k in ("RBF(mq)", "GP(Kriging)", "IDW(p=1)", "OrdinaryKriging")]
 print(f"  classical span {min(cl):.2f}-{max(cl):.2f}  (paper: 25.6-28.1)")
-print(f"  unc_err_corr wnet_occ {d['COMPASS-wnet_occ']['unc_err_corr']}  (paper: 0.56)")
+print(f"  unc_err_corr wnet_occ {d['COMPASS-wnet_occ']['unc_err_corr']}  (paper: 0.55)")
 
 pw = d.get("_pairwise_occlusion_cascade")
 if pw:

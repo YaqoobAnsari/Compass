@@ -3,26 +3,26 @@
 & Method & RMSE$\downarrow$ & SSIM$\uparrow$ & LoS$\downarrow$ & NLoS$\downarrow$ \\
 \midrule
 \multicolumn{6}{@{}l}{\textit{Ours}} \\
-& WNet $+$ occlusion & \textbf{8.64}\,\tiny[8.41,8.85] & 0.841 & 3.85 & 9.78 \\
-& U-Net $+$ occlusion & 9.47\,\tiny[9.20,9.72] & 0.826 & 3.95 & 10.73 \\
+& WNet $+$ occlusion & \textbf{8.64}\,\tiny[8.42,8.85] & 0.841 & 3.85 & 9.79 \\
+& U-Net $+$ occlusion & 9.46\,\tiny[9.19,9.71] & 0.826 & 3.95 & 10.72 \\
 \addlinespace[1pt]
 \multicolumn{6}{@{}l}{\textit{Learned baselines}} \\
 & RadioUNet~\cite{levie2021radiounet} & 9.93\,\tiny[9.68,10.18] & 0.816 & 5.28 & 11.12 \\
-& WNet (no occlusion) & 10.01\,\tiny[9.72,10.28] & 0.825 & 5.18 & 11.26 \\
+& WNet (no occlusion) & 9.99\,\tiny[9.71,10.26] & 0.825 & 5.18 & 11.24 \\
 & Mamba-UNet$^\dagger$~\cite{jia2025radiomamba} & 10.92\,\tiny[10.65,11.19] & 0.795 & 7.00 & 12.10 \\
 & CNN-Transformer$^\dagger$~\cite{li2025rmtransformer} & 10.97\,\tiny[10.66,11.28] & 0.791 & 6.53 & 12.19 \\
-& Bayesian U-Net$^\dagger$~\cite{lu2025uram} & 11.37\,\tiny[11.11,11.61] & 0.801 & 7.72 & 12.50 \\
-& RadioDiff~\cite{wang2025radiodiff} & 11.37\,\tiny[11.03,11.69] & 0.803 & 5.99 & 12.74 \\
+& Bayesian U-Net$^\dagger$~\cite{lu2025uram} & 11.31\,\tiny[11.06,11.55] & 0.801 & 7.70 & 12.45 \\
+& RadioDiff~\cite{wang2025radiodiff} & 11.41\,\tiny[11.07,11.73] & 0.802 & 6.00 & 12.78 \\
 & cGAN$^\dagger$~\cite{zhang2023rmegan} & 11.42\,\tiny[11.15,11.67] & 0.788 & 7.09 & 12.63 \\
-& U-Net (no occlusion) & 11.51\,\tiny[11.17,11.85] & 0.797 & 6.46 & 12.84 \\
+& U-Net (no occlusion) & 11.50\,\tiny[11.17,11.85] & 0.797 & 6.46 & 12.84 \\
 & PMNet~\cite{lee2024pmnet} & 14.12\,\tiny[13.71,14.50] & 0.714 & 9.98 & 15.52 \\
 & SparseUNet$^\dagger$ (no geometry) & 21.05\,\tiny[20.67,21.42] & 0.656 & 26.89 & 20.17 \\
-& RMDM~\cite{jia2025rmdm} & 35.87\,\tiny[34.41,37.25] & 0.715 & 11.19 & 39.67 \\
+& RMDM~\cite{jia2025rmdm} & 36.56\,\tiny[35.05,37.93] & 0.714 & 11.63 & 40.45 \\
 \addlinespace[1pt]
 \multicolumn{6}{@{}l}{\textit{Input ablations}} \\
-& Tx-free occlusion & 9.88\,\tiny[9.59,10.17] & 0.825 & 4.96 & 11.16 \\
-& no Tx heatmap & 16.25\,\tiny[15.80,16.71] & 0.739 & 19.44 & 16.32 \\
-& no buildings & 18.82\,\tiny[18.46,19.19] & 0.674 & 20.84 & 18.82 \\
+& Tx-free occlusion & 9.89\,\tiny[9.60,10.18] & 0.825 & 4.97 & 11.18 \\
+& no Tx heatmap & 16.26\,\tiny[15.80,16.71] & 0.739 & 19.38 & 16.33 \\
+& no buildings & 18.83\,\tiny[18.47,19.21] & 0.674 & 20.85 & 18.83 \\
 \addlinespace[1pt]
 \multicolumn{6}{@{}l}{\textit{Classical}} \\
 & RBF & 25.64\,\tiny[24.85,26.44] & 0.720 & 27.19 & 26.42 \\

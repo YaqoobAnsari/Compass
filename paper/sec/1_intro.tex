@@ -36,13 +36,13 @@ operators computes cheaply, because it is a long thin path-dependent sum between
 points that may be two hundred cells apart. Supplying it as one extra
 input channel costs $432$ parameters in a single network and $576$ in the cascade,
 and moves both error modes at once, taking line-of-sight error to $3.85$~dB and
-non-line-of-sight error to $9.78$~dB, below the band that every other method
+non-line-of-sight error to $9.79$~dB, below the band that every other method
 shares.
 
 The consequences run against the usual intuition about scale. In a controlled
 $2 \times 2$ design, geometry conditioning and a second network in series turn out to
 be substitutes rather than complements. Measured separately they are worth $2.04$ and
-$1.50$~dB, and applied together they deliver $2.87$~dB rather than the $3.54$~dB
+$1.51$~dB, and applied together they deliver $2.86$~dB rather than the $3.55$~dB
 their sum predicts. A plain single network given the geometry outperforms a cascade
 denied it. Effort spent computing the right input buys more than effort spent adding
 capacity.
