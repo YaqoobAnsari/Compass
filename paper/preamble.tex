@@ -18,12 +18,17 @@
 %% work harder in optimizing text layout. Typically shrinks text by 1/6 of page, enable
 %% it at the very end of the writing process, when you are just above the page limit
 %%
-% \usepackage{microtype}
+% %% times.sty only declares OT1/T1 shapes. Under a Unicode engine the bold and
+%% italic Times faces resolve to TU/ptm/b/n and TU/ptm/m/it, which do not exist,
+%% so bold body text silently degrades to regular. Selecting T1 explicitly keeps
+%% the Type 1 faces and is correct under pdflatex as well.
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
 
 %%
 %% fine-tune paragraph spacing
 %%
-% \renewcommand{\paragraph}[1]{\vspace{.5em}\noindent\textbf{#1.}}
+\renewcommand{\paragraph}[1]{\vspace{.45em}\noindent\textbf{#1}\ }
 
 %%
 %% globally adjusts space between figure and caption
@@ -56,5 +61,10 @@
 %%
 %% cvpr.sty already provides amsmath, amssymb, graphicx, booktabs, xspace,
 %% enumitem and cleveref, so only the genuinely missing pieces are added here.
+%% times.sty only declares OT1/T1 shapes. Under a Unicode engine the bold and
+%% italic Times faces resolve to TU/ptm/b/n and TU/ptm/m/it, which do not exist,
+%% so bold body text silently degrades to regular. Selecting T1 explicitly keeps
+%% the Type 1 faces and is correct under pdflatex as well.
+\usepackage[T1]{fontenc}
 \usepackage{microtype}
 \setlength{\abovecaptionskip}{.45em}
